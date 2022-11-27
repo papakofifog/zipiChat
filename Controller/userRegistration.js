@@ -1,25 +1,28 @@
 require('dotenv').config();
 const User= require('../Module/user')
 const bcrypt= require('bcrypt');
-const { deleteOne } = require('../Module/user');
-const { createToken, validateToken }= require('../Middleware/JWT')
+const { createToken } = require('../Middleware/JWT')
 
-const registerUser= async (req,res,next,done) =>{
+const registerUser= async (req,res,next) =>{
     try{
-        const { username,email,password,Dob }= req.body
-        if(!(username && email && password && Dob))return res.json({"message":"Body not formated properly"});
-        const existingUser= await User.findOne(email);
+        const { firstname,lastname,username,email,password,Dob }= req.body
+        
+        if(!(firstname,lastname,username && email && password && Dob))return res.json({"message":"Body not formated properly"});
+        let existingUser= await User.findOne({email:email});
         if(existingUser)return res.json({"message":"User already exist proceed to Login"})
-        let salt= await bcrypt.genSalt(process.env['SALT']);
-        let encrptPassword= await bcrypt.hash(password,salt);
-        const newUser= await User.create({
-            username,
-            email,
-            encrptPassword,
-            Dob
+        let salt= await bcrypt.genSalt(11);
+        let encruptedpassword= await bcrypt.hash(password,salt);
+        const newUser= new User({
+            firstname:firstname,
+            lastname:lastname,
+            username:username,
+            email:email,
+            password:encruptedpassword,
+            Dob:Dob
         })
         let userAccesstoken=createToken(newUser);
         newUser.token=userAccesstoken;
+        await newUser.save();
         res.status(201).json(newUser)
     }catch(err){
         next(err)
@@ -28,18 +31,21 @@ const registerUser= async (req,res,next,done) =>{
 }
 
 
-
-
-
 const loginWithJWT= async (req,res,next) =>{
     try{
         const { email, password }= req.body;
-        const user= await User.findOne({ username: username });
-        const userIsverified= await bcrypt.compare(password, user.password);
-        
+        if(!(email && password))res.status(400).json("All inputs required")
+        const user= await User.findOne({ email: email });
+        const userIsverified= bcrypt.compare(password, user.password);
+        if(userIsverified){
+            const token= createToken(user);
+            user.token= token;
+            return res.status(200).json(user);
+        }
+        return 
     }catch(err){
         next(err)
     }
 }
 
-module.exports= registerUser;
+module.exports= { registerUser, loginWithJWT };
