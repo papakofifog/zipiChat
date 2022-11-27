@@ -31,9 +31,9 @@ const errorHandler= async (err, req, res, next)=>{
 }
 
 const processError=(errMessage)=>{
-    const message=errManage
+    const message=errMessage;
     error= new ErrorResponse(message,400)
-    return errors
+    return error;
 }
 
 

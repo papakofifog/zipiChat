@@ -1,24 +1,36 @@
-const express= require('express');
-const chatApp= express();
 require('dotenv').config();
+const express= require('express');
+const app= express();
+
 const cors= require('cors');
+
 const dbConnection= require('./Settings/connectToDb');
+
 const errorHandler= require('./Middleware/handleErrors/errorHandler');
 
-chatApp.use(cors())
-chatApp.use(express.json)
+const bodyParser= require('body-parser') 
 
-// chat app routes
-chatApp.use('/api/', registeUser)
-
+const routeUser= require('./routes/userRoutes');
+const homeRoute = require('./routes/home');
 
 
-// handle errors
-chatApp.use(errorHandler);
+app.use(bodyParser.json())
 
-//connect to the mongoose database
-dbConnection()
+app.get('/', (req,res)=>{
+    res.sendFile(__dirname+'/View/views/index.html')
+})
 
-chatApp.listen(process.env['PORT'], ()=>{
+//application routes
+app.use('/api',routeUser);
+app.use('/api',homeRoute);
+
+
+
+app.use(errorHandler);
+
+//connect to the db
+dbConnection();
+
+app.listen(process.env['PORT'], ()=>{
     console.log(`Chat app running on http://localhost:${process.env['PORT']}`);
 })

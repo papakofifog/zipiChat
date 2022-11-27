@@ -1,5 +1,5 @@
-const verifyBody= (data,message) =>{
-    if(!data){
-        re
-    }
+const toLower=(e)=>{
+    return e.toLowerCase()
 }
+
+module.exports= toLower;
