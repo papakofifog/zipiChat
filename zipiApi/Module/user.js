@@ -1,4 +1,4 @@
-const e = require('express')
+//const e = require('express')
 const mongoose= require('mongoose')
 const pictureRoot= 'cloudinarySomething';
 const toLower= require('../Util/helperfunctions')
@@ -70,7 +70,7 @@ async function createUser(newUser){
 async function findOneUser(user){
     try{
         let existingUser= await ZipiUser.findOne(user).catch((e)=>{
-            next(e)
+            console.error(e)
         });
         return existingUser;
     }catch(err){

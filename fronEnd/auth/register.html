@@ -32,7 +32,7 @@
                     DOB
                     
                 </label>
-                <input type="text" name="dateofbirth" id="dob">
+                <input type="date" name="dateofbirth" id="dob">
             </div>
     
             <div class="formInput">
@@ -40,7 +40,7 @@
                     username
                     
                 </label>
-                <input type="text" name="username" id="uname">
+                <input type="text" name="username" id="uname" aria-required="true">
             </div>
     
             <div class="formInput">
@@ -48,7 +48,7 @@
                     Email
                     
                 </label>
-                <input type="email" name="email" id="email">
+                <input type="email" name="email" id="email" aria-required="true">
             </div>
     
             <div class="formInput">
@@ -56,7 +56,7 @@
                     Password
                     
                 </label>
-                <input type="password" name="password" id="pass">
+                <input type="password" name="password" id="pass" aria-required="true">
             </div>
     
             <div class="formInput">
@@ -64,14 +64,14 @@
                     Confirm Password
                     
                 </label>
-                <input type="text" name="comfirmPassword" id="com-pass">
+                <input type="text" name="comfirmPassword" id="com-pass" aria-required="true">
             </div>
             
-            <input class="submitButtons" type="" value="Create Account">
+            <input id="register" class="submitButtons" type="button" value="Create Account">
         </form>
         <div class="options">
             <div class="authButton">
-                <a href="http://localhost:3000">Sign Up Google</a>
+                <a href="http://localhost:3000/api/google">Sign Up Google</a>
             </div>
             <div class="authButton">
                 <a href="http://localhost:3000">Sign Up facebook</a>
