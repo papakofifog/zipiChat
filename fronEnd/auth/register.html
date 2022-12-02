@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/authentication.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="formContainer">
+        <form action="http://localhost:3000/api/register" method="post">
+            <div class="formInput">
+                <label for="fname">
+                    Firstname
+                    
+                </label>
+                <input type="text" name="firstname" id="fname">
+            </div>
+            
+            <div class="formInput">
+                <label for="lname">
+                    Lastname
+                    
+                </label>
+                <input type="text" name="lastname" id="lname">
+            </div>
+            
+    
+            <div class="formInput">
+                <label for="dob">
+                    DOB
+                    
+                </label>
+                <input type="text" name="dateofbirth" id="dob">
+            </div>
+    
+            <div class="formInput">
+                <label for="uname">
+                    username
+                    
+                </label>
+                <input type="text" name="username" id="uname">
+            </div>
+    
+            <div class="formInput">
+                <label for="email">
+                    Email
+                    
+                </label>
+                <input type="email" name="email" id="email">
+            </div>
+    
+            <div class="formInput">
+                <label for="pass">
+                    Password
+                    
+                </label>
+                <input type="password" name="password" id="pass">
+            </div>
+    
+            <div class="formInput">
+                <label for="com-pass">
+                    Confirm Password
+                    
+                </label>
+                <input type="text" name="comfirmPassword" id="com-pass">
+            </div>
+            
+            <input class="submitButtons" type="" value="Create Account">
+        </form>
+        <div class="options">
+            <div class="authButton">
+                <a href="http://localhost:3000">Sign Up Google</a>
+            </div>
+            <div class="authButton">
+                <a href="http://localhost:3000">Sign Up facebook</a>
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+</html>

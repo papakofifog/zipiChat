@@ -1,0 +1,64 @@
+a{
+    text-decoration: none;
+}
+body{
+    background-color:#fdfdfd;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+}
+form{
+    height: auto;
+    padding: 10px;
+}
+label{
+    display: flex;
+    gap:5px
+}
+
+.formInput{
+    margin: 10px;
+}
+
+.formInput input{
+    width: 150px;
+    height: 25px;
+}
+.formContainer{
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  margin-left: auto; 
+  margin-right: auto; 
+  top: 100px;
+  width: 400px; 
+  border-style: 1px solid black;
+}
+.options{
+    display: flex;
+    gap:10px;
+}
+
+
+
+.submitButtons{
+    color: white;
+    padding: 10px;
+    width:35px;
+    background-color:cornflowerblue;
+    width: fit-content;
+    text-align: center;
+    border-style: none;
+}
+
+.authButton{
+    color: white;
+    padding: 10px;
+    width:35px;
+    background-color:cornflowerblue;
+    width: fit-content;
+    text-align: center;
+}
+
+.authButton> a{
+    color: #fdfdfd;
+}
