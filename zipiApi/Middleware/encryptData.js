@@ -6,9 +6,9 @@ async function encryptedPassword(password){
     return encryptedpassword;
 }
 
-async function verifyPassword(existingPassword,incomingPassword){
-    let isPasswordVerified=await bcrypt.compare(existingPassword, incomingPassword).catch((e)=>{
-        next(err);
+async function verifyPassword(incomingPassword,existingPassword){
+    let isPasswordVerified=await bcrypt.compare(incomingPassword,existingPassword).catch((e)=>{
+        next(e);
     });
     return isPasswordVerified;
 }

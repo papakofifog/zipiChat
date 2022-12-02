@@ -23,8 +23,8 @@ app.get('/', (req,res)=>{
 
 //application routes
 app.use('/api',AppRoute);
-app.get('/admin/allUsers', (req,res)=>{
-    return res.json(getAllUsers());
+app.get('/admin/allUsers', async (req,res)=>{
+    return res.json( await getAllUsers());
 })
 
 
