@@ -3,7 +3,8 @@ const { createUser,findOneUser,doesUserExist,checkRegisterDataformat, checkLogin
 const { encryptedPassword, verifyPassword} = require('../Middleware/encryptData');
 const { createToken } = require('../Middleware/JWT');
 const { successMessage, failureMessage } = require('../Middleware/handleResponse')
-
+const passport= require('passport');
+require('../Middleware/google-OAuth20')
 
 const registerUser= async (req,res,next) =>{
     try{
@@ -24,8 +25,8 @@ const loginWithJWT= async (req,res,next) =>{
     try{
         if(checkLoginDataformat(req.body)===false)return res.status(400).json(failureMessage("All inputs required"));
         let user= await findOneUser({email:req.body.email});
-        console.log(req.body.password)
-        const isPasswordVerified= await verifyPassword(user.password,req.body.password)
+        if(!user)return res.json(failureMessage("User does not exist proceed to SignUp"));
+        const isPasswordVerified= await verifyPassword(req.body.password, user.password);
         if(isPasswordVerified){
             const token= await createToken(user);
             return res.json(successMessage('Login Successfull',user,token));
@@ -44,4 +45,31 @@ const showHomePage = (req, res, next) =>{
     }
 }
 
-module.exports= { registerUser, loginWithJWT, showHomePage };
+const registerWithGoogle= (req,res,next)=>{
+    try{
+        passport.authenticate('google', {scope: ['email','profile']});
+    }catch(e){
+        next(e)
+    }
+}
+
+const googleRedirectCallback= (req,res,next) =>{
+    try{
+        passport.authenticate('google',{
+            successRedirect: 'api/registerUser',
+            failureRedirect:'api/failure'
+        })
+    }catch(e){
+        next(e)
+    }
+    
+}
+
+const registerGoogleUser= (req,res,next) =>{
+    console.log(req)
+    return
+}
+
+
+
+module.exports= { registerUser, loginWithJWT, showHomePage,registerWithGoogle,googleRedirectCallback };

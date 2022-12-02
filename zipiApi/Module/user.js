@@ -68,7 +68,6 @@ async function createUser(newUser){
 }
 
 async function findOneUser(user){
-    console.log(user)
     try{
         let existingUser= await ZipiUser.findOne(user).catch((e)=>{
             next(e)
