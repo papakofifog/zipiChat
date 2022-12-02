@@ -44,14 +44,78 @@ const userSchema= new mongoose.Schema({
         of: String
     },
     userPictures: [{url:String}],
-    token:{
-        type:String
-    }
 
 })
 
+let ZipiUser=mongoose.model('User', userSchema);
 
+async function createUser(newUser){
+    try{
+        let newPerson= new ZipiUser({
+            firstname:newUser.firstname,
+            lastname: newUser.lastname,
+            username: newUser.username,
+            email:newUser.email,
+            password: newUser.password,
+            Dob:newUser.Dob
+        });
+        await newPerson.save();
 
-//userSchema.path('userPicture.0.url').get(v=> `${pictureRoot}${v}`);
+    }catch(e){
+        console.error(e)
+    }
+    
+}
 
-module.exports= mongoose.model('User', userSchema);
+async function findOneUser(user){
+    console.log(user)
+    try{
+        let existingUser= await ZipiUser.findOne(user).catch((e)=>{
+            next(e)
+        });
+        return existingUser;
+    }catch(err){
+        console.error(err)
+    }
+}
+
+async function getAllUsers(user){
+    try{
+        let allUsers= await ZipiUser.find().catch((e)=>{
+            next(e);
+        })
+        return allUsers;
+    }catch(err){
+        console.error(err)
+    }
+}
+
+async function doesUserExist(data){
+    try{
+        let user=await ZipiUser.findOne(data);
+        if (!user){
+            return false;
+        }
+        return true;
+    }catch(e){
+        console.error(e)
+    }
+    
+}
+
+function checkRegisterDataformat(data){
+    if (data.hasOwnProperty('firstname')===false||data.hasOwnProperty('lastname')===false|| data.hasOwnProperty('username')===false ||data.hasOwnProperty('email')===false||
+    data.hasOwnProperty('password')==false|| data.hasOwnProperty('Dob')===false){
+        return false
+    }
+    return true
+}
+
+function checkLoginDataformat(data){
+    if ( data.hasOwnProperty('email')===false ||data.hasOwnProperty('password')===false){
+        return false
+    }
+    return true
+}
+
+module.exports= { createUser,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat }

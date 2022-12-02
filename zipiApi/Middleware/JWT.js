@@ -12,16 +12,13 @@ const createToken= (user) =>{
     return accessToken;
 }
 
-const verifyToken = (req,res,next) =>{
+const verifyToken = async (req,res,next) =>{
     try{
-        const  token= req.body.token || req.query.token || req.headers['x-access-token'];
+        const  token= req.body.token || req.query.token || req.headers['access-token'];
         if(!token)return res.status(403).json("A token authentication is needed");
-        const decode= verify(token, process.env['JWTSECRET']);
+        const decode= await verify(token, process.env['JWTSECRET']);
+        
         req.user= decode;
-        /*if (decode){
-            req.authenticated= true;
-            return next();
-        }*/
     }catch(err){
         next(err)
     }

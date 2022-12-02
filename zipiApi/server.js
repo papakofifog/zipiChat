@@ -10,10 +10,11 @@ const errorHandler= require('./Middleware/handleErrors/errorHandler');
 
 const bodyParser= require('body-parser') 
 
-const routeUser= require('./routes/userRoutes');
-const homeRoute = require('./routes/home');
+const AppRoute = require('./routes/applicationRoutes');
 
+const { getAllUsers } = require('./Module/user')
 
+app.use(cors())
 app.use(bodyParser.json())
 
 app.get('/', (req,res)=>{
@@ -21,8 +22,10 @@ app.get('/', (req,res)=>{
 })
 
 //application routes
-app.use('/api',routeUser);
-app.use('/api',homeRoute);
+app.use('/api',AppRoute);
+app.get('/admin/allUsers', (req,res)=>{
+    return res.json(getAllUsers());
+})
 
 
 
