@@ -8,7 +8,7 @@ AppRoute.post("/signUp", registerUser);
 AppRoute.post("/login",loginWithJWT);
 AppRoute.get("/google", registerWithGoogle );
 AppRoute.get("/google/callback",googleRedirectCallback )
-AppRoute.get("/registerUse")
+//AppRoute.get("/registerUse")
 
 
 module.exports= AppRoute;

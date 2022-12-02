@@ -14,7 +14,13 @@
     <header>
       <div class="userHeader">
         <div class="userImage">
-          <img src="http://localhost:3000/:userId/image" alt="Image of user">
+          <script>
+            let user=window.sessionStorage.getItem('user');
+            console.log(JSON.parse(user));
+            let url= `http://localhost:3000/${userId}/image`;
+            
+          </script>
+          <img src="http://localhost:3000//image" alt="Image of user">
         </div>
         <div class="userName">
           <p>Name of the User</p>
