@@ -1,11 +1,5 @@
 function storeAccessToken(data){
-    
-    const user= {
-        userId: data['data']['_id'],
-        username: data['data']['username'],
-        'access-token': data.token
-    }
-    window.sessionStorage.setItem('user',JSON.stringify(user));
+    window.sessionStorage.setItem('access-token',data);
 }
 
 function getLoginFormData(){
@@ -47,10 +41,11 @@ document.querySelector('#login').addEventListener('click', async ()=>{
     let data= await handleLocalRequest(url,Formdata);
     console.log(JSON.stringify(data))
     if (data.success===true){
-        storeAccessToken(data);
+        storeAccessToken(data.token);
         const myHeaders= new Headers();
         let user= window.sessionStorage.getItem('user');
         myHeaders.set('access-token', user['access-token'] )
+        let authetcationData=handleApiRequest('http://localhost:3000/api/welcome')
         window.location.href= '../../main/userHome.html'
     }else{
         return alert("Imvalid Credentials")
@@ -71,13 +66,13 @@ async function handleLocalRequest(url,data) {
 document.querySelector('#googleLogin').addEventListener('click', async ()=>{
     
     url='http://localhost:3000/api/google';
-    await handleGoogleApiRequest(url);
+    await handleApiRequest(url);
 })
 
 
-function handleGoogleApiRequest(url){
-    axios.post(url,data).then((response)=>{
-        console.log(reponse.data);
+function handleApiRequest(url,headers){
+    axios.post(url,headers).then((response)=>{
+        console.log(reponse);
     }).catch((e)=>{
         console.error(e)
     })

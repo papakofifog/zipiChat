@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/authentication.css">
     <title>Document</title>
 </head>
@@ -14,16 +15,16 @@
                 <label for="fname">
                     Firstname
                     
-                </label>
-                <input type="text" name="firstname" id="fname">
+                </label><br>
+                <input type="text" name="firstname" id="fname" placeholder="enter firstname">
             </div>
             
             <div class="formInput">
                 <label for="lname">
                     Lastname
                     
-                </label>
-                <input type="text" name="lastname" id="lname">
+                </label><br>
+                <input type="text" name="lastname" id="lname" placeholder="enter lastname">
             </div>
             
     
@@ -31,51 +32,47 @@
                 <label for="dob">
                     DOB
                     
-                </label>
-                <input type="date" name="dateofbirth" id="dob">
+                </label><br>
+                <input type="date" name="dateofbirth" id="dob" placeholder="select date of birth">
             </div>
     
             <div class="formInput">
                 <label for="uname">
                     username
                     
-                </label>
-                <input type="text" name="username" id="uname" aria-required="true">
+                </label><br>
+                <input type="text" name="username" id="uname" aria-required="true" placeholder="enter username">
             </div>
     
             <div class="formInput">
                 <label for="email">
                     Email
                     
-                </label>
-                <input type="email" name="email" id="email" aria-required="true">
+                </label><br>
+                <input type="email" name="email" id="email" aria-required="true" placeholder="enter email">
             </div>
     
             <div class="formInput">
                 <label for="pass">
                     Password
                     
-                </label>
-                <input type="password" name="password" id="pass" aria-required="true">
+                </label><br>
+                <input type="password" name="password" id="pass" aria-required="true" placeholder="enter password">
             </div>
     
             <div class="formInput">
                 <label for="com-pass">
                     Confirm Password
                     
-                </label>
-                <input type="text" name="comfirmPassword" id="com-pass" aria-required="true">
+                </label><br>
+                <input type="text" name="comfirmPassword" id="com-pass" aria-required="true" placeholder="confirm your password">
             </div>
             
             <input id="register" class="submitButtons" type="button" value="Create Account">
         </form>
         <div class="options">
-            <div class="authButton">
-                <a href="http://localhost:3000/api/google">Sign Up Google</a>
-            </div>
-            <div class="authButton">
-                <a href="http://localhost:3000">Sign Up facebook</a>
-            </div>
+            <input id="googleLogin" class="authButton" type="button" value="Register with Google">
+                <input class="authButton" type="button" value="Register with Facebook">
         </div>
     </div>
     
