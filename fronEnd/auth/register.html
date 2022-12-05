@@ -16,7 +16,8 @@
                     Firstname
                     
                 </label><br>
-                <input type="text" name="firstname" id="fname" placeholder="enter firstname">
+                <input type="text" name="firstname" id="fname" placeholder="enter firstname" required>
+                <p class="error" id="error-fname"> firstname required</p>
             </div>
             
             <div class="formInput">
@@ -24,7 +25,8 @@
                     Lastname
                     
                 </label><br>
-                <input type="text" name="lastname" id="lname" placeholder="enter lastname">
+                <input type="text" name="lastname" id="lname" placeholder="enter lastname" required>
+                <p class='error' id="error-lname">lastname required</p>
             </div>
             
     
@@ -33,7 +35,8 @@
                     DOB
                     
                 </label><br>
-                <input type="date" name="dateofbirth" id="dob" placeholder="select date of birth">
+                <input type="date" name="dateofbirth" id="dob" placeholder="select date of birth" required>
+                <p class='error' id="error-dob">date of birth required</p>
             </div>
     
             <div class="formInput">
@@ -41,7 +44,8 @@
                     username
                     
                 </label><br>
-                <input type="text" name="username" id="uname" aria-required="true" placeholder="enter username">
+                <input type="text" name="username" id="uname" aria-required="true" placeholder="enter username" required>
+                <p  class='error' id="error-uname">username required</p>
             </div>
     
             <div class="formInput">
@@ -49,7 +53,8 @@
                     Email
                     
                 </label><br>
-                <input type="email" name="email" id="email" aria-required="true" placeholder="enter email">
+                <input type="email" name="email" id="email" aria-required="true" placeholder="enter email" required>
+                <p class='error' id="error-email">email is invalid</p>
             </div>
     
             <div class="formInput">
@@ -57,7 +62,15 @@
                     Password
                     
                 </label><br>
-                <input type="password" name="password" id="pass" aria-required="true" placeholder="enter password">
+                <input type="password" name="password" id="pass" aria-required="true" placeholder="enter password" required>
+                <div class='error' id="error-pass">
+                    Password should have at least<ul>
+                        <li>one character</li>
+                        <li>one number</li>
+                        <li>one small letter</li>
+                        <li>one capital letter</li>
+                    </ul>
+                </div>
             </div>
     
             <div class="formInput">
@@ -65,7 +78,8 @@
                     Confirm Password
                     
                 </label><br>
-                <input type="text" name="comfirmPassword" id="com-pass" aria-required="true" placeholder="confirm your password">
+                <input type="password" name="comfirmPassword" id="com-pass" placeholder="confirm your password" required>
+                <p class='error' id="error-com-pass"> Password does not match</p>
             </div>
             
             <input id="register" class="submitButtons" type="button" value="Create Account">
@@ -75,7 +89,7 @@
                 <input class="authButton" type="button" value="Register with Facebook">
         </div>
     </div>
-    
+    <script src="../assets/js/validateRegister.js"></script>
     
 </body>
 </html>

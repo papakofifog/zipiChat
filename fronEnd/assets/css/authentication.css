@@ -39,5 +39,11 @@ input[type=button]{
 input[type=button]:hover{
     border-radius: 10px;
     background-color: cornflowerblue;
+    border: none;
 
+}
+
+.error{
+    color: red;
+    display: none;
 }
