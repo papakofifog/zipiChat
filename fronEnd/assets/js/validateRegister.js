@@ -21,7 +21,7 @@ function comparePasswords(x){
 }
 
 function validateEmail(x){
-    emailRegex= /^\w+@\w+.com$/
+    emailRegex= /^\w+@\w+\.com$/
     emailInputStatus= emailRegex.test(x.value);
     if(emailInputStatus){
         alertSuccess(x);

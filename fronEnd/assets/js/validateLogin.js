@@ -1,17 +1,17 @@
-const emailInput=document.querySelector('#email');
-const passwordInput= document.querySelector('#pass');
-const logIn= document.querySelector('#login');
+let emailInput=document.querySelector('#email');
+let passwordInput= document.querySelector('#pass');
+let logIn= document.querySelector('#login');
 
-function validateEmail(x){
-    emailRegex= /^\w+@\w+.com$/
-    emailInputStatus= emailRegex.test(x.value);
+function validateEmail(input){
+    emailRegex= /^\w+@\w+\.com$/
+    emailInputStatus= emailRegex.test(input.value);
     if(emailInputStatus){
-        showErrorMessage(x);
-        alertSuccess(x);
+        hideErrorMessage(input);
+        alertSuccess(input);
         return true
     }else{
-        hideErrorMessage(x);
-        alertProblem(x);
+        showErrorMessage(input);
+        alertProblem(input);
         return false;
     }
 }
@@ -48,11 +48,11 @@ function validateBoth(){
         x.addEventListener('keyup', ()=>{
             switch(x.type){
                 case 'email':
-                    validateEmail(emailInput);
+                    validateEmail(x);
                     break;
                 
                 case 'password':
-                    validatePassword(passwordInput);
+                    validatePassword(x);
                     break;
                 default:
                     break;
