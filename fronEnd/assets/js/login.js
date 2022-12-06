@@ -1,4 +1,4 @@
-/*function storeAccessToken(data){
+function storeAccessToken(data){
     window.sessionStorage.setItem('access-token',data);
 }
 
@@ -76,4 +76,4 @@ function handleApiRequest(url,headers){
     }).catch((e)=>{
         console.error(e)
     })
-}*/
+}
