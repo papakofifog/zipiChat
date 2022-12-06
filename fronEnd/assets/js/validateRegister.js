@@ -7,6 +7,8 @@ const password= document.querySelector('#pass');
 const confirmPassword= document.querySelector('#com-pass');
 
 const registerButton= document.querySelector('#register');
+import { registerUser } from "./register.js";
+
 
 function comparePasswords(x){
     if(password.value === x.value){
@@ -21,8 +23,8 @@ function comparePasswords(x){
 }
 
 function validateEmail(x){
-    emailRegex= /^\w+@\w+\.com$/
-    emailInputStatus= emailRegex.test(x.value);
+    let emailRegex=/^\w+@\w+\.com$/;
+    let emailInputStatus= emailRegex.test(x.value);
     if(emailInputStatus){
         alertSuccess(x);
         hideErrorMessage(x);
@@ -48,18 +50,75 @@ function validateNames(input){
     }
 }
 
-function validatePassword(x){
-    passwordRegex= /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,16}/;
-    paswordStatus= passwordRegex.test(x.value);
-    if(paswordStatus){
-        alertSuccess(x);
-        hideErrorMessage(x);
-        return true;
+function isPasswordContainSmallLetterValid(x){
+    let smalletterRegex= /(?=.*[a-z])/;
+    if(smalletterRegex.test(x.value)){
+        return isPasswordCapitalLetterValid(x)
     }else{
+        let message= "Pasword should have atleat one lowercase letter";
+        showPasswordErrorMessage(x,message);
         alertProblem(x)
-        showErrorMessage(x);
         return false;
     }
+        
+    
+}
+
+function isPasswordCapitalLetterValid(x){
+    let capitalLeterRegex= /(?=.*[A-Z])/;
+    if(capitalLeterRegex.test(x.value)){
+        return isPasswordNumericallyValid(x)
+    }else{
+        let message= "Password should have atleast one uppercase letter";
+        showPasswordErrorMessage(x, message);
+        alertProblem(x)
+        return false;
+    }
+}
+
+function isPasswordNumericallyValid(x){
+    let numericalLetterRegex= /(?=.*[0-9])/;
+    if(numericalLetterRegex.test(x.value)){
+        return isPasswordSybolValid(x);
+    }else{
+        let message= "Password should have atleast one number";
+        alertProblem(x)
+        return false;
+    }
+}
+
+function isPasswordSybolValid(x){
+    let symbolRegex= /(?=.*[!@#$%^&*_=+-])/;
+    if(symbolRegex.test(x.value)){
+        return isPasswordSizeValid(x);
+    }else{
+        let message="Password should have atleast one symbol";
+        showPasswordErrorMessage(x, message);
+        alertProblem(x)
+        return false;
+    }
+}
+
+function isPasswordSizeValid(x){
+    let passwordSizeRegex= /.{8,16}/;
+    
+    if(passwordSizeRegex.test(x.value)){
+        return validatePassword(x);
+    }else{
+        let message= "Password should be 8-16 chars long";
+        showPasswordErrorMessage(x,message);
+        alertProblem(x)
+        return false;
+    }
+   
+    
+}
+
+function validatePassword(x){
+    alertSuccess(x);
+    hideErrorMessage(x);
+    return true;
+    
 }
 
 function validateInteractively(){
@@ -88,7 +147,7 @@ function validateInteractively(){
                 
                 x.addEventListener('keyup',()=>{
                     if (x.id=== 'pass'){
-                        validatePassword(x)
+                        isPasswordContainSmallLetterValid(x)
                     }else{
                         comparePasswords(x)
                     }
@@ -107,6 +166,12 @@ validateInteractively();
 function showErrorMessage(inputId){
     return document.querySelector('#error-'+inputId.id).style.display='block';
 }
+
+function showPasswordErrorMessage(inputId,message){
+    document.querySelector('#error-'+inputId.id).innerHTML=message;
+    return document.querySelector('#error-'+inputId.id).style.display='block';
+}
+
 
 function hideErrorMessage(inputId){
     return document.querySelector('#error-'+inputId.id).style.display='none';
@@ -128,18 +193,33 @@ function isNameInputsEmpty(){
     return false;
 }
 
+function showErrorServerErrorMessage(message){
+    return document.querySelector('server-message').innerHTML=message
+}
 
+function storeUserToken(){
+    
+}
 
-function registerUser(){
+function validateRegistrationInputs(){
     registerButton.addEventListener('click', function validateAllInputs(){
        if(isNameInputsEmpty() && validateEmail(email) && validatePassword(password) && comparePasswords(confirmPassword)){
-        // send the request to create the account
-        console.log("We are good")
+        // send the request to create the 
+        console.log("hi")
+        let results= registerUser().then((response)=>{
+            console.log(response);
+        });
+        
+        if(results.status = true){
+            return window.location.href='../../auth/login.html'
+        }
        }else{
         // 
-        console.log('We are not good')
+
+        return showErrorMessage(results.message);
        }
     })
 }
 
-registerUser();
+validateRegistrationInputs();
+

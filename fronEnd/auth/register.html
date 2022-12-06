@@ -9,6 +9,7 @@
     <title>Document</title>
 </head>
 <body>
+    <p id="server-message"></p>
     <div class="formContainer">
         <form action="http://localhost:3000/api/register" method="post">
             <div class="formInput">
@@ -89,7 +90,10 @@
                 <input class="authButton" type="button" value="Register with Facebook">
         </div>
     </div>
-    <script src="../assets/js/validateRegister.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="module" src="../assets/js/validateRegister.js"></script>
+    <script type="module" src="../assets/js/register.js"></script>
+    
     
 </body>
 </html>
