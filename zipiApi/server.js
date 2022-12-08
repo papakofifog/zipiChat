@@ -14,12 +14,14 @@ const bodyParser= require('body-parser')
 
 const AppRoute = require('./routes/applicationRoutes');
 
-//const ChatRoute= require('./routes/chatRoutes')
+const ChatRouter= require('./routes/chatRoutes')
 
 
 
 const { getAllUsers } = require('./Module/user');
 const UserRoute = require('./routes/userRoutes');
+
+
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -42,7 +44,7 @@ app.get('/admin/allUsers', async (req,res)=>{
 app.use('/users', UserRoute);
 
 // chat routes
-//app.use('/chat',ChatRoute);
+app.use('/convo',ChatRouter);
 
 
 

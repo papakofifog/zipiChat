@@ -29,7 +29,7 @@ const loginWithJWT= async (req,res,next) =>{
         const isPasswordVerified= await verifyPassword(req.body.password, user.password);
         if(isPasswordVerified){
             const token= await createToken(user);
-            return res.json(successMessage('Login Successfull',user,token));
+            return res.json(successMessage('Login Successfull',user="User verified",token));
         }
         return res.json(failureMessage("Invalid username or password"));
     }catch(err){
