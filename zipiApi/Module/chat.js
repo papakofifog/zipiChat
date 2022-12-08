@@ -15,26 +15,36 @@ const chats= new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'user'
     }
-});
+    
+}, {timestamps: true}
+);
 
 let chatSchema= mongoose.model('chat', chats);
 
 async function addChat(data){
-    let convo= new chatSchema({
-        message:data.message,
-        sender_id: data.sender_id,
-        receiver_id:data.receiver_id
-    });
-    await convo.save().catch((e)=>{
-        console.error(e);
-    })
+    try{
+        let convo= new chatSchema({
+            message:data.message,
+            sender_id: data.sender_id,
+            receiver_id:data.receiver_id
+        });
+        await convo.save();
+        return true;
+    }catch(e){
+        console.error(e)
+        return false;
+    } 
 }
 
 async function retriveChats(sender,receiver){
-   let retrivedChats=await chatSchema.find({sender_id:sender, receiver_id:receiver}). catch((e)=>{
-    console.error(e)
-   })
-   return retrivedChats;
+   try{
+        let retrivedChats=await chatSchema.find({sender_id:sender, receiver_id:receiver});
+        return retrivedChats;
+
+   }catch(e){
+        console.error(e)
+        return false;
+   }
 }
 
 async function deleteOneChat(convoId){
