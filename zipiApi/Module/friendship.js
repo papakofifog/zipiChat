@@ -1,14 +1,17 @@
-const { default: mongoose, default: mongoose, default: mongoose } = require('mongoose');
-const mongoose= require('mongoose');
+const mongoose = require('mongoose');
 
 const friendSchema = new mongoose.Schema({
     userId:{
         type: mongoose.Types.ObjectId,
-        ref: 'user'
+        ref: 'user',
+        unique: true,
+        required: (true, "user reference is required")
     },
-    userFriend: {
-        type: mongoose.Types.ObjectId,
-        ref:'user'
+    userFriendId: {
+        type: [mongoose.Types.ObjectId],
+        ref:'user',
+        required: (true, "friend reference is required"),
+        unique: true
     }
 });
 
@@ -16,21 +19,68 @@ let friendshipSchema= mongoose.model('friend', friendSchema);
 
 
 async function retriveUserFriends(userID){
-    let friends= await friendshipSchema.find({userId:userID}).catch((e)=>{
-        console.error(e);
-    });
-    return friends;
-}
-
-async function addAfriend(data){
-    let newFriend= new friendshipSchema({
-        userId:data.userId,
-        userFriend:data.userFriend
-    });
-
-    await newFriend.save().catch((e)=>{
+    try{
+        let friends= await friendshipSchema.find({userId:userID});
+        return friends;
+    }catch(e){
         console.error(e)
-    })
+    }
+    
+}
+async function doesUserHaveRelationship(userID){
+    try{
+        let user= await friendshipSchema.findOne({userId:userID});
+        return user;
+    }catch(e){
+        console.error(e)
+    }
 }
 
-module.exports=  { retriveUserFriends, addAfriend }
+
+
+async function getUserNumberFriends(userID){
+    let friends= await retriveUserFriends(userID).catch((e)=>{
+        console.error(e)
+    });
+    return friends.length;
+}
+
+async function addRelationship(data){
+    try{
+            let newFriend= new friendshipSchema({
+            "userId":data.userId,
+            userFriendId:data.friendId
+        });
+        await newFriend.save()
+    }catch(e){
+        console.error(e)
+    }
+    
+}
+
+async function addNewFriend(user){
+    user.userFriendId.push(data.friendId);
+    user.save();
+}
+
+
+
+async function addAfriend(data,next){
+    try{
+        let user= await doesUserHaveRelationship(data.userId);
+        if(user){
+            if(user.userFriendId.includes(data.friendId)===true){
+                return false;
+            } 
+            await addNewFriend(user);
+            return true
+        }else{
+            await addRelationship(data);
+            return true;
+        } 
+    }catch(e){
+        return next(e)
+    }
+}
+
+module.exports=  { retriveUserFriends, getUserNumberFriends, addAfriend }

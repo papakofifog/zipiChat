@@ -1,9 +1,9 @@
 const mongoose= require('mongoose')
 require('dotenv').config()
 
-const connectToZipiDB=()=>{
+const connectToZipiDB= async()=>{
     try{
-        let dbConnection= mongoose.connect(process.env['DB_SECRET'],
+        let dbConnection= await mongoose.connect(process.env['DB_SECRET'],
         {useNewUrlParser: true,useUnifiedTopology: true},()=>{
             console.log("Connected to the database Successfully")
         });

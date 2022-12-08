@@ -67,6 +67,17 @@ async function createUser(newUser){
     
 }
 
+async function findOneUserById(userId){
+    try{
+        let existingUser= await ZipiUser.findById(userId).catch((e)=>{
+            console.error(e)
+        })
+        return existingUser;
+    }catch(e){
+        console.error(e)
+    }
+}
+
 async function findOneUser(user){
     try{
         let existingUser= await ZipiUser.findOne(user).catch((e)=>{
@@ -117,4 +128,4 @@ function checkLoginDataformat(data){
     return true
 }
 
-module.exports= { createUser,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat }
+module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat }
