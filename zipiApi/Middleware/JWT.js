@@ -1,5 +1,7 @@
 require('dotenv').config();
-const { sign, verify}= require('jsonwebtoken');
+const { sign, verify,}= require('jsonwebtoken');
+const decodeJwtT= require('jwt-decode');
+
 
 const createToken= (user) =>{
     const accessToken = sign(
@@ -27,5 +29,22 @@ const verifyToken = async (req,res,next) =>{
 }
 
 
+const decryptToken = async(token)=>{
+    try{
+        let codeBreakdown= await decodeJwtT(token);
 
-module.exports= { createToken, verifyToken };
+        let userId=codeBreakdown.id;
+        return userId;
+    }catch(e){
+        next(e)
+    }
+    
+}
+
+
+module.exports= { createToken, verifyToken, decryptToken };
+
+
+
+
+

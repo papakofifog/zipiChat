@@ -14,4 +14,11 @@ function failureMessage(message){
     }
 }
 
-module.exports = { successMessage, failureMessage };
+function userSuccess(data){
+    return {
+        'success': true,
+        'data': data
+    }
+}
+
+module.exports = { successMessage, failureMessage, userSuccess };
