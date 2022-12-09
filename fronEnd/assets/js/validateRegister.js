@@ -201,9 +201,6 @@ function showErrorServerErrorMessage(message){
 }
 
 function showRegisterToast(message,color){
-    setTimeout(function(){
-        window.location.href="../../auth/login.html";
-      },5000)
     Toastify({
         text: message,
         duration: 4000,
@@ -224,7 +221,6 @@ function showRegisterToast(message,color){
         onClick: function(){} // Callback after click
       }).showToast();
       
-      
 }
 
 function validateRegistrationInputs(){
@@ -234,15 +230,17 @@ function validateRegistrationInputs(){
         let results= await registerUser();
         console.log(results)
         let registerStatus=document.querySelector('.server-message');
-        //console.log(registerStatus)
+        
         if(results.data.status === true){
-            //console.log(results.data)
+            
             showRegisterToast(results.data.message,'green');
+            setTimeout(function(){
+                window.location.href="../../auth/login.html";
+              },5000)
         }else{
             // request failed
-            console.log("hey bby")
             showRegisterToast(results.data.message, 'red');
-
+            
             //return;
         }
         
