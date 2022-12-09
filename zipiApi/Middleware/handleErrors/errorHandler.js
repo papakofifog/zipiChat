@@ -2,7 +2,7 @@ const ErrorResponse = require('../../util/errorResponse')
 
 const errorHandler= async (err, req, res, next)=>{
     console.error(err);
-
+    console.log(err.code);
     let error = {...err}
 
     error.message= err.message;
@@ -13,15 +13,16 @@ const errorHandler= async (err, req, res, next)=>{
         processError(message)
 
     }
-    if(err.code=== 11000){
-        message="Duplicate field value entered"
-        processError(message)
+    if(err.code == 11000){
+        let concernedItem=Object.keys(err.keyValue)[0];
+        message=`${ concernedItem } value is already taken`;
+        error.message=processError(message).message
     }
-    if(err.name=== 'ValidationError'){
+    if(err.name === 'ValidationError'){
         let message= Object.values(err.errors).map(value =>value.message)
-        processError(message)
+        error.message=processError(message).message
     }
-
+    
     res.status(error.statusCode || 500).json({
         success: false,
         error:error.message || 'Server Error'
