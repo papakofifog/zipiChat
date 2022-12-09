@@ -2,6 +2,7 @@
 const mongoose= require('mongoose')
 const pictureRoot= 'cloudinarySomething';
 const toLower= require('../Util/helperfunctions')
+const errorHandler= require('../Middleware/handleErrors/errorHandler')
 
 
 const userSchema= new mongoose.Schema({
@@ -19,10 +20,7 @@ const userSchema= new mongoose.Schema({
     },
     username:{
         type: String,
-        required: (true, "username is requred"),
         max_length: 50,
-        unique: true
-
     },
     email: {
         type: String,
@@ -60,7 +58,6 @@ async function createUser(newUser){
             Dob:newUser.Dob
         });
         await newPerson.save();
-
     }catch(e){
         console.error(e)
     }
@@ -85,7 +82,7 @@ async function findOneUser(user){
         });
         return existingUser;
     }catch(err){
-        console.error(err)
+        console.error(e)
     }
 }
 
@@ -96,7 +93,7 @@ async function getAllUsers(user){
         })
         return allUsers;
     }catch(err){
-        console.error(err)
+        console.error(e)
     }
 }
 
@@ -108,7 +105,7 @@ async function doesUserExist(data){
         }
         return true;
     }catch(e){
-        console.error(e)
+        return errorHandler(e)
     }
     
 }

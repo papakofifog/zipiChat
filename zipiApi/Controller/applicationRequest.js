@@ -10,12 +10,13 @@ const registerUser= async (req,res,next) =>{
     try{
         if(!(checkRegisterDataformat(req.body)))return res.json(failureMessage("All inputs requred"));
         let existingUser= await doesUserExist({email:req.body.email});
-        if(existingUser)return res.json(failureMessage("User already exist proceed to Login"))
-        req.body.password= await encryptedPassword(req.body.password)
-        const newUser= await createUser(req.body)
+        if(existingUser) return res.json(failureMessage("User already exist proceed to Login"))
+        req.body.password= await encryptedPassword(req.body.password,next)
+        newUser= createUser(req.body);
+        //if(newUser) return next(newUser);
         return res.json(successMessage("User Registered",newUser))
     }catch(err){
-        next(err)
+        return next(err)
     }
     
 }
