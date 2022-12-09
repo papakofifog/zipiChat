@@ -7,6 +7,9 @@ const password= document.querySelector('#pass');
 const confirmPassword= document.querySelector('#com-pass');
 
 const registerButton= document.querySelector('#register');
+
+
+
 import { registerUser } from "./register.js";
 
 
@@ -197,26 +200,52 @@ function showErrorServerErrorMessage(message){
     return document.querySelector('server-message').innerHTML=message
 }
 
-function storeUserToken(){
-    
+function showRegisterToast(message,color){
+    setTimeout(function(){
+        window.location.href="../../auth/login.html";
+      },5000)
+    Toastify({
+        text: message,
+        duration: 4000,
+        //destination: "../../auth/login.html",
+        newWindow: true,
+        offset: {
+            x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+            y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+          },
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "left", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+          background: "linear-gradient(to right, #00b09b, #96c93d)",
+          color:color
+        },
+        onClick: function(){} // Callback after click
+      }).showToast();
+      
+      
 }
 
 function validateRegistrationInputs(){
-    registerButton.addEventListener('click', function validateAllInputs(){
+    registerButton.addEventListener('click', async function validateAllInputs(){
        if(isNameInputsEmpty() && validateEmail(email) && validatePassword(password) && comparePasswords(confirmPassword)){
         // send the request to create the 
-        console.log("hi")
-        let results= registerUser().then((response)=>{
-            console.log(response);
-        });
-        
-        if(results.status = true){
-            return window.location.href='../../auth/login.html'
-        }
-       }else{
-        // 
+        let results= await registerUser();
+        console.log(results)
+        let registerStatus=document.querySelector('.server-message');
+        //console.log(registerStatus)
+        if(results.data.status === true){
+            //console.log(results.data)
+            showRegisterToast(results.data.message,'green');
+        }else{
+            // request failed
+            console.log("hey bby")
+            showRegisterToast(results.data.message, 'red');
 
-        return showErrorMessage(results.message);
+            //return;
+        }
+        
        }
     })
 }

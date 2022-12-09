@@ -1,11 +1,3 @@
-async function postRequest(url,data){
-   await axios.post(url,data).then((received)=>{
-    return received;
-   }).catch((e)=>{
-    console.error(e)
-   });
-}
-
 function getFormData(){
     let arr=[];
     document.querySelectorAll('input').forEach((x)=>{
@@ -17,7 +9,7 @@ function getFormData(){
     return arr;
 }
 
-function registerUser(){
+async function registerUser(){
         let url='http://localhost:3000/api/signUp';
         let registerData= getFormData();
         let data = {
@@ -30,11 +22,17 @@ function registerUser(){
 
         }
         
-        let results= postRequest(url,data);
+        let results= await postRequest(url,data);
         
-    return results;
+        return results;
 
 
 }
+
+async function postRequest(url,data){
+    let registerData=await axios.post(url,data);
+    return registerData;
+ 
+ }
 
 export { registerUser }

@@ -1,10 +1,11 @@
 let emailInput=document.querySelector('#email');
 let passwordInput= document.querySelector('#pass');
 let logIn= document.querySelector('#login');
+import { LoginUser } from "./login.js";
 
 function validateEmail(input){
-    emailRegex= /^\w+@\w+\.com$/
-    emailInputStatus= emailRegex.test(input.value);
+    let emailRegex= /^\w+@\w+\.com$/
+    let emailInputStatus= emailRegex.test(input.value);
     if(emailInputStatus){
         hideErrorMessage(input);
         alertSuccess(input);
@@ -68,17 +69,19 @@ validateBoth();
 
 
 function validateLogin(){
-    logIn.addEventListener('click', ()=>{
-        if(validateEmail(emailInput) && validatePassword(passwordInput)){
-            // we good to send the request
-            console.log('we good')
-        }
-        else{
-            // we are not good to send the request
-            console.log('we aint good')
-        }
-
-    })
+    try{
+        logIn.addEventListener('click', async ()=>{
+            if(validateEmail(emailInput) && validatePassword(passwordInput)){
+                // we good to send the request
+                await LoginUser(); 
+            }
+            return false;
+    
+        })
+    }catch(e){
+        console.error(e)
+    }
+    
 }
 
 validateLogin();

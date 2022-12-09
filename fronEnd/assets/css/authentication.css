@@ -47,3 +47,16 @@ input[type=button]:hover{
     color: red;
     display: none;
 }
+.server-message{
+    display: none;
+}
+
+.registerSuccess{
+    display: block;
+    color: green;
+}
+
+.registerFailure{
+    display: block;
+    color: red;
+}
