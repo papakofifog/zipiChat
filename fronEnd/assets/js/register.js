@@ -3,7 +3,8 @@ import { showInformationToast, createSpinner, createToastImage } from "./toaster
 let registerForm= document.querySelector('#registerForm');
 let windowBody= document.querySelector('body');
 let usernameInput= document.querySelector('#uname');
-
+let succesImg= "/assets/svg/success-check.svg";
+let failureImg= "/assets/svg/failure-check.svg";
 
 
 
@@ -11,8 +12,7 @@ function getFormData(){
     let arr=[];
     document.querySelectorAll('input').forEach((x)=>{
         if(x.type!='button' && x.id!='com-pass'){
-            arr.push(x.value)
-            
+            arr.push(x.value)   
         }
     });
     return arr;
@@ -38,6 +38,7 @@ function AlterToast(message,badge){
     document.querySelector('#tC').appendChild(statusImage);
 }
 
+
 async function registerUser(){
         let url='http://localhost:3000/api/signUp';
         let registerData= getFormData();
@@ -53,8 +54,7 @@ async function registerUser(){
         showOpaqueBackground();
         
         let results= await postRequest(url,data);
-        let succesImg= "/assets/svg/success-check.svg";
-        let failureImg= "/assets/svg/failure-check.svg";
+        
         
         if(results.data.success === true){
             AlterToast(results.data.message,succesImg);
