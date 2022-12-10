@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { findOneUserById } = require('./user');
 
 const friendSchema = new mongoose.Schema({
     userId:{
@@ -27,6 +28,22 @@ async function retriveUserFriends(userID){
     }
     
 }
+
+async function getFriendsDetails(userID){
+    try{
+        let friends= await retriveUserFriends(userID);
+        let friendDetails= [];
+        friends.userFriendId.forEach((f),()=>{
+            let user=findOneUserById(f);
+            friendDetails.push(user);
+        })
+        friends.userFriendId=friendDetails;
+        return friends;
+    }catch(e){
+        console.error(e)
+    }
+}
+
 async function doesUserHaveRelationship(userID){
     try{
         let user= await friendshipSchema.findOne({userId:userID});
@@ -83,4 +100,4 @@ async function addAfriend(data,next){
     }
 }
 
-module.exports=  { retriveUserFriends, getUserNumberFriends, addAfriend }
+module.exports=  { retriveUserFriends, getFriendsDetails, getUserNumberFriends, addAfriend }
