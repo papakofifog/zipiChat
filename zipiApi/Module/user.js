@@ -21,6 +21,7 @@ const userSchema= new mongoose.Schema({
     username:{
         type: String,
         max_length: 50,
+        unique:true,
     },
     email: {
         type: String,
@@ -37,7 +38,7 @@ const userSchema= new mongoose.Schema({
         type: String,
         required: (true, "Your Date of birth is required"),
     },
-    SocialMediaHnadles:{
+    SocialMediaHandles:{
         type: Map,
         of: String
     },
@@ -47,7 +48,7 @@ const userSchema= new mongoose.Schema({
 
 let ZipiUser=mongoose.model('User', userSchema);
 
-async function createUser(newUser){
+async function createUser(newUser,next){
     try{
         let newPerson= new ZipiUser({
             firstname:newUser.firstname,
@@ -59,7 +60,7 @@ async function createUser(newUser){
         });
         await newPerson.save();
     }catch(e){
-        console.error(e)
+        return e
     }
     
 }
