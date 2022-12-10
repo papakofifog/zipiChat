@@ -3,6 +3,7 @@ const { decryptToken }= require('../Middleware/JWT');
 const { retriveUserFriends, getUserNumberFriends, addAfriend }= require('../Module/friendship');
 const { userSuccess, successMessage, failureMessage}= require('../Middleware/handleResponse')
 
+
 async function getActiveUser(req,res,next){
     try{
         let userId= await decryptToken(req.headers['access-token']);
@@ -63,6 +64,8 @@ async function createFriend(req,res,next){
     
     
 }
+
+
 
 // next code we will implement adding a friend.
 

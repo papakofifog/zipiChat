@@ -2,7 +2,7 @@ require('dotenv').config();
 const { createUser,findOneUser,doesUserExist,checkRegisterDataformat, checkLoginDataformat }= require('../Module/user')
 const { encryptedPassword, verifyPassword} = require('../Middleware/encryptData');
 const { createToken } = require('../Middleware/JWT');
-const { successMessage, failureMessage } = require('../Middleware/handleResponse')
+const { successMessage, failureMessage, success, failure } = require('../Middleware/handleResponse')
 const passport= require('passport');
 require('../Middleware/google-OAuth20')
 
@@ -10,10 +10,10 @@ const registerUser= async (req,res,next) =>{
     try{
         if(!(checkRegisterDataformat(req.body)))return res.json(failureMessage("All inputs requred"));
         let existingUser= await doesUserExist({email:req.body.email});
-        if(existingUser) return res.json(failureMessage("User already exist proceed to Login"))
+        if(existingUser) return res.json(successMessage("User exists proceeding to login"))
         req.body.password= await encryptedPassword(req.body.password,next)
-        newUser= createUser(req.body);
-        //if(newUser) return next(newUser);
+        newUser= await createUser(req.body,next);
+        if(newUser) return next(newUser);
         return res.json(successMessage("User Registered",newUser))
     }catch(err){
         return next(err)
@@ -21,6 +21,18 @@ const registerUser= async (req,res,next) =>{
     
 }
 
+async function checkUserName(req,res,next){
+    try{
+        let userName=req.query.username;
+        let existingUserName= await doesUserExist({username:userName});
+        if (existingUserName){
+            return res.json(failure);
+        }
+        return res.json(success)
+    }catch(e){
+        return next(e);
+    }
+}
 
 const loginWithJWT= async (req,res,next) =>{
     try{
@@ -73,4 +85,4 @@ const registerGoogleUser= (req,res,next) =>{
 
 
 
-module.exports= { registerUser, loginWithJWT, showHomePage,registerWithGoogle,googleRedirectCallback };
+module.exports= { registerUser, checkUserName, loginWithJWT, showHomePage,registerWithGoogle,googleRedirectCallback };

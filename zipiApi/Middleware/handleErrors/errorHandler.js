@@ -23,9 +23,9 @@ const errorHandler= async (err, req, res, next)=>{
         error.message=processError(message).message
     }
     
-    res.status(error.statusCode || 500).json({
+    res.status(error.statusCode || 200).json({
         success: false,
-        error:error.message || 'Server Error'
+        message:error.message || 'Server Error'
     })
 
     

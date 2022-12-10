@@ -24,4 +24,18 @@ function userSuccess(data){
     }
 }
 
-module.exports = { successMessage, failureMessage, userSuccess };
+function success(){
+    let result= new Object({
+        success: true
+    })
+    return result;
+}
+
+function failure(){
+    let result= new Object({
+        success: false
+    })
+    return result;
+}
+
+module.exports = { successMessage, failureMessage, userSuccess, success, failure };
