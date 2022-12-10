@@ -1,6 +1,6 @@
 const { findOneUserById }= require('../Module/user');
 const { decryptToken }= require('../Middleware/JWT');
-const { retriveUserFriends, getUserNumberFriends, addAfriend }= require('../Module/friendship');
+const { getFriendsDetails, getUserNumberFriends, addAfriend }= require('../Module/friendship');
 const { userSuccess, successMessage, failureMessage}= require('../Middleware/handleResponse')
 
 
@@ -22,7 +22,7 @@ async function getActiveUser(req,res,next){
             email: user.email,
             Dob:user.Dob,
             friendCount: numberOfFriends,
-            pictures:user.userPictures
+            pictures:user.userPictures[0]||''
         }
         return res.status(200).json(userSuccess(returnUser));
     }catch(e){
@@ -34,7 +34,7 @@ async function getActiveUser(req,res,next){
 async function getFriends(req,res,next){
     try{
         let userId= await decryptToken(req.headers['access-token']);
-        let userFriends= await retriveUserFriends(userId);
+        let userFriends= await getFriendsDetails(userId);
         return res.status(200).json(userSuccess(userFriends));
     }catch(e){
         next(e)
