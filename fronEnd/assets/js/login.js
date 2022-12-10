@@ -1,4 +1,10 @@
-const loginStatusFeedbackElement=document.querySelector('#loginStatus');
+import { showInformationToast, createSpinner, createToastImage } from './toaster.js'
+
+let loginFormContainer= document.querySelector('#loginFormContainer');
+let workingBody= document.querySelector('body');
+let successImg= '/assets/svg/success-check.svg';
+let failureImg='/assets/svg/failure-check.svg';
+
 
 function storeAccessToken(data){
     return window.sessionStorage.setItem('access-token',data);
@@ -15,51 +21,58 @@ function getLoginFormData(){
     return data;
 }
 
+function showOpaqueLoginBackground(){
+    loginFormContainer.style.display='none';
+    workingBody.classList.add('opaqueBody');
+    workingBody.appendChild(showInformationToast('Authenticating User'));
 
-
-function showLoginToast(message,color){
-    Toastify({
-        text: message,
-        duration: 4000,
-        //destination: "../../auth/login.html",
-        newWindow: true,
-        offset: {
-            x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
-            y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
-          },
-        close: true,
-        gravity: "top", // `top` or `bottom`
-        position: "left", // `left`, `center` or `right`
-        //stopOnFocus: true, // Prevents dismissing of toast on hover
-        style: {
-          background: "linear-gradient(to right, #00b09b, #96c93d)",
-          color:color
-        },
-        //onClick: function(){} // Callback after click
-      }).showToast();
-      
 }
+
+function showLoginSpinner(){
+    let loginSpinner=createSpinner();
+    let toast= document.querySelector('#tC');
+    workingBody.removeChild(toast);
+    workingBody.appendChild(loginSpinner);
+}
+
+function removeOpaqueLoginBackground(){
+    window.location.reload();
+}
+
+function AlterLoginToast(message,badge){
+    let toastItem= document.querySelector('#tT');
+    toastItem.innerHTML=message;
+    let statusImage=createToastImage(badge,'successImage');
+    document.querySelector('#tC').appendChild(statusImage);
+}
+
 
 
 async function LoginUser(){
     let Formdata=getLoginFormData();
     let url="http://localhost:3000/api/login";
+
+    showOpaqueLoginBackground();
+
     let results= await handleLocalRequest(url,Formdata);
-    //console.log(results.data.message)
+    
     if (results.data.success===true){
         storeAccessToken(results.token);
         const myHeaders= new Headers();
         let user= window.sessionStorage.getItem('access-token');
         myHeaders.set('access-token', user['access-token'] )
-        showLoginToast(results.data.message,'rgb(0, 128, 0)');
+        setTimeout(function(){
+            AlterLoginToast(results.data.message,successImg)
+        },1000)
         setTimeout(function(){
             window.location.href= '../../main/userHome.html';
-        },4000)
+        },2000)
                 
     }else{
+        AlterLoginToast(results.data.message,failureImg)
         setTimeout(function(){
-            showLoginToast(results.data.message,'rgb(128,0,0)');
-        },5000)
+            removeOpaqueLoginBackground()
+        },2000)
 
     }
 }
