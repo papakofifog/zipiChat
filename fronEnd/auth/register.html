@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/authentication.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
     <title>Document</title>
 </head>
 <body>
     
-    <div class="formContainer">
-        <p  class="server-message">Hello</p>
+    <div id="registerForm" class="formContainer">
         <form action="http://localhost:3000/api/register" method="post">
             <div class="formInput">
                 <label for="fname">
@@ -93,8 +93,10 @@
         </div>
     </div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../assets/js/toaster.js"></script>
     <script type="module" src="../assets/js/validateRegister.js"></script>
+
     <script type="module" src="../assets/js/register.js"></script>
     <script>
         if ( window.history.replaceState ) {

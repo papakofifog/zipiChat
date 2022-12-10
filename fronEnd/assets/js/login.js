@@ -30,12 +30,12 @@ function showLoginToast(message,color){
         close: true,
         gravity: "top", // `top` or `bottom`
         position: "left", // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
+        //stopOnFocus: true, // Prevents dismissing of toast on hover
         style: {
           background: "linear-gradient(to right, #00b09b, #96c93d)",
           color:color
         },
-        onClick: function(){} // Callback after click
+        //onClick: function(){} // Callback after click
       }).showToast();
       
 }
@@ -45,21 +45,20 @@ async function LoginUser(){
     let Formdata=getLoginFormData();
     let url="http://localhost:3000/api/login";
     let results= await handleLocalRequest(url,Formdata);
-    if (results.success===true){
+    //console.log(results.data.message)
+    if (results.data.success===true){
         storeAccessToken(results.token);
         const myHeaders= new Headers();
         let user= window.sessionStorage.getItem('access-token');
         myHeaders.set('access-token', user['access-token'] )
+        showLoginToast(results.data.message,'rgb(0, 128, 0)');
         setTimeout(function(){
-            showLoginToast(results.message,'rgb(0, 128, 0)');
-
-            setTimeout(function(){
-                window.location.href= '../../main/userHome.html';
-            },4000)
-        },5000)
+            window.location.href= '../../main/userHome.html';
+        },4000)
+                
     }else{
         setTimeout(function(){
-            showLoginToast(results.message,'rgb(128,0,0)');
+            showLoginToast(results.data.message,'rgb(128,0,0)');
         },5000)
 
     }

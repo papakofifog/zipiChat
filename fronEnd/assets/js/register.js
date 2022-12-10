@@ -1,3 +1,12 @@
+import { showInformationToast, createSpinner, createToastImage } from "./toaster.js";
+
+let registerForm= document.querySelector('#registerForm');
+let windowBody= document.querySelector('body');
+let usernameInput= document.querySelector('#uname');
+
+
+
+
 function getFormData(){
     let arr=[];
     document.querySelectorAll('input').forEach((x)=>{
@@ -7,6 +16,26 @@ function getFormData(){
         }
     });
     return arr;
+}
+
+function showOpaqueBackground(){
+    registerForm.style.display='none'
+    windowBody.classList.add('opaqueBody');
+    windowBody.appendChild(showInformationToast('User Registration Underway'));
+}
+
+function removeOpaqueBackground(){
+    registerForm.style.display='block';
+    windowBody.classList.remove('opaqueBody');
+    let toastContianer= document.querySelector('#tC');
+    windowBody.removeChild(toastContianer);
+}
+
+function AlterToast(message,badge){
+    let toastItem= document.querySelector('#tT');
+    toastItem.innerHTML=message;
+    let statusImage=createToastImage(badge,'successImage');
+    document.querySelector('#tC').appendChild(statusImage);
 }
 
 async function registerUser(){
@@ -21,10 +50,23 @@ async function registerUser(){
             password:registerData[5],
 
         }
+        showOpaqueBackground();
         
         let results= await postRequest(url,data);
+        let succesImg= "/assets/svg/success-check.svg";
+        let failureImg= "/assets/svg/failure-check.svg";
         
-        return results;
+        if(results.data.success === true){
+            AlterToast(results.data.message,succesImg);
+            setTimeout(function(){
+                window.location.href='../../auth/login.html';
+            },3000)
+        }else{
+            AlterToast(results.data.message,failureImg);
+            setTimeout(function(){
+                removeOpaqueBackground()
+            },1000)
+        }
 
 
 }

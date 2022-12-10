@@ -200,52 +200,21 @@ function showErrorServerErrorMessage(message){
     return document.querySelector('server-message').innerHTML=message
 }
 
-function showRegisterToast(message,color){
-    Toastify({
-        text: message,
-        duration: 4000,
-        //destination: "../../auth/login.html",
-        newWindow: true,
-        offset: {
-            x: 50, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
-            y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
-          },
-        close: true,
-        gravity: "top", // `top` or `bottom`
-        position: "left", // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-        style: {
-          background: "linear-gradient(to right, #00b09b, #96c93d)",
-          color:color
-        },
-        onClick: function(){} // Callback after click
-      }).showToast();
-      
-}
 
 function validateRegistrationInputs(){
-    registerButton.addEventListener('click', async function validateAllInputs(){
-       if(isNameInputsEmpty() && validateEmail(email) && validatePassword(password) && comparePasswords(confirmPassword)){
-        // send the request to create the 
-        let results= await registerUser();
-        console.log(results)
-        let registerStatus=document.querySelector('.server-message');
-        
-        if(results.data.status === true){
-            
-            showRegisterToast(results.data.message,'green');
-            setTimeout(function(){
-                window.location.href="../../auth/login.html";
-              },5000)
-        }else{
-            // request failed
-            showRegisterToast(results.data.message, 'red');
-            
-            //return;
-        }
-        
-       }
-    })
+    try{
+        registerButton.addEventListener('click', async function validateAllInputs(){
+            if(isNameInputsEmpty() && validateEmail(email) && validatePassword(password) && comparePasswords(confirmPassword)){
+             // send the request to create the user
+             await registerUser();
+     
+            }
+            return false;
+         })
+    }catch(e){
+        console.error(e)
+    }
+    
 }
 
 validateRegistrationInputs();
