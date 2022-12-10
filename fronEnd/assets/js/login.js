@@ -57,10 +57,7 @@ async function LoginUser(){
     let results= await handleLocalRequest(url,Formdata);
     
     if (results.data.success===true){
-        storeAccessToken(results.token);
-        const myHeaders= new Headers();
-        let user= window.sessionStorage.getItem('access-token');
-        myHeaders.set('access-token', user['access-token'] )
+        storeAccessToken(results.token);   
         setTimeout(function(){
             AlterLoginToast(results.data.message,successImg)
         },1000)
