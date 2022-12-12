@@ -1,10 +1,10 @@
 # ZipiChat Api 
 
-# This api will handle all user request sent by the zipi chat app.
+#This api will handle all user request sent by the zipi chat app.
 
-# This is the first chap app i am creating so fingers crossed
+#This is the first chat app i am creating so fingers crossed
 
-#Technology Used.
+# Technology Used.
 
 #Node JS for the API
 
