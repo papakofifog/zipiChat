@@ -10,6 +10,6 @@
 
 #JWT, Google OAuth2.0 for User Authentication
 
-#Socket.io for bideractional communication between two users.
+#Socket.io for bidirectional communication between two users.
 
-#Cloudinary for story user meadia.
+#Cloudinary for storing user meadia.
