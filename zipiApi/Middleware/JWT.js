@@ -8,7 +8,7 @@ const createToken= (user) =>{
         { id: user._id, username:user.username },
         process.env['JWTSECRET'],
         {
-            expiresIn:"2h",
+            expiresIn:"5h",
         }
     );
     return accessToken;
@@ -32,8 +32,9 @@ const decryptToken = async(req,res,next)=>{
         let token= req.headers['authorization'];
         
         let codeBreakdown= await decodeJwtT(token);
-
+        
         req.body['id']=codeBreakdown.id;
+        req.user=codeBreakdown.id;
         return next()
     }catch(e){
         next(e)
