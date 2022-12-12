@@ -1,7 +1,8 @@
 const { findOneUserById }= require('../Module/user');
 const { decryptToken }= require('../Middleware/JWT');
 const { getFriendsDetails, getUserNumberFriends, addAfriend }= require('../Module/friendship');
-const { userSuccess, successMessage, failureMessage}= require('../Middleware/handleResponse')
+const { userSuccess, successMessage, failureMessage}= require('../Middleware/handleResponse');
+const { getUserpicture } = require('../Module/userPictures');
 
 
 async function getActiveUser(req,res,next){
@@ -14,6 +15,8 @@ async function getActiveUser(req,res,next){
         let numberOfFriends= await getUserNumberFriends(userId).catch((e)=>{
             next(e)
         })
+
+        let usersPicture= await getUserpicture(userId);
         
         let returnUser= {
             firstname: user.firstname,
@@ -21,7 +24,7 @@ async function getActiveUser(req,res,next){
             email: user.email,
             Dob:user.Dob,
             friendCount: numberOfFriends,
-            pictures:user.userPictures[0]||''
+            pictures:usersPicture.userPicUrl||''
         }
         return res.status(200).json(userSuccess(returnUser));
     }catch(e){
@@ -47,7 +50,7 @@ async function createFriend(req,res,next){
     try{
         let userId= req.body['id'];
         let friend= req.body.friend;
-        console.log(friend)
+        //console.log(friend)
         data={
             userId:userId,
             friendId:friend
@@ -66,17 +69,10 @@ async function createFriend(req,res,next){
     
 }
 
-async function upload(req,res,next){
-    try{
-        res.json
-    }catch(e){
-        next(e)
-    }
-}
 
 
 
-// next code we will implement adding a friend.
+
 
 module.exports= { getActiveUser,getFriends, createFriend };
 
