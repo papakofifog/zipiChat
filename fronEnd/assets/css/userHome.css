@@ -112,8 +112,8 @@ div[type=button]:hover{
 }
 
 .contactImg{
-    height: 35px;
-    width: 35px;
+    height: 50px;
+    width: 50px;
     border-radius: 50%;
 }
 
@@ -143,6 +143,9 @@ div[type=button]:hover{
 .send-message{
     width: 20%;
 }
+
+
+
 
 
 

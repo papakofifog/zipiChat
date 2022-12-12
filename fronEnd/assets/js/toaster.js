@@ -36,7 +36,12 @@ let ToastButtons=createElement(createElementObject('div','toastButtons','tB'));
 
 
 function createSpinner(){
-    let code='<div class="spinner-border" role="status"> <span class="visually-hidden">Loading...</span></div>';
+    let code='<div class="text-center" style="margin-top:50px;">\
+    <div class="spinner-border" style="height:5rem; width:5rem;color:blue;" role="status">\
+      <span class="sr-only"></span>\
+    </div>\
+    <p>Loading...</p>\
+  </div>';
 
     let spnnerContainer= createElement(createElementObject('div', 'spNote', 'sP'));
     spnnerContainer.innerHTML= code;

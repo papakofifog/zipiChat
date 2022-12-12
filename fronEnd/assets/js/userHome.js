@@ -1,27 +1,23 @@
 import { showInformationToast, createSpinner, createToastImage  } from "./toaster.js"
 
 let userHomeBoard= document.querySelector('#userHome');
-let userContacts=document.querySelector('#userConatactList');
+let workingBody= document.querySelector('body');
+let userContacts=document.querySelector('#userContactsList');
 let userProfileBoard= document.querySelector('#userEverything');
+let Spinner=createSpinner();
 
 function createContact(data){
     let newContact=`<li type="button">
     <div class="userImg contactImg">
-    <img src="${data.picUrl}" alt="contactUrl">
-    </div><div id="userFriendName">${data.fristname} ${data.lastname}
-    </div><div><img class='icon' src="../svg/success-check.svg" alt="chat icon" >
+    <img class="contactImg" src="${data.picUrl}" alt="contactUrl">
+    </div><div id="userFriendName">${data.fullname}
+    </div><div><img class='icon' src="/assets/svg/success-check.svg" alt="chat icon" >
     </div>
     </li>`;
     return newContact;
 }
 
-function generateUserContacts(data){
-    let friendList='';
-    for(let i=0; i< data.length; i++){
-        friendList+=createContact(data);
-    }
-    return friendList;
-}
+
 
 function showUserContacts(data){
     let userFriends=generateUserContacts(data)
@@ -30,19 +26,19 @@ function showUserContacts(data){
 
 function showUserProfile(data){
     let userProfile=`<div class="userImg">
-    <img src="${data.userPic}" alt="User image">
+    <img class='userImg' src="${data.userPic}" alt="User image">
   </div>
   <div style="display: block;">
     <div>
-      <p id="userFullName">${data.fristname} ${data.lastname}</p>
+      <p id="userFullName">${data.firstname+' '+data.lastname}</p>
     </div>
     <div>
-      <div id='userFriends'>Friends:${data.friendCount}</div>
+      <div id='userFriends'>Friends: ${data.friendCount}</div>
       <div style="display: flex; gap: 10px; flex-wrap: wrap ;">
-        <i><img class='icon' src="../svg" alt="facebook"></i>
-        <i><img class='icon' src="../svg" alt="twiter"></i>
-        <i><img class='icon' src="../svg" alt="instagram"></i>
-        <i><img class='icon' src="../svg" alt="snapchat"></i>
+        <i><img class='icon' src='/assets/svg/facebook.svg' alt="facebook"></i>
+        <i><img class='icon' src='/assets/svg/twitter.svg' alt="twiter"></i>
+        <i><img class='icon' src='/assets/svg/instagram.svg' alt="instagram"></i>
+        <i><img class='icon' src='/assets/svg/snapchat.svg' alt="snapchat"></i>
       </div>
     </div>
 
@@ -53,17 +49,18 @@ function showUserProfile(data){
 function showOpaqueHomeBackground(){
     userHomeBoard.style.display='none';
     workingBody.classList.add('opaqueBody');
-    createSpinner();
-
+    workingBody.appendChild(Spinner);
 }
 
 function removeOpaqueHomeBackground(){
-    window.location.reload();
+    userHomeBoard.style.display='block';
+    workingBody.classList.remove('opaqueBody');
+    workingBody.removeChild(Spinner);
 }
 
 async function postUserRequest(url,Headers){
     try{
-        let data=await axious.post(url,Headers);
+        let data=await axios.get(url,Headers);
         return data;
     }catch(e){
         console.error(e)
@@ -72,43 +69,85 @@ async function postUserRequest(url,Headers){
 }
 
 async function getUserData(){
-    url='http://localhost:3000/users/activeuser'
-    const myHeaders= new Headers();
+    let url='http://localhost:3000/users/activeuser'
     let user= window.sessionStorage.getItem('access-token');
-    myHeaders.set('access-token', user['access-token'] )
-    let results= await postUserRequest(url,myHeaders);
+    let Headers={ headers: {
+        authorization: user
+      }
+    }
+    let results= await postUserRequest(url,Headers).catch((e)=>{
+        console.error(e)
+    });
     return results
 
 }
+async function formatActiveUserData(){
+    try{
+        let results= await getUserData();
+        let userData= {
+        firstname: results.data.data.firstname,
+        lastname: results.data.data.lastname,
+        email: results.data.data.email,
+        Dob: results.data.data.Dob,
+        friendCount: results.data.data.friendCount,
+        userPic: results.data.data.userPic
 
+        }
+        return userData;
+    }catch(e){
+        console.error(e)
+    }
+    
+}
 
-document.addEventListener('load',async function(){
+async function getUserFriends(){
+    let url='http://localhost:3000/users/friends';
+    let user= window.sessionStorage.getItem('access-token');
+    let Headers={ headers: {
+        authorization: user
+      }
+    }
+    let results= await postUserRequest(url,Headers).catch((e)=>{
+        console.error(e)
+    });
+    return results
+}
+
+async function formatActiveUserFriends(){
+    try{
+        let activeUserFriends= await getUserFriends();
+        console.log(activeUserFriends.data.data)
+        let friendListHtmlCode=generateUserContacts(activeUserFriends.data.data);
+        return friendListHtmlCode;
+    }catch(e){
+        console.error(e)
+    }
+}
+
+function generateUserContacts(data){
+    let friendList='';
+    let noFriends= data.length;
+    for(let i=0; i< noFriends; i++){
+        friendList+=createContact(data[i]);
+    }
+    //console.log(friendList)
+    return friendList;
+}
+
+window.addEventListener('load',async function(){
     showOpaqueHomeBackground();
-    let results= {
-        firstname:"Papa Kofi",
-        lastname:"Asante",
-        friendCount: 10,
-        userPic:'../pictures/pexels-daniel-absi-952670.jpg'
-    }
-    let friends=[
-    {
-        firstname:'Kwesi',
-        lastname:'Sekyr3',
-        picUrl:'../pictures/pexels-miguel-á-padriñán-1111368.jpg'
-    },
-    {
-        firstname:'Kweku',
-        lastname:'Asante',
-        picUrl:'../pictures/pexels-mudassir-ali-2680270.jpg'
-    },
-    {
-        firstname:'Emmanuel',
-        lastname:'Forson',
-        picUrl:'../pictures/pexels-ovan-62693.jpg'
-    }
-    ]
+    
+    let results= await formatActiveUserData();
+    let friends= await formatActiveUserFriends();
+
+    
     let userProfileData= showUserProfile(results);
     userProfileBoard.innerHTML=userProfileData;
-    let userFriends=generateUserContacts(friends);
+    let userFriends=friends;
+    
     userContacts.innerHTML=userFriends;
+
+    this.setTimeout(function(){
+        removeOpaqueHomeBackground();
+    },1000)
 });

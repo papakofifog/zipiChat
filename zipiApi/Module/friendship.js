@@ -32,13 +32,16 @@ async function retriveUserFriends(userID){
 async function getFriendsDetails(userID){
     try{
         let friends= await retriveUserFriends(userID);
+        //console.log(friends)
         let friendDetails= [];
-        friends.userFriendId.forEach((f),()=>{
-            let user=findOneUserById(f);
-            friendDetails.push(user);
-        })
-        friends.userFriendId=friendDetails;
-        return friends;
+        for(let i=0; i < friends.length; i++){
+            for(let j=0; j<friends[i].userFriendId.length; j++){
+                let user = await findOneUserById(friends[i].userFriendId[j]);
+                friendDetails.push({userId:user._id,fullname:user.firstname+" "+user.lastname,username:user.username, userPic:user.userPictures[0]||'no picture found'});
+            }
+               
+        }
+        return friendDetails;
     }catch(e){
         console.error(e)
     }
@@ -56,9 +59,10 @@ async function doesUserHaveRelationship(userID){
 
 
 async function getUserNumberFriends(userID){
-    let friends= await retriveUserFriends(userID).catch((e)=>{
+    let friends= await getFriendsDetails(userID).catch((e)=>{
         console.error(e)
     });
+    
     return friends.length;
 }
 
