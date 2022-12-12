@@ -11,7 +11,7 @@ function createContact(data){
     <div class="userImg contactImg">
     <img class="contactImg" src="${data.picUrl}" alt="contactUrl">
     </div><div id="userFriendName">${data.fullname}
-    </div><div><img class='icon' src="/assets/svg/success-check.svg" alt="chat icon" >
+    </div><div><img class='icon' src="/assets/svg/chat.svg" alt="chat icon" >
     </div>
     </li>`;
     return newContact;
@@ -43,6 +43,7 @@ function showUserProfile(data){
     </div>
 
   </div>`;
+  console.log(userProfile)
   return userProfile;
 }
 
@@ -90,9 +91,9 @@ async function formatActiveUserData(){
         email: results.data.data.email,
         Dob: results.data.data.Dob,
         friendCount: results.data.data.friendCount,
-        userPic: results.data.data.userPic
-
+        userPic: results.data.data.pictures
         }
+        console.log(userData.userPic)
         return userData;
     }catch(e){
         console.error(e)

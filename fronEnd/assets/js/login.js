@@ -57,7 +57,6 @@ async function LoginUser(){
     let results= await handleLocalRequest(url,Formdata);
     
     if (results.data.success===true){
-        //console.log(results.data.token)
         storeAccessToken(results.data.token);   
         setTimeout(function(){
             AlterLoginToast(results.data.message,successImg)

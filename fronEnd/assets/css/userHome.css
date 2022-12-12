@@ -20,10 +20,16 @@ header{
 }
 .appBrand{
     display: flex;
-    align-items: center;
     gap:5px;
     margin-left: 100px;
+    align-items: center;
 }
+
+.appBrand > img{
+    display: block;
+    align-self: baseline;
+}
+
 div[type=button]{
     margin-right: 100px;
     border: 1px outset black;
