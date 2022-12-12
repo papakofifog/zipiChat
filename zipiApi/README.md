@@ -12,4 +12,4 @@
 
 #Socket.io for bidirectional communication between two users.
 
-#Cloudinary for storing user meadia.
+#Cloudinary for storing user media.
