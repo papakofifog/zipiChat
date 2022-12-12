@@ -10,7 +10,7 @@ const { getActiveUser,getFriends, createFriend }= require('../Controller/userReq
 UserRoute.get('/activeUser',verifyToken, decryptToken, getActiveUser)
 UserRoute.get('/friends', verifyToken, decryptToken, getFriends)
 UserRoute.post('/addFriend/',verifyToken,decryptToken, createFriend)
-UserRoute.post('/pFilePicture', verifyToken,decryptToken,)
+UserRoute.post('/userPictures', verifyToken,decryptToken,)
 
 
 module.exports= UserRoute;

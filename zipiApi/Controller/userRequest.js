@@ -66,8 +66,12 @@ async function createFriend(req,res,next){
     
 }
 
-async function processUploadedPhoto(){
-    // The code will follow after i have configured something
+async function upload(req,res,next){
+    try{
+        res.json
+    }catch(e){
+        next(e)
+    }
 }
 
 

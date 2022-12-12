@@ -42,7 +42,7 @@ const userSchema= new mongoose.Schema({
         type: Map,
         of: String
     },
-    userPictures: [{url:String}],
+    userPictures: {url:String},
 
 })
 
