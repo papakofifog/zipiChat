@@ -20,7 +20,7 @@ const ChatRouter= require('./routes/chatRoutes')
 
 const { getAllUsers } = require('./Module/user');
 const UserRoute = require('./routes/userRoutes');
-
+const PictureRouter= require('')
 
 
 app.use(cors())
@@ -31,7 +31,7 @@ app.use(bodyParser.json())
 dbConnection()
 
 app.get('/', (req,res)=>{
-    res.sendFile(__dirname+'/View/views/index.html')
+    res.sendFile(__dirname+'/view')
 })
 
 //application routes
@@ -45,6 +45,9 @@ app.use('/users', UserRoute);
 
 // chat routes
 app.use('/convo',ChatRouter);
+
+//picture routes
+app.use('/userPictures',PictureRouter)
 
 
 
