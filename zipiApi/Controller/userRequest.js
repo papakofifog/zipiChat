@@ -6,8 +6,7 @@ const { userSuccess, successMessage, failureMessage}= require('../Middleware/han
 
 async function getActiveUser(req,res,next){
     try{
-        let userId= await decryptToken(req.headers['access-token']);
-       
+        let userId= req.body['id'];
         let user= await findOneUserById(userId).catch((e)=>{
             next(e);
         })
@@ -33,8 +32,10 @@ async function getActiveUser(req,res,next){
 
 async function getFriends(req,res,next){
     try{
-        let userId= await decryptToken(req.headers['access-token']);
-        let userFriends= await getFriendsDetails(userId);
+        let userId= req.body['id'];
+        let userFriends= await getFriendsDetails(userId).catch((e)=>{
+            next(e);
+        });
         return res.status(200).json(userSuccess(userFriends));
     }catch(e){
         next(e)
@@ -44,7 +45,7 @@ async function getFriends(req,res,next){
 
 async function createFriend(req,res,next){
     try{
-        let userId= await decryptToken(req.headers['access-token']);
+        let userId= req.body['id'];
         let friend= req.body.friend;
         console.log(friend)
         data={
@@ -63,6 +64,10 @@ async function createFriend(req,res,next){
     }
     
     
+}
+
+async function processUploadedPhoto(){
+    // The code will follow after i have configured something
 }
 
 

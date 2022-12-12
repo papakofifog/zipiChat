@@ -16,11 +16,9 @@ const createToken= (user) =>{
 
 const verifyToken = async (req,res,next) =>{
     try{
-        const  token= req.body.token || req.query.token || req.headers['access-token'];
+        const  token= req.body.token || req.query.token || req.headers['authorization'];
         if(!token)return res.status(403).json("A token authentication is needed");
         const decode= await verify(token, process.env['JWTSECRET']);
-        
-        req.user= decode;
     }catch(err){
         next(err)
     }
@@ -29,12 +27,14 @@ const verifyToken = async (req,res,next) =>{
 }
 
 
-const decryptToken = async(token)=>{
+const decryptToken = async(req,res,next)=>{
     try{
+        let token= req.headers['authorization'];
+        
         let codeBreakdown= await decodeJwtT(token);
 
-        let userId=codeBreakdown.id;
-        return userId;
+        req.body['id']=codeBreakdown.id;
+        return next()
     }catch(e){
         next(e)
     }

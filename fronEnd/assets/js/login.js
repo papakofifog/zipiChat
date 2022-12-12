@@ -57,13 +57,14 @@ async function LoginUser(){
     let results= await handleLocalRequest(url,Formdata);
     
     if (results.data.success===true){
-        storeAccessToken(results.token);   
+        //console.log(results.data.token)
+        storeAccessToken(results.data.token);   
         setTimeout(function(){
             AlterLoginToast(results.data.message,successImg)
         },1000)
         setTimeout(function(){
             window.location.href= '../../main/userHome.html';
-        },2000)
+        },2000);
                 
     }else{
         AlterLoginToast(results.data.message,failureImg)

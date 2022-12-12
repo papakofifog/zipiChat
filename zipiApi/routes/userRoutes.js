@@ -1,5 +1,5 @@
 const express= require('express');
-const { verifyToken } = require('../Middleware/JWT');
+const { verifyToken, decryptToken } = require('../Middleware/JWT');
 const UserRoute= express.Router();
 const { getActiveUser,getFriends, createFriend }= require('../Controller/userRequest');
 
@@ -7,9 +7,10 @@ const { getActiveUser,getFriends, createFriend }= require('../Controller/userReq
 
 
 
-UserRoute.get('/activeUser',verifyToken, getActiveUser)
-UserRoute.get('/friends', verifyToken, getFriends)
-UserRoute.post('/addFriend/',verifyToken,createFriend)
+UserRoute.get('/activeUser',verifyToken, decryptToken, getActiveUser)
+UserRoute.get('/friends', verifyToken, decryptToken, getFriends)
+UserRoute.post('/addFriend/',verifyToken,decryptToken, createFriend)
+UserRoute.post('/pFilePicture', verifyToken,decryptToken,)
 
 
 module.exports= UserRoute;
