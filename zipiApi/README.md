@@ -8,7 +8,7 @@
 
 #Node JS for the API
 
-#JWT, OAuth2.0 for User Authentication
+#JWT, Google OAuth2.0 for User Authentication
 
 #Socket.io for bideractional communication between two users.
 
