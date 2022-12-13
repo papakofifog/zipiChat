@@ -7,10 +7,11 @@ const password= document.querySelector('#pass');
 const confirmPassword= document.querySelector('#com-pass');
 
 const registerButton= document.querySelector('#register');
+let googleRegisterProcedure= document.querySelector('#googleRegister');
 
 
 
-import { registerUser } from "./register.js";
+import { registerUser, registerWithGoogle } from "./register.js";
 
 
 function comparePasswords(x){
@@ -218,4 +219,19 @@ function validateRegistrationInputs(){
 }
 
 validateRegistrationInputs();
+
+function validateGoogleRegistration(){
+    try{
+        googleRegisterProcedure.addEventListener('click',async  function registerGoogleUser(){
+            //await registerWithGoogle();
+            
+        })
+    }catch(e){
+        console.error(e)
+    }
+}
+
+validateGoogleRegistration();
+
+
 

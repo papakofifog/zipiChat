@@ -1,6 +1,5 @@
 const { findOneUserById }= require('../Module/user');
-const { decryptToken }= require('../Middleware/JWT');
-const { getFriendsDetails, getUserNumberFriends, addAfriend }= require('../Module/friendship');
+const { retriveUserFriends, addAfriend }= require('../Module/friendship');
 const { userSuccess, successMessage, failureMessage}= require('../Middleware/handleResponse');
 const { getUserpicture } = require('../Module/userPictures');
 
@@ -33,6 +32,14 @@ async function getActiveUser(req,res,next){
     
 }
 
+async function getUserNumberFriends(userID){
+    let friends= await getFriendsDetails(userID).catch((e)=>{
+        console.error(e)
+    });
+    
+    return friends.length;
+}
+
 async function getFriends(req,res,next){
     try{
         let userId= req.body['id'];
@@ -46,27 +53,48 @@ async function getFriends(req,res,next){
     
 }
 
+async function getFriendsDetails(userID){
+    try{
+        let friends= await retriveUserFriends(userID);
+        let friendDetails= [];
+        for(let i=0; i < friends.length; i++){
+            for(let j=0; j<friends[i].userFriendId.length; j++){
+                let user = await findOneUserById(friends[i].userFriendId[j]);
+                let userPicture= await getUserpicture(user._id);
+                friendDetails.push({userId:user._id,fullname:user.firstname+" "+user.lastname,username:user.username, userPic:userPicture||''});
+            }
+               
+        }
+        return friendDetails;
+    }catch(e){
+        console.error(e)
+    }
+}
+
 async function createFriend(req,res,next){
     try{
+        if(req.body.friend==='') return res.json.status(400).json(failureMessage("friend not specified"));
         let userId= req.body['id'];
         let friend= req.body.friend;
-        //console.log(friend)
         data={
             userId:userId,
             friendId:friend
         }
+        data2={
+            userId:friend,
+            friendId:userId
+        }
         let newUser=await addAfriend(data,next);
-        if(newUser===true){
-            return res.status(200).json(successMessage("New friend added"));
+        let newfriend1 = await addAfriend(data2,next);
+        if(newUser===true && newfriend1){
+            return res.status(200).json(successMessage("Friendship Created"));
         }else{
-            return res.status(400).json(failureMessage("Friend already exist"));
+            return res.status(400).json(failureMessage("Broken friendship why"));
         }
         
     }catch(e){
         return next(e);
-    }
-    
-    
+    }  
 }
 
 

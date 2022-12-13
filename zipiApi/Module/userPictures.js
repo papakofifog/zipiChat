@@ -51,18 +51,7 @@ async function updateUserPicture(data){
         let currentUserPicture= await UserPicture.findOne({userId:userId}).catch((e)=>{
             return new Error(e)
         });
-        if(currentUserPicture){
-            let newUserPicture= data.newUploadedPicture;
-            currentUserPicture.userPicUrl= newUserPicture;
-            await currentUserPicture.save().catch((e)=>{
-                return new Error(e)
-            }
-
-            );
-            return true;
-        }else{
-            return false
-        }
+        
     }catch(e){
         return e;
     }

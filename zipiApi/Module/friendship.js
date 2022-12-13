@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { findOneUserById } = require('./user');
+
 
 const friendSchema = new mongoose.Schema({
     userId:{
@@ -11,8 +11,7 @@ const friendSchema = new mongoose.Schema({
     userFriendId: {
         type: [mongoose.Types.ObjectId],
         ref:'user',
-        required: (true, "friend reference is required"),
-        unique: true
+        required: (true, "friend reference is required")
     }
 });
 
@@ -29,23 +28,7 @@ async function retriveUserFriends(userID){
     
 }
 
-async function getFriendsDetails(userID){
-    try{
-        let friends= await retriveUserFriends(userID);
-        //console.log(friends)
-        let friendDetails= [];
-        for(let i=0; i < friends.length; i++){
-            for(let j=0; j<friends[i].userFriendId.length; j++){
-                let user = await findOneUserById(friends[i].userFriendId[j]);
-                friendDetails.push({userId:user._id,fullname:user.firstname+" "+user.lastname,username:user.username, userPic:user.userPictures||'no picture found'});
-            }
-               
-        }
-        return friendDetails;
-    }catch(e){
-        console.error(e)
-    }
-}
+
 
 async function doesUserHaveRelationship(userID){
     try{
@@ -58,18 +41,12 @@ async function doesUserHaveRelationship(userID){
 
 
 
-async function getUserNumberFriends(userID){
-    let friends= await getFriendsDetails(userID).catch((e)=>{
-        console.error(e)
-    });
-    
-    return friends.length;
-}
+
 
 async function addRelationship(data){
     try{
             let newFriend= new friendshipSchema({
-            "userId":data.userId,
+            userId:data.userId,
             userFriendId:data.friendId
         });
         await newFriend.save()
@@ -90,6 +67,7 @@ async function addAfriend(data,next){
     try{
         let user= await doesUserHaveRelationship(data.userId);
         if(user){
+            console.log("we good");
             if(user.userFriendId.includes(data.friendId)===true){
                 return false;
             } 
@@ -100,8 +78,10 @@ async function addAfriend(data,next){
             return true;
         } 
     }catch(e){
-        return next(e)
+        next(e)
     }
 }
 
-module.exports=  { retriveUserFriends, getFriendsDetails, getUserNumberFriends, addAfriend }
+
+
+module.exports=  { retriveUserFriends, addAfriend }
