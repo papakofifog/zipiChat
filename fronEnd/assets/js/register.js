@@ -71,10 +71,25 @@ async function registerUser(){
 
 }
 
+
+
 async function postRequest(url,data){
     let registerData=await axios.post(url,data);
     return registerData;
  
  }
 
-export { registerUser }
+
+ async function registerWithGoogle(){
+    let url='http://localhost:3000/api/google';
+    let data=await getRequest(url);
+    console.log(data);
+}
+
+async function getRequest(url){
+    let registerDataGoogle= await axios.get(url);
+    return registerDataGoogle;
+}
+
+
+export { registerUser, registerWithGoogle }

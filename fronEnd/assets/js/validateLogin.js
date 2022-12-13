@@ -1,6 +1,7 @@
 let emailInput=document.querySelector('#email');
 let passwordInput= document.querySelector('#pass');
 let logIn= document.querySelector('#login');
+let logInGoogle= document.querySelector('#googleLogin');
 import { LoginUser } from "./login.js";
 
 function validateEmail(input){
@@ -83,5 +84,15 @@ function validateLogin(){
     }
     
 }
+
+/*function validateLoginGoogle(){
+    try{
+        logInGoogle.addEventListener('click', async function googleLogin(){
+
+        })
+    }catch(e){
+        console.error(e);
+    }
+}*/
 
 validateLogin();

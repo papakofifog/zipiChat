@@ -4,7 +4,7 @@ const { addUserPicture, getAllpictures } = require('../Module/userPictures')
 
 async function AddProfilePicture(req,res,next){
     try{
-        let picturePath= './userProfiles/'+req.user+'1056_';
+        let picturePath= '/userProfiles/'+req.user+'1056_';
         let data= {
         userId:req.user,
         userPicture:picturePath
