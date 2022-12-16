@@ -3,8 +3,32 @@ const { createUser,findOneUser,doesUserExist,checkRegisterDataformat, checkLogin
 const { encryptedPassword, verifyPassword} = require('../Middleware/encryptData');
 const { createToken } = require('../Middleware/JWT');
 const { successMessage, failureMessage, success, failure } = require('../Middleware/handleResponse')
-const passport= require('passport');
-require('../Middleware/google-OAuth20')
+//require('../Middleware/google-OAuth20')
+const passport = require('passport');
+const GoogleStrategy= require('passport-google-oauth2').Strategy;
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
+passport.use(new GoogleStrategy({
+  clientID: GOOGLE_CLIENT_ID,
+  clientSecret: GOOGLE_CLIENT_SECRET,
+  callbackURL: "http://localhost:3000/api/google/callback",
+  passReqToCallback: true,
+},
+function(request, accessToken, refreshToken, profile, done) {
+  return done(null, profile);
+}));
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+
 
 const registerUser= async (req,res,next) =>{
     try{
@@ -59,18 +83,15 @@ const showHomePage = (req, res, next) =>{
 }
 
 const registerWithGoogle= (req,res,next)=>{
-    try{
-        passport.authenticate('google', {scope: ['email','profile']});
-    }catch(e){
-        next(e)
-    }
+    passport.authenticate('google', {scope: ['profile']});
 }
 
 const googleRedirectCallback= (req,res,next) =>{
     try{
+        console.log("we are here")
         passport.authenticate('google',{
-            successRedirect: 'api/registerUser',
-            failureRedirect:'api/failure'
+            successRedirect: process.env.CLIENT_URL,
+            failureRedirect:'/login/failed'
         })
     }catch(e){
         next(e)
@@ -78,11 +99,23 @@ const googleRedirectCallback= (req,res,next) =>{
     
 }
 
-const registerGoogleUser= (req,res,next) =>{
-    console.log(req)
-    return
+const googleLoginFailed= (req,res,next)=>{
+    res.status(401).json(failureMessage("Login failure"))
+}
+
+const verifyLogin= (req,res,next)=>{
+    if (req.user){
+        res.status(200).json(successMessage("Successfully Login in ", req.user))
+    }else{
+        res.status(403).json(failureMessage("Not Authorized"))
+    }
+}
+
+const appLogout= (req, res, next)=>{
+    req.logout();
+    res.redirect(process.env.CLIENT_URL)
 }
 
 
 
-module.exports= { registerUser, checkUserName, loginWithJWT, showHomePage,registerWithGoogle,googleRedirectCallback };
+module.exports= { registerUser, checkUserName, loginWithJWT, showHomePage,registerWithGoogle,googleRedirectCallback,googleLoginFailed, verifyLogin, appLogout };

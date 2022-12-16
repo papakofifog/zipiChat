@@ -223,7 +223,7 @@ validateRegistrationInputs();
 function validateGoogleRegistration(){
     try{
         googleRegisterProcedure.addEventListener('click',async  function registerGoogleUser(){
-            //await registerWithGoogle();
+            await registerWithGoogle();
             
         })
     }catch(e){

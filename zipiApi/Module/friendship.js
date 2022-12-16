@@ -67,7 +67,6 @@ async function addAfriend(data,next){
     try{
         let user= await doesUserHaveRelationship(data.userId);
         if(user){
-            console.log("we good");
             if(user.userFriendId.includes(data.friendId)===true){
                 return false;
             } 
