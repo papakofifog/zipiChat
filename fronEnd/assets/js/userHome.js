@@ -1,4 +1,6 @@
 import { showInformationToast, createSpinner, createToastImage  } from "./toaster.js"
+import MonitorClickFriend from "./handleChat.js";
+import ConnectWitChatServer from './userhomeMessages.js'
 
 let userHomeBoard= document.querySelector('#userHome');
 let workingBody= document.querySelector('body');
@@ -7,11 +9,12 @@ let userProfileBoard= document.querySelector('#userEverything');
 let Spinner=createSpinner();
 
 function createContact(data){
-    let newContact=`<li type="button">
+    let newContact=`<li id=${data.username}  type="button">
     <div class="userImg contactImg">
-    <img class="contactImg" src="${'http://localhost:3000'+data.picUrl||'/assets/svg/user.svg' }" alt="img">
-    </div><div id="userFriendName">${data.fullname}
-    </div><div><img class='icon' src="/assets/svg/chat.svg" alt="chat icon" >
+    <img class="contactImg" src="${'http://localhost:3000'+data.picUrl||'/assets/svg/user.svg' }" alt="img"></div>
+    <div class="userFriendName">${data.fullname}</div>
+    <div>
+        <img class='icon' src="/assets/svg/chat.svg" alt="chat icon" >
     </div>
     </li>`;
     return newContact;
@@ -25,7 +28,7 @@ function showUserContacts(data){
 }
 
 function showUserProfile(data){
-    let userProfile=`<div class="userImg">
+    let userProfile=`<div id=${data.username} class="userImg">
     <img class='userImg' src="http://localhost:3000${data.userPic}.jpg" alt="User image">
   </div>
   <div style="display: block;">
@@ -88,6 +91,7 @@ async function formatActiveUserData(){
         let userData= {
         firstname: results.data.data.firstname,
         lastname: results.data.data.lastname,
+        username: results.data.data.username,
         email: results.data.data.email,
         Dob: results.data.data.Dob,
         friendCount: results.data.data.friendCount,
@@ -147,6 +151,8 @@ window.addEventListener('load',async function(){
     let userFriends=friends;
     
     userContacts.innerHTML=userFriends;
+    ConnectWitChatServer();
+    MonitorClickFriend();
 
     this.setTimeout(function(){
         removeOpaqueHomeBackground();

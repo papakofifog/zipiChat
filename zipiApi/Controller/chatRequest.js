@@ -2,8 +2,8 @@ const { addChat, retriveChats, deleteOneChat }= require('../Module/chat');
 const { decryptToken }= require('../Middleware/JWT');
 const { successMessage, userSuccess, failureMessage } = require('../Middleware/handleResponse');
 
-const saveMessage= async(req,res,next)=>{
-    let newChatStatus=await addChat(req.body);
+const saveMessage= async(data)=>{
+    let newChatStatus=await addChat(data);
     if (newChatStatus){
         return res.status(200).json("Chat added");
     }else{

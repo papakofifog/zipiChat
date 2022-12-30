@@ -45,12 +45,21 @@
         </div>
 
         <div class="chats-container">
-          <ul id="messages" class="chats-view" >
+          <div class="chat-profile">
+            <img id="chatFriendIcon" class="icon" src="" alt="chat Avatar">
+            <p id="chat-name"></p>
+          </div>
+          <div class="chats-view">
+            <ul id="messages"  >
 
-          </ul>
-         
-            <input id="input" autocomplete="off" /> <button id="sendMessage">Send</button>
+            </ul>
+
+          </div>
           
+            <div id="form">
+              <input id="input" autocomplete="off" /> <button id="sendMessage">Send</button>
+            </div>
+           
         </div>
 
       </section>
@@ -62,7 +71,8 @@
     <script defer src="https://kitl.font@ausome.com/42eae9eadc.js"></script>
     <script src="../assets/js/logout.js"></script>
     <script type="module" src="../assets/js/toaster.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+    <script type="module" src="../assets/js/handleChat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.5.0/socket.io.js"></script>
     <script type="module" src="../assets/js/userhomeMessages.js"></script>
     <script type="module" src="../assets/js/userHome.js"></script>
 

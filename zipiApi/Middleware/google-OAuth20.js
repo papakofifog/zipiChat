@@ -1,26 +1,36 @@
-require('dotenv').config();
-const passport = require('passport');
-const GoogleStrategy= require('passport-google-oauth2').Strategy;
+require('dotenv').config()
+const {OAuth2Client} = require('google-auth-library');
+const { failureMessage } = require('./handleResponse')
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+function verifyGoogleAccessToken(req,res,next){
+    let googleToken= req.body.headers.authorization || req.query.token || req.headers.authorization
+    //console.log(req)
+    if(!(googleToken)) return res.json(failureMessage('Authorization Token needed'))
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    async function verify() {
 
-passport.use(new GoogleStrategy({
-  clientID: GOOGLE_CLIENT_ID,
-  clientSecret: GOOGLE_CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/api/google/callback",
-  passReqToCallback: true,
-},
-function(request, accessToken, refreshToken, profile, done) {
-  console.log(profile)
-  return done(null, profile);
-}));
+      const ticket = await client.verifyIdToken({
+          idToken: googleToken,
+          audience: process.env.GOOGLE_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+          // Or, if multiple clients access the backend:
+          //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+      });
+      const payload = ticket.getPayload();
+      const userid = payload['sub'];
+      // If request specified a G Suite domain:
+      // const domain = payload['hd'];
 
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
+      
+    }
+    verify().then((data)=>{
+        res.status(200).json(data)
+    }).catch((e)=>{
+        next(e)
+    });
 
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
 
+    
+}
+
+
+module.exports= verifyGoogleAccessToken

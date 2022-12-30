@@ -4,29 +4,7 @@ const { encryptedPassword, verifyPassword} = require('../Middleware/encryptData'
 const { createToken } = require('../Middleware/JWT');
 const { successMessage, failureMessage, success, failure } = require('../Middleware/handleResponse')
 //require('../Middleware/google-OAuth20')
-const passport = require('passport');
-const GoogleStrategy= require('passport-google-oauth2').Strategy;
-
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-
-passport.use(new GoogleStrategy({
-  clientID: GOOGLE_CLIENT_ID,
-  clientSecret: GOOGLE_CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/api/google/callback",
-  passReqToCallback: true,
-},
-function(request, accessToken, refreshToken, profile, done) {
-  return done(null, profile);
-}));
-
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
+require('dotenv').config();
 
 
 
@@ -82,25 +60,12 @@ const showHomePage = (req, res, next) =>{
     }
 }
 
-const registerWithGoogle= (req,res,next)=>{
-    passport.authenticate('google', {scope: ['profile']});
-}
-
-const googleRedirectCallback= (req,res,next) =>{
+const LoginWithGoogle= (res,req,next)=>{
     try{
-        console.log("we are here")
-        passport.authenticate('google',{
-            successRedirect: process.env.CLIENT_URL,
-            failureRedirect:'/login/failed'
-        })
+        
     }catch(e){
         next(e)
     }
-    
-}
-
-const googleLoginFailed= (req,res,next)=>{
-    res.status(401).json(failureMessage("Login failure"))
 }
 
 const verifyLogin= (req,res,next)=>{
@@ -113,9 +78,9 @@ const verifyLogin= (req,res,next)=>{
 
 const appLogout= (req, res, next)=>{
     req.logout();
-    res.redirect(process.env.CLIENT_URL)
+    res.redirect('http://localhost:3000')
 }
 
 
 
-module.exports= { registerUser, checkUserName, loginWithJWT, showHomePage,registerWithGoogle,googleRedirectCallback,googleLoginFailed, verifyLogin, appLogout };
+module.exports= { registerUser, checkUserName, loginWithJWT, showHomePage, verifyLogin, appLogout };

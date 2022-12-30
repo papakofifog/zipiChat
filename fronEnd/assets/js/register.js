@@ -82,8 +82,7 @@ async function postRequest(url,data){
 
  async function registerWithGoogle(){
     let url='http://localhost:3000/api/google';
-    let data=await getRequest(url);
-    console.log(data);
+    window.location.assign(url);
 }
 
 async function getRequest(url){
