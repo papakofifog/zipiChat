@@ -48,6 +48,7 @@ const userSchema= new mongoose.Schema({
 
 let ZipiUser=mongoose.model('User', userSchema);
 
+
 async function createUser(newUser,next){
     try{
         let newPerson= new ZipiUser({

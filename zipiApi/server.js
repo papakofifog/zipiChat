@@ -4,13 +4,17 @@ const cors= require('cors');
 const express= require('express');
 const app= express();
 
+
+let http= require('http');
+const server= http.createServer(app);
+
 app.use(cors({
     origin:'http://localhost:8000'
 }));
 
 
 
-
+const { registerWithGoogle } = require('./Controller/applicationRequest');
 
 const dbConnection= require('./Settings/connectToDb');
 
@@ -27,15 +31,20 @@ const ChatRouter= require('./routes/chatRoutes')
 const { getAllUsers } = require('./Module/user');
 const UserRoute = require('./routes/userRoutes');
 
+const { saveMessage, viewAllMessages }= require('./Controller/chatRequest');
+
 app.use(bodyParser.json())
-app.use('/userProfiles/',express.static('./userProfiles/'))
+app.use('/userProfiles',express.static(__dirname+'/userProfiles'))
 
 //connect to the db
 dbConnection()
 
-app.get('/', (req,res)=>{
-    res.sendFile(__dirname+'/view')
+app.get('/home', (req,res)=>{
+    console.log("hey")
+    res.sendFile(__dirname+'/View/views/index.html')
 })
+
+
 
 //application routes
 app.use('/api',AppRoute);
@@ -52,9 +61,6 @@ app.use('/convo',ChatRouter);
 // handle errors
 app.use(errorHandler);
 
-let http= require('http');
-
-const server= http.createServer(app);
 
 
 const sio = require("socket.io")(server, {
@@ -73,13 +79,41 @@ const sio = require("socket.io")(server, {
         // add event listeners here
         //console.log(socket.id)
 });*/
-
+let clients=new Map()
 
 sio.on('connection', function(socket){
-    
-    socket.on('message', message=> console.log(message))
-})
 
+    socket.on('setUserId',(msg)=> {
+        // Store the users's Id in a list or database
+        //clients[userId]= socket
+        //console.log(msg)
+         clients.set(msg, socket) 
+        
+    })
+    //Asign a unique ID to the client and store it
+
+    //const clientId=generateUniqueId();
+    //clients[clientId] = socket;
+    console.log(clients)
+    // When a client sends a message
+    socket.on('sendMessage', (data)=> {
+        // check if the recipient is connected to the server
+        console.log(data)
+        let clientSocket= data.recipientId;
+        if (clients.has(clientSocket)) {
+            //save chat 
+            let chatData= {
+                message: data.message,
+                sender_id: data.senderId,
+                receiver_id: data.receiverId
+            }
+            saveMessage(chatData)
+            // Send the message to the recipient 
+            clients.get(clientSocket).emit('receiveMessage', data.message)
+            console.log("Moo")
+        }
+    });
+});
 
 server.listen(process.env.PORT);
 

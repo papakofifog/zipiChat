@@ -4,17 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<meta name="google-signin-client-id" content="982661396703-k16fr3na04n6but1eqkmfefq7doss0er.apps.googleusercontent.com">-->
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/authentication.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+    
     <title>Login</title>
+    
 </head>
 <body>
-    <div id="LoginStatus">
     
-    </div>
+
+    <script>
+       
+    </script>
     <div  id="loginFormContainer" class="formContainer">
+
+        
         
         <form action=""  method="post">
             <div class="formInput">
@@ -37,10 +44,12 @@
             
     
             <input class="submitButtons" id="login" type="button" value="Login">
+            <input class="submitButtons" id="googleLogin" type="button" value="Google Login">
         </form>
+        
         <div class="options">
             
-                <input id="googleLogin" class="authButton" type="button" value="SinIn with Google">
+                
                 <input id="facebookRegister" class="authButton" type="button" value="SignIn with Facebook">
             
         </div>
@@ -52,9 +61,11 @@
     
     
 </body>
-
+<script src="https://apis.google.com/js/api.js" crossorigin="anonymous"></script>
+<script type="module"  src="../assets/js/googleAuth.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script type="module" src="../assets/js/validateLogin.js"></script>
 <script type="module" src="../assets/js/login.js"></script>
 <script>
@@ -62,4 +73,5 @@
         window.history.replaceState( null, null, window.location.href );
     }
 </script>
+
 </html>

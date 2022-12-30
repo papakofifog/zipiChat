@@ -1,4 +1,4 @@
-const { findOneUserById }= require('../Module/user');
+const { findOneUserById, getAllUsers }= require('../Module/user');
 const { retriveUserFriends, addAfriend }= require('../Module/friendship');
 const { userSuccess, successMessage, failureMessage}= require('../Middleware/handleResponse');
 const { getUserpicture } = require('../Module/userPictures');
@@ -20,6 +20,7 @@ async function getActiveUser(req,res,next){
         let returnUser= {
             firstname: user.firstname,
             lastname: user.lastname,
+            username: user.username,
             email: user.email,
             Dob:user.Dob,
             friendCount: numberOfFriends,
@@ -97,11 +98,24 @@ async function createFriend(req,res,next){
     }  
 }
 
+async function getAllUserSystem(req,res, next){
+    try{
+        let users= await getAllUsers();
+        if (!users){
+            return res.json(failureMessage("No user exist"))
+        }
+        return res.json(successMessage("Users are ", users))
+
+    }catch(e){
+        next(e)
+    }
+}
 
 
 
 
 
-module.exports= { getActiveUser,getFriends, createFriend };
+
+module.exports= { getActiveUser,getFriends, createFriend, getAllUserSystem };
 
 
