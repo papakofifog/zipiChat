@@ -87,13 +87,20 @@
                 <input type="password" name="comfirmPassword" id="com-pass" placeholder="confirm your password" required>
                 <p class='error' id="error-com-pass"> Password does not match</p>
             </div>
+            <div class="options">
+                <input id="register" class="submitButtons" type="button" value="Create Account">
+                <input type="button" id="backSignIn" class="authButton" value=" Back to Sign In">
+            </div>
             
-            <input id="register" class="submitButtons" type="button" value="Create Account">
         </form>
         <div class="options">
             <input id="googleRegister" href="http://localhost:3000/api/google" class="authButton" type="button" value="Register with Google">
             <input id="facebookRegister" class="authButton" type="button" value="Register with Facebook">
         </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end;">
+        
     </div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

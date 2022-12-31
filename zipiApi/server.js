@@ -14,7 +14,7 @@ app.use(cors({
 
 
 
-const { registerWithGoogle } = require('./Controller/applicationRequest');
+//const { registerWithGoogle } = require('./Controller/applicationRequest');
 
 const dbConnection= require('./Settings/connectToDb');
 
@@ -31,7 +31,7 @@ const ChatRouter= require('./routes/chatRoutes')
 const { getAllUsers } = require('./Module/user');
 const UserRoute = require('./routes/userRoutes');
 
-const { saveMessage, viewAllMessages }= require('./Controller/chatRequest');
+const { updateUserData } = require('./Module/user')
 
 app.use(bodyParser.json())
 app.use('/userProfiles',express.static(__dirname+'/userProfiles'))
@@ -83,18 +83,24 @@ let clients=new Map()
 
 sio.on('connection', function(socket){
 
-    socket.on('setUserId',(msg)=> {
+    socket.on('setUserId', async (msg)=> {
         // Store the users's Id in a list or database
         //clients[userId]= socket
         //console.log(msg)
-         clients.set(msg, socket) 
+        let data= {
+            username: msg,
+            socketData:socket
+        }
+        // trying to store the socket object in the database so that i can send message to the user and store them as unread messages.
+        //await updateUserData(data)
+        clients.set(msg, socket) 
         
     })
     //Asign a unique ID to the client and store it
 
     //const clientId=generateUniqueId();
     //clients[clientId] = socket;
-    console.log(clients)
+    //console.log(clients)
     // When a client sends a message
     socket.on('sendMessage', (data)=> {
         // check if the recipient is connected to the server
@@ -105,11 +111,10 @@ sio.on('connection', function(socket){
             let chatData= {
                 message: data.message,
                 sender_id: data.senderId,
-                receiver_id: data.receiverId
+                receiver_id: data.recipientId
             }
-            saveMessage(chatData)
             // Send the message to the recipient 
-            clients.get(clientSocket).emit('receiveMessage', data.message)
+            clients.get(clientSocket).emit('receiveMessage', data)
             console.log("Moo")
         }
     });

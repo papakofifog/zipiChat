@@ -5,6 +5,7 @@ let windowBody= document.querySelector('body');
 let usernameInput= document.querySelector('#uname');
 let succesImg= "/assets/svg/success-check.svg";
 let failureImg= "/assets/svg/failure-check.svg";
+let backToSignIn= document.querySelector('#backSignIn');
 
 
 
@@ -71,7 +72,13 @@ async function registerUser(){
 
 }
 
+function backToSignIn(){
+    backToSignIn.addEventListener('click', function goBackSignIn(){
+        window.location.href='http://localhost:8000/auth/login.html'
+    })
+}
 
+backToSignIn();
 
 async function postRequest(url,data){
     let registerData=await axios.post(url,data);
