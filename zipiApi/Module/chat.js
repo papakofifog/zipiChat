@@ -8,12 +8,10 @@ const chats= new mongoose.Schema({
         max_length:255
     },
     sender_id: {
-        type: mongoose.Types.ObjectId,
-        ref: 'user'
+        type: String
     },
     receiver_id: {
-        type: mongoose.Types.ObjectId,
-        ref: 'user'
+        type: String 
     }
     
 }, {timestamps: true}
@@ -25,8 +23,8 @@ async function addChat(data){
     try{
         let convo= new chatSchema({
             message:data.message,
-            sender_id: data.sender_id,
-            receiver_id:data.receiver_id
+            sender_id: data.senderId,
+            receiver_id:data.recipientId
         });
         await convo.save();
         return true;

@@ -43,6 +43,7 @@ const userSchema= new mongoose.Schema({
         of: String
     },
     userPictures: {url:String},
+    socketData : {type: Object}
 
 })
 
@@ -127,4 +128,17 @@ function checkLoginDataformat(data){
     return true
 }
 
-module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat }
+async function updateUserData(data){
+    let filter={
+        username:data.username,
+    }
+
+    let update= {
+        socketData: data.socketData
+    }
+
+    let user= await ZipiUser.findOneAndUpdate(filter, update)
+    return user;
+}
+
+module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat, updateUserData }

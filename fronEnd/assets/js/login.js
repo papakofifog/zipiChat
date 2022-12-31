@@ -4,6 +4,7 @@ let loginFormContainer= document.querySelector('#loginFormContainer');
 let workingBody= document.querySelector('body');
 let successImg= '/assets/svg/success-check.svg';
 let failureImg='/assets/svg/failure-check.svg';
+let spinner= createSpinner();
 
 
 function storeAccessToken(data){
@@ -25,6 +26,7 @@ function showOpaqueLoginBackground(){
     loginFormContainer.style.display='none';
     workingBody.classList.add('opaqueBody');
     workingBody.appendChild(showInformationToast('Authenticating User'));
+    workingBody.appendChild(spinner)
 
 }
 

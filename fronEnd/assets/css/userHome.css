@@ -138,7 +138,6 @@ div[type=button]:hover{
 .chats-view{
     background: rgba(0,0,0,0.15);
     padding: 0.25rem;
-    display: flex; 
     height: 30rem; 
     box-sizing: border-box; 
     backdrop-filter: blur(10px); 
@@ -163,15 +162,51 @@ div[type=button]:hover{
 #messages{
     padding: 0.1rem;
     height: 27rem;
-    width: 50rem;
     list-style-type: none; 
     margin: 0.25rem; 
     background-color: #fff;
+    overflow-y: scroll;
 
 }
 #messages > li {
      padding: 0.5rem 1rem;
 }
+
+.messageList {
+    width: 100px;
+    margin: 5px;
+
+    
+
+}
+
+.receiver{
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
+    color: black;
+    margin: 15px;
+}
+
+.receiver > li{
+    background-color: rgb(4,75,109);
+    margin: 10px;
+}
+
+.sender{
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    color: black;
+    margin: 15px;
+}
+
+.sender > li{
+    background-color: rgba(191, 222, 236, 0.924);
+    margin: 10px;
+}
+
+
 #input { 
     border: none; 
     padding: 0 1rem; 
