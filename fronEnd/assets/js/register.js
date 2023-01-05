@@ -72,13 +72,13 @@ async function registerUser(){
 
 }
 
-function backToSignIn(){
+function BackToSignIn(){
     backToSignIn.addEventListener('click', function goBackSignIn(){
         window.location.href='http://localhost:8000/auth/login.html'
     })
 }
 
-backToSignIn();
+BackToSignIn();
 
 async function postRequest(url,data){
     let registerData=await axios.post(url,data);
