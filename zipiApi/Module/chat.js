@@ -7,10 +7,10 @@ const chats= new mongoose.Schema({
         type: String,
         max_length:255
     },
-    sender_id: {
+    senderId: {
         type: String
     },
-    receiver_id: {
+    recipientId: {
         type: String 
     }
     
@@ -23,8 +23,8 @@ async function addChat(data){
     try{
         let convo= new chatSchema({
             message:data.message,
-            sender_id: data.senderId,
-            receiver_id:data.recipientId
+            senderId: data.senderId,
+            recipientId:data.recipientId
         });
         await convo.save();
         return true;
@@ -36,8 +36,8 @@ async function addChat(data){
 
 async function retriveChats(sender,receiver){
    try{
-        let retrivedChats=await chatSchema.find({sender_id:sender, receiver_id:receiver});
-        return retrivedChats;
+        let retrivedChats1=await chatSchema.find({$or:[{senderId:sender, recipientId:receiver},{senderId: receiver, recipientId:sender}]});
+        return retrivedChats1;
 
    }catch(e){
         console.error(e)
