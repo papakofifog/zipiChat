@@ -7,6 +7,8 @@ const app= express();
 
 let http= require('http');
 const server= http.createServer(app);
+const clients=new Map()
+
 
 app.use(cors({
     origin:'http://localhost:8000'
@@ -31,7 +33,7 @@ const ChatRouter= require('./routes/chatRoutes')
 const { getAllUsers } = require('./Module/user');
 const UserRoute = require('./routes/userRoutes');
 
-const { updateUserData } = require('./Module/user')
+const { updateUserData, getUserSocket } = require('./Module/user')
 
 app.use(bodyParser.json())
 app.use('/userProfiles',express.static(__dirname+'/userProfiles'))
@@ -79,22 +81,16 @@ const sio = require("socket.io")(server, {
         // add event listeners here
         //console.log(socket.id)
 });*/
-let clients=new Map()
+
+function sendMessageToReceiver(clientSocket,data){
+    clients.get(clientSocket).emit('receiveMessage', data)
+}
 
 sio.on('connection', function(socket){
 
+
     socket.on('setUserId', async (msg)=> {
-        // Store the users's Id in a list or database
-        //clients[userId]= socket
-        //console.log(msg)
-        let data= {
-            username: msg,
-            socketData:socket
-        }
-        // trying to store the socket object in the database so that i can send message to the user and store them as unread messages.
-        //await updateUserData(data)
         clients.set(msg, socket) 
-        
     })
     //Asign a unique ID to the client and store it
 
@@ -102,10 +98,11 @@ sio.on('connection', function(socket){
     //clients[clientId] = socket;
     //console.log(clients)
     // When a client sends a message
-    socket.on('sendMessage', (data)=> {
+    socket.on('sendMessage', async (data)=> {
         // check if the recipient is connected to the server
-        console.log(data)
-        let clientSocket= data.recipientId;
+        //console.log(data)
+        //let client= await getUserSocket(data);
+        let clientSocket= data.recipientId
         if (clients.has(clientSocket)) {
             //save chat 
             let chatData= {
@@ -113,12 +110,28 @@ sio.on('connection', function(socket){
                 sender_id: data.senderId,
                 receiver_id: data.recipientId
             }
+            // see message sent
+            //console.log(clients.get(clientSocket))
             // Send the message to the recipient 
-            clients.get(clientSocket).emit('receiveMessage', data)
-            console.log("Moo")
+            //clients.get(clientSocket).emit('receiveMessage', data)
+            sendMessageToReceiver(clientSocket,data)
+            //let clientSocket= client.socketData;
+            //clientSocket.emit('receiveMessage',data)
+            //console.log("Moo")
+        }else{
+            // current User does not have a socket.
+            clients.set(data.recipientId,socket);
+            sendMessageToReceiver(clientSocket,data)
+            //console.log('noUser',data)
         }
+
+        // if userId does not exist
+        
     });
 });
+
+
+
 
 server.listen(process.env.PORT);
 

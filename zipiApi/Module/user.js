@@ -42,10 +42,9 @@ const userSchema= new mongoose.Schema({
         type: Map,
         of: String
     },
-    userPictures: {url:String},
     socketData : {type: Object}
 
-})
+}, {timestamps:true})
 
 let ZipiUser=mongoose.model('User', userSchema);
 
@@ -58,7 +57,8 @@ async function createUser(newUser,next){
             username: newUser.username,
             email:newUser.email,
             password: newUser.password,
-            Dob:newUser.Dob
+            Dob:newUser.Dob,
+            socketData:''
         });
         await newPerson.save();
     }catch(e){
@@ -129,16 +129,50 @@ function checkLoginDataformat(data){
 }
 
 async function updateUserData(data){
-    let filter={
-        username:data.username,
-    }
+    try{
+        let filter={
+            username:data.username,
+        }
+    
+        /*let update= {
+            socketData: data.socketData
+        }
+        await ZipiUser.updateOne(filter,update)
+        await ZipiUser.save();
 
-    let update= {
-        socketData: data.socketData
-    }
+        //let user= await ZipiUser.findOne(filter);
+        //console.log(user);*/
 
-    let user= await ZipiUser.findOneAndUpdate(filter, update)
-    return user;
+        let user= await ZipiUser.findOne(filter);
+        user.socketData= JSON.stringify(data.socketData);
+        user.save();
+        console.log(user)
+        
+
+    }catch(e){
+        console.error(e)
+    }
+   
 }
 
-module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat, updateUserData }
+async function getUserSocket(data){
+    try{
+        let filter= {
+            username: data.recipientId
+        };
+    
+        let user= await findOne(filter);
+        if (user){
+            return {
+                username: user.user,
+                socket:user.socketData
+            }
+        }
+
+    }catch(e){
+        console.error(e)
+    }
+
+}
+
+module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat, updateUserData, getUserSocket }
