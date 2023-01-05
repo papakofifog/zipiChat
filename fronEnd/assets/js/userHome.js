@@ -1,12 +1,14 @@
 import { showInformationToast, createSpinner, createToastImage  } from "./toaster.js"
-import MonitorClickFriend from "./handleChat.js";
-import ConnectWitChatServer from './userhomeMessages.js'
+import { MonitorClickFriend } from "./handleChat.js";
+import { ConnectWitChatServer } from './userhomeMessages.js'
+
 
 let userHomeBoard= document.querySelector('#userHome');
 let workingBody= document.querySelector('body');
 let userContacts=document.querySelector('#userContactsList');
 let userProfileBoard= document.querySelector('#userEverything');
 let Spinner=createSpinner();
+
 
 function createContact(data){
     let newContact=`<li id=${data.username}  type="button">
@@ -17,6 +19,7 @@ function createContact(data){
         <img class='icon' src="/assets/svg/chat.svg" alt="chat icon" >
     </div>
     </li>`;
+
     return newContact;
 }
 

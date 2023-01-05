@@ -1,23 +1,27 @@
-import sendData from "./handleRequest.js";
-
+import { sendData } from "./handleRequest.js";
 let chatsView = document.querySelector('#messages');
 let messageToBeSent= document.querySelector('#input')
 let sendMessageButton= document.querySelector('#sendMessage')
 let chatTitle= document.querySelector('#chat-name')
 let userProfileContainer= document.querySelector('#userEverything')
+//userProfileContainer.childNodes[0].id
 
 //console.log()
 
 
 function creatList(data){
-    let receiverName= chatTitle.innerHTML;
+    console.log(data.sender_id === userProfileContainer.childNodes[0].id)
     let listClass='receiver';
-    if (data.senderId === userProfileContainer.childNodes[0].id){
+    if (data.senderId=== userProfileContainer.childNodes[0].id ){
         listClass='sender';
     }
+   
     let messageList=`<div class=${listClass}> <li class='messageList'>${data.message}</li></div>`;
     return messageList;
+    
+    
 }
+
 let accessToken= window.sessionStorage.getItem('access-token');
 const socket = io.connect(`http://localhost:3000`);
 
@@ -27,22 +31,24 @@ const socket = io.connect(`http://localhost:3000`);
 },4000);*/
 
 
-export default function ConnectWitChatServer(){
+function ConnectWitChatServer(){
     socket.emit('setUserId', userProfileContainer.childNodes[0].id)
 
 }
 
-function receiveMessage(){
-    socket.on('receiveMessage',(msg)=>{
-        //console.log(msg)
-        /*let message= creatList(msg);
-        chatsView.innerHTML+=message;
-        console.log(message)*/
-        showMessage(msg);
-        
-    } )
+function showMessagePerUser(msg){
+    let receiverName= chatTitle.innerHTML;
+    if (msg.recipientId === receiverName){
+        showMessage(msg)
+    }
 }
 
+function receiveMessage(){
+    socket.on('receiveMessage',(msg)=>{
+        showMessage(msg)
+        //showMessagePerUser(msg)
+    } )
+}
 
 
 receiveMessage()
@@ -50,7 +56,7 @@ receiveMessage()
 function showMessage(msg){
     let message= creatList(msg);
     chatsView.innerHTML+=message;
-    console.log(message)
+    //console.log(message)
 }
 
 async function sendMessage() {
@@ -69,7 +75,8 @@ async function sendMessage() {
         // send data to be saved at the server side
         let response= await sendData('http://localhost:3000/convo/addmessage', dataPacket)
 
-        showMessage(dataPacket);
+        //showMessage(dataPacket);
+        showMessagePerUser(dataPacket)
 
         //console.log(response)
 
@@ -89,6 +96,9 @@ sendMessageButton.addEventListener('click', function handleSocketIntraction(){
     sendMessage();
     clearMessageInput();
 })
+
+
+export { ConnectWitChatServer, showMessage }
 
 
 

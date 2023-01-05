@@ -7,7 +7,7 @@ const { verifyToken } = require('../Middleware/JWT');
 const Chatrouter = express.Router();
 
 Chatrouter.post('/addmessage',verifyToken, saveMessage);
-Chatrouter.get('/readAllConvo',verifyToken,viewAllMessages);
+Chatrouter.post('/readAllConvo',verifyToken,viewAllMessages);
 
 
 

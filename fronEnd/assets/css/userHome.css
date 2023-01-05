@@ -173,8 +173,10 @@ div[type=button]:hover{
 }
 
 .messageList {
-    width: 100px;
-    margin: 5px;
+    /*margin: 5px;*/
+    align-self: center;
+    padding: 20px;
+    border-radius: 15px;
 
     
 
@@ -189,20 +191,19 @@ div[type=button]:hover{
 }
 
 .receiver > li{
-    background-color: rgb(4,75,109);
+    background-color: #FAB5B1;
     margin: 10px;
 }
 
 .sender{
     display: flex;
     justify-content: flex-end;
-    padding: 10px;
     color: black;
     margin: 15px;
 }
 
 .sender > li{
-    background-color: rgba(191, 222, 236, 0.924);
+    background-color: #B1F6FA;
     margin: 10px;
 }
 
