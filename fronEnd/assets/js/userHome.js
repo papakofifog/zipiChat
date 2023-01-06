@@ -11,9 +11,11 @@ let Spinner=createSpinner();
 
 
 function createContact(data){
+    let contactPicture='http://localhost:3000'+data.picUrl;
+    if(!data.picUrl) contactPicture= 'http://localhost:8000/assets/svg/user.svg'
     let newContact=`<li id=${data.username}  type="button">
     <div class="userImg contactImg">
-    <img class="contactImg" src="${'http://localhost:3000'+data.picUrl||'/assets/svg/user.svg' }" alt="img"></div>
+    <img class="contactImg" src="${contactPicture}" alt="img"></div>
     <div class="userFriendName">${data.fullname}</div>
     <div>
         <img class='icon' src="/assets/svg/chat.svg" alt="chat icon" >
@@ -31,8 +33,10 @@ function showUserContacts(data){
 }
 
 function showUserProfile(data){
+    let userPicture=`http://localhost:3000${data.userPic}.jpg`;
+    if(!data.userPic)userPicture='http://localhost:8000/assets/svg/user.svg';
     let userProfile=`<div id=${data.username} class="userImg">
-    <img class='userImg' src="http://localhost:3000${data.userPic}.jpg" alt="User image">
+    <img class='userImg' src="${userPicture}" alt="User image">
   </div>
   <div style="display: block;">
     <div>
@@ -124,7 +128,7 @@ async function getUserFriends(){
 async function formatActiveUserFriends(){
     try{
         let activeUserFriends= await getUserFriends();
-        //console.log(activeUserFriends.data.data)
+        console.log(activeUserFriends.data.data)
         let friendListHtmlCode=generateUserContacts(activeUserFriends.data.data);
         return friendListHtmlCode;
     }catch(e){

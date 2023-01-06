@@ -5,14 +5,15 @@
 }
 
 header{
-    width: 100%;
+    width: 100vw;
     background-color: #fff;
     display: flex;
     gap: 15px;
-    height: auto;
     justify-content: space-between;
     align-items: center;
-    height: 80px;
+    padding: 10px;
+    position: absolute;
+    z-index: 50px;
 }
 .appBrand{
     display: flex;
@@ -42,9 +43,13 @@ div[type=button]:hover{
     display: flex;
     justify-content:space-evenly;
     border: 1px solid black;
-    padding: 10px;
     background-image: url('../pictures/pexels-mudassir-ali-2680270.jpg');
     height: 100vh;
+}
+
+.mainPage ::after {
+    background-image: url('../pictures/chats_pic.jpg');
+    background-repeat: space;
 }
 .userProfile{
     background-color: #fefefe;
@@ -54,6 +59,7 @@ div[type=button]:hover{
     width: 30%;
     padding: 20px;
     margin-top: 25px;
+    align-self: center;
 
 
 }
@@ -98,7 +104,7 @@ div[type=button]:hover{
     border: 1px solid black;
     padding: 5px;
     margin-top: 50px;
-    height:10rem
+    height:auto
 }
 
 .chatsContact{
