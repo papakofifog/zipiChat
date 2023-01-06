@@ -27,7 +27,7 @@ const bodyParser= require('body-parser')
 const AppRoute = require('./routes/applicationRoutes');
 
 const ChatRouter= require('./routes/chatRoutes')
-
+const {updateReadStatusOfOneChat} = require('./Module/chat')
 
 
 const { getAllUsers } = require('./Module/user');
@@ -100,7 +100,7 @@ sio.on('connection', function(socket){
     // When a client sends a message
     socket.on('sendMessage', async (data)=> {
         // check if the recipient is connected to the server
-        //console.log(data)
+        console.log(data)
         //let client= await getUserSocket(data);
         let clientSocket= data.recipientId
         if (clients.has(clientSocket)) {
@@ -114,6 +114,8 @@ sio.on('connection', function(socket){
             //console.log(clients.get(clientSocket))
             // Send the message to the recipient 
             //clients.get(clientSocket).emit('receiveMessage', data)
+            //update the read status of the message to true.
+            
             sendMessageToReceiver(clientSocket,data)
             //let clientSocket= client.socketData;
             //clientSocket.emit('receiveMessage',data)
@@ -121,7 +123,8 @@ sio.on('connection', function(socket){
         }else{
             // current User does not have a socket.
             clients.set(data.recipientId,socket);
-            sendMessageToReceiver(clientSocket,data)
+            //updateReadStatusOfOneChat(data.senderId,data.recipientId,)
+            //sendMessageToReceiver(clientSocket,data)
             //console.log('noUser',data)
         }
 

@@ -42,7 +42,11 @@ const userSchema= new mongoose.Schema({
         type: Map,
         of: String
     },
-    socketData : {type: Object}
+    loginStatus: {
+        type: Boolean,
+        default: false
+    }
+
 
 }, {timestamps:true})
 
@@ -128,51 +132,22 @@ function checkLoginDataformat(data){
     return true
 }
 
-async function updateUserData(data){
+async function updateLoginStatus(data){
     try{
-        let filter={
-            username:data.username,
-        }
-    
-        /*let update= {
-            socketData: data.socketData
-        }
-        await ZipiUser.updateOne(filter,update)
-        await ZipiUser.save();
+        
 
-        //let user= await ZipiUser.findOne(filter);
-        //console.log(user);*/
-
-        let user= await ZipiUser.findOne(filter);
-        user.socketData= JSON.stringify(data.socketData);
-        user.save();
-        console.log(user)
+        let user= await ZipiUser.findById(data.userId);
+        //console.log(user)
+        user.loginStatus=data.status;
+        await user.save();
+        return true
         
 
     }catch(e){
         console.error(e)
+        return false
     }
    
 }
 
-async function getUserSocket(data){
-    try{
-        let filter= {
-            username: data.recipientId
-        };
-    
-        let user= await findOne(filter);
-        if (user){
-            return {
-                username: user.user,
-                socket:user.socketData
-            }
-        }
-
-    }catch(e){
-        console.error(e)
-    }
-
-}
-
-module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat, updateUserData, getUserSocket }
+module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat, updateLoginStatus }
