@@ -38,6 +38,7 @@ function ConnectWitChatServer(){
 
 function showMessagePerUser(msg){
     let receiverName= chatTitle.innerHTML;
+    console.log(msg.recipientId , receiverName)
     if (msg.recipientId === receiverName){
         showMessage(msg)
     }
@@ -46,7 +47,9 @@ function showMessagePerUser(msg){
 function receiveMessage(){
     socket.on('receiveMessage',(msg)=>{
         showMessage(msg)
+        
         //showMessagePerUser(msg)
+        console.log(2)
     } )
 }
 
@@ -68,7 +71,8 @@ async function sendMessage() {
         let dataPacket= {
             senderId: userProfileContainer.childNodes[0].id,
             recipientId: chatName,
-            message: messageToBeSent.value
+            message: messageToBeSent.value,
+            sentAt: Date()
         }
         socket.emit("sendMessage",dataPacket);
 
@@ -78,7 +82,7 @@ async function sendMessage() {
         //showMessage(dataPacket);
         showMessagePerUser(dataPacket)
 
-        //console.log(response)
+        console.log(1)
 
     }catch(e){
         console.error(e)
