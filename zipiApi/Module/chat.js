@@ -12,7 +12,12 @@ const chats= new mongoose.Schema({
     },
     recipientId: {
         type: String 
+    },
+    readStatus: {
+        type:Boolean,
+        default: false
     }
+
     
 }, {timestamps: true}
 );
@@ -21,10 +26,12 @@ let chatSchema= mongoose.model('chat', chats);
 
 async function addChat(data){
     try{
+        console.log(data.sentAt)
         let convo= new chatSchema({
             message:data.message,
             senderId: data.senderId,
-            recipientId:data.recipientId
+            recipientId:data.recipientId,
+            sentAt: data.sentAt
         });
         await convo.save();
         return true;
@@ -45,10 +52,22 @@ async function retriveChats(sender,receiver){
    }
 }
 
+async function updateReadStatusOfOneChat(sender,receiver){
+    try{
+        let specificChat= await chatSchema.findOne({senderId:sender,recipientId:receiver,});
+        specificChat.readStatus=true;
+        specificChat.save();
+        return true;
+    }catch(e){
+        console.error(e)
+        return false;
+    }
+}
+
 async function deleteOneChat(convoId){
     await chatSchema.deleteOne({_id:convoId}).catch((e)=>{
         console.error(e);
     })
 }
 
-module.exports= { addChat, retriveChats, deleteOneChat }
+module.exports= { addChat, retriveChats, updateReadStatusOfOneChat, deleteOneChat }

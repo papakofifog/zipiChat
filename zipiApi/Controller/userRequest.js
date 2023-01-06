@@ -62,7 +62,7 @@ async function getFriendsDetails(userID){
             for(let j=0; j<friends[i].userFriendId.length; j++){
                 let user = await findOneUserById(friends[i].userFriendId[j]);
                 let userPicture= await getUserpicture(user._id);
-                friendDetails.push({userId:user._id,fullname:user.firstname+" "+user.lastname,username:user.username, userPic:userPicture||''});
+                friendDetails.push({userId:user._id,fullname:user.firstname+" "+user.lastname,username:user.username, userPic:userPicture||'',loginStatus:user.loginStatus||false});
             }
                
         }

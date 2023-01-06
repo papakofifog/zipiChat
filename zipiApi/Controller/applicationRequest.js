@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { createUser,findOneUser,doesUserExist,checkRegisterDataformat, checkLoginDataformat }= require('../Module/user')
+const { createUser,findOneUser,doesUserExist,checkRegisterDataformat, checkLoginDataformat, updateLoginStatus }= require('../Module/user')
 const { encryptedPassword, verifyPassword} = require('../Middleware/encryptData');
 const { createToken } = require('../Middleware/JWT');
 const { successMessage, failureMessage, success, failure } = require('../Middleware/handleResponse')
@@ -43,7 +43,8 @@ const loginWithJWT= async (req,res,next) =>{
         if(!user)return res.json(failureMessage("User does not exist proceed to SignUp"));
         const isPasswordVerified= await verifyPassword(req.body.password, user.password);
         if(isPasswordVerified){
-            const token= await createToken(user);
+            await updateLoginStatus({userId:user._id,status:true});
+            const token= createToken(user);
             return res.json(successMessage('Login Successfull',user="User verified",token));
         }
         return res.json(failureMessage("Invalid username or password"));
@@ -76,9 +77,14 @@ const verifyLogin= (req,res,next)=>{
     }
 }
 
-const appLogout= (req, res, next)=>{
-    req.logout();
-    res.redirect('http://localhost:3000')
+const appLogout= async (req, res, next)=>{
+    try{
+        let userId= req.body['id']|| req.user;
+        let status=await updateLoginStatus({userId:userId,status:false});
+        return res.json(status)
+    }catch(e){
+        next(e)
+    }
 }
 
 

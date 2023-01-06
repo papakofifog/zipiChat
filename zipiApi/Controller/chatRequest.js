@@ -1,6 +1,6 @@
-const { addChat, retriveChats, deleteOneChat }= require('../Module/chat');
+const { addChat, retriveChats, updateReadStatusOfOneChat, deleteOneChat }= require('../Module/chat');
 const { decryptToken }= require('../Middleware/JWT');
-const { successMessage, userSuccess, failureMessage } = require('../Middleware/handleResponse');
+const { successMessage, userSuccess, failureMessage, success, failure } = require('../Middleware/handleResponse');
 
 const saveMessage= async(req,res,next)=>{
     let newChatStatus=await addChat(req.body);
@@ -22,4 +22,14 @@ const viewAllMessages= async (req,res,next)=>{
     }
 }
 
-module.exports= { saveMessage, viewAllMessages }
+const updateReadStatus= async (req,res,next)=>{
+    let data= req.body || req.query;
+    let updateStatus= updateReadStatus(data.sender,data.receiver);
+    if(updateStatus){
+        return res.json(success);
+    }else{
+        return res.json(failure)
+    }
+}
+
+module.exports= { saveMessage, viewAllMessages, updateReadStatus }
