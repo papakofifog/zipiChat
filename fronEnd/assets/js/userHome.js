@@ -11,11 +11,13 @@ let Spinner=createSpinner();
 
 
 function createContact(data){
-    let contactPicture='http://localhost:3000'+data.picUrl;
-    if(!data.picUrl) contactPicture= 'http://localhost:8000/assets/svg/user.svg'
+    let names=data.fullname.split(' ');
+    let contactPicture=`<img class="contactImg" src="http://localhost:3000'+${data.picUrl}" alt="img">`
+    if(!data.picUrl) contactPicture= `<div class="contactImg contactNoPic">${names[0][0]+names[1][0]}</div>`
     let newContact=`<li id=${data.username}  type="button">
     <div class="userImg contactImg">
-    <img class="contactImg" src="${contactPicture}" alt="img"></div>
+        ${contactPicture}
+    </div>
     <div class="userFriendName">${data.fullname}</div>
     <div>
         <img class='icon' src="/assets/svg/chat.svg" alt="chat icon" >
@@ -33,10 +35,10 @@ function showUserContacts(data){
 }
 
 function showUserProfile(data){
-    let userPicture=`http://localhost:3000${data.userPic}.jpg`;
-    if(!data.userPic)userPicture='http://localhost:8000/assets/svg/user.svg';
+    let userPicture=`<img class='userImg' src="http://localhost:3000${data.userPic}.jpg" alt="User image">`;
+    if(!data.userPic)userPicture=`<div class='contactImg contactactNoPic'>${data.firstname[0]+data.lastname[1]}</div>`;
     let userProfile=`<div id=${data.username} class="userImg">
-    <img class='userImg' src="${userPicture}" alt="User image">
+    ${userPicture}
   </div>
   <div style="display: block;">
     <div>
