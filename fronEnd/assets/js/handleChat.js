@@ -1,4 +1,3 @@
-//import { showMessage } from "./userhomeMessages.js";
 import { sendData } from "./handleRequest.js";
 import { showMessage } from "./userhomeMessages.js";
 const userContactsContainer= document.querySelector('#userContactsList');
@@ -17,8 +16,6 @@ function MonitorClickFriend(){
     userContacts.forEach((x)=>{
         x.addEventListener('click', async function chatWithUser(){
             chatsView.innerHTML='';
-            //chatWithFriendIcon.src=x.childNodes[1].childNodes[1].src;
-            //chatWithUserUsername.innerText=x.id;
             let chatImage=`<img id="chatFriendIcon" class="icon" src="${x.childNodes[1].childNodes[1].src}" alt="chat Avatar">`;
             if(!x.childNodes[1].childNodes[1].src)chatImage= `<div class="contactImg contactNoPic">${x.childNodes[1].childNodes[1].innerHTML}</div>`;
 
@@ -27,7 +24,6 @@ function MonitorClickFriend(){
 
             let chatsBetweenUsers= await getInterPersonalChats(currentUser.childNodes[0].id,x.id)
             console.log(currentUser.childNodes[0].id,x.id)
-            //console.log(chatsBetweenUsers)
             walkthroughMessages(chatsBetweenUsers)
 
         })

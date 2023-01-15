@@ -47,13 +47,13 @@ div[type=button]:hover{
     height: 100vh;
 }
 
-.mainPage ::after {
+/*.mainPage ::after {
     background-image: url('../pictures/chats_pic.jpg');
     background-repeat: space;
-}
+}*/
 .userProfile{
     background-color: #fefefe;
-    box-shadow: 10x 10px 1 1 rgb(207, 207, 220);
+    box-shadow: 10px 10px 1  rgb(207, 207, 220);
     border-radius: 10px;
     height: auto;
     width: 30%;
@@ -79,7 +79,7 @@ div[type=button]:hover{
     background-color: #fefefe;
     box-shadow: 2px 2px 0 0 rgb(207, 207, 220);
     border-radius: 10px;
-    height: auto;
+    height: 500px;
     width: 50%;
     align-self: center;
     margin-right:20px;
@@ -151,9 +151,8 @@ div[type=button]:hover{
 .chats-view{
     background: rgba(0,0,0,0.15);
     padding: 0.25rem;
-    height: 30rem; 
     box-sizing: border-box; 
-    backdrop-filter: blur(10px); 
+    backdrop-filter: blur(10px);
     
 }
 
@@ -167,6 +166,18 @@ div[type=button]:hover{
     
 }
 
+.backdropMask{
+    background-color: rgba(0,0,0,0.15);
+    backdrop-filter: blur(10px); 
+    position: absolute;
+    z-index: 100px;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    margin: auto auto;
+}
+
 .message-sent{
     display: flex;
     gap:5px;
@@ -174,7 +185,7 @@ div[type=button]:hover{
 }
 #messages{
     padding: 0.1rem;
-    height: 27rem;
+    height: 350px;
     list-style-type: none; 
     margin: 0.25rem; 
     background-color: #fff;
@@ -229,6 +240,21 @@ div[type=button]:hover{
     margin: 0.25rem; 
 }
 
+.message-auxilliaries{
+    background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff;
+    
+}
+
+.message-spicer{
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.uploadActions{
+    margin: 20px;
+}
+
 #input:focus {
      outline: none; 
 }
@@ -237,6 +263,34 @@ div[type=button]:hover{
 
 
 #messages > li:nth-child(odd) { background: #efefef; }
+
+.toastContainer{
+    height: auto;
+    width: 200px;
+    background-color: #fff;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 150px;
+    border-radius: 10px;
+    box-shadow: 0 0 50px #ccc;
+    padding: 10px;
+}
+
+.toastText{
+    height: auto;
+    width:auto;
+    text-align: center;
+    font-size: 16px;
+    margin: 5px;
+}
+
+.toastButtons{
+    height: 150px;
+    width:100%;
+    display: flex;
+    gap: 25px;
+}
+
 
 
 
