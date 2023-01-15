@@ -4,12 +4,14 @@ require('dotenv').config()
 const connectToZipiDB= async()=>{
     try{
         let dbConnection= await mongoose.connect(process.env['DB_SECRET'],
-        {useNewUrlParser: true,useUnifiedTopology: true},()=>{
+        {useNewUrlParser: true,useUnifiedTopology: true});
+        if(connectToZipiDB){
             console.log("Connected to the database Successfully")
-        });
-        return dbConnection;
+            return dbConnection;
+        }
+        
     }catch(err){
-        next(err)
+        console.error(err)
     }
     
 }

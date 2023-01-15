@@ -76,7 +76,11 @@ async function LoginUser(){
 
         }
     }catch(e){
-        console.error(e)
+        AlterLoginToast("Session Expired", failureImg);
+        setTimeout(function(){
+            removeOpaqueLoginBackground()
+        },1000);
+        console.error(e);
     }
     
 }
