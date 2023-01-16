@@ -14,7 +14,7 @@ const registerUser= async (req,res,next) =>{
         let existingUser= await doesUserExist({email:req.body.email});
         if(existingUser) return res.json(successMessage("User exists proceeding to login"))
         req.body.password= await encryptedPassword(req.body.password,next)
-        newUser= await createUser(req.body,next);
+        let newUser= await createUser(req.body,next);
         if(newUser) return next(newUser);
         return res.json(successMessage("User Registered",newUser))
     }catch(err){

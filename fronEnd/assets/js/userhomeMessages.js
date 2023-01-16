@@ -1,12 +1,18 @@
 import { sendData } from "./handleRequest.js";
+import { showInformationToast } from "./toaster.js";
+
 let chatsView = document.querySelector('#messages');
 let messageToBeSent= document.querySelector('#input')
 let sendMessageButton= document.querySelector('#sendMessage')
-let chatTitle= document.querySelector('#chat-name')
-let userProfileContainer= document.querySelector('#userEverything')
-//userProfileContainer.childNodes[0].id
 
-//console.log()
+let userProfileContainer= document.querySelector('#userEverything');
+let chatTitle= document.querySelector('#chat-name')
+let attatchFileBtn= document.querySelector('#attatchFile');
+let Body= document.querySelector('body');
+
+
+
+
 
 
 function creatList(data){
@@ -64,9 +70,9 @@ function showMessage(msg){
 
 async function sendMessage() {
     try{
-
+        console.log(chatTitle);
         let chatName=chatTitle.innerHTML;
-      console.log(userProfileContainer.childNodes[0].id)
+      //npmconsole.log(userProfileContainer.childNodes[0].id)
 
         let dataPacket= {
             senderId: userProfileContainer.childNodes[0].id,
@@ -96,10 +102,46 @@ function clearMessageInput(){
 }
 
 
+function showUploadToast(){
+    let uploadContainer=`<div>
+    <div class="filePreview">
+      
+    </div>
+    <input class="form-control" type="file" name="" id="">
+    <div class="row uploadActions">
+      <div class="col-md-6">
+        <button class="btn btn-block btn-primary">Upload</button>
+      </div>
+      <div class="col-md-6">
+        <button  class="btn btn-block btn-danger">Cancel</button>
+      </div>
+    </div>
+  </div>`
+    let Toast=showInformationToast(uploadContainer);
+    return Toast;
+}
+
+function modifyMainForUpload(){
+    let uploadToast=showUploadToast();
+    console.log(uploadToast.outerHTML)
+    let mask=`<div class="backdropMask">${uploadToast.outerHTML}</div>`
+    Body.innerHTML+=mask;
+}
+
+
+
+
 sendMessageButton.addEventListener('click', function handleSocketIntraction(){
     sendMessage();
     clearMessageInput();
 })
+
+attatchFileBtn.addEventListener('click', function handleUploadInteraction(){
+    modifyMainForUpload();
+} )
+
+
+
 
 
 export { ConnectWitChatServer, showMessage }

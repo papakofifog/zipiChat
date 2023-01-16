@@ -130,7 +130,7 @@ async function getUserFriends(){
 async function formatActiveUserFriends(){
     try{
         let activeUserFriends= await getUserFriends();
-        console.log(activeUserFriends.data.data)
+        //console.log(activeUserFriends.data.data)
         let friendListHtmlCode=generateUserContacts(activeUserFriends.data.data);
         return friendListHtmlCode;
     }catch(e){

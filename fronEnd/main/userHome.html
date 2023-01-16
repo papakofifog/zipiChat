@@ -24,45 +24,79 @@
 
         <div id="logout" class="buttons" type="button">logout</div>
     </header>
-    <main id="userHome">
+    <main id="userHome" class="container-fluid">
       <section class="mainPage">
-        <div class="userProfile">
+        
+
+        
+        
+          <div class="userProfile ">
           
-          <div id="userEverything" style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div id="userEverything" style="display: flex; gap: 20px; flex-wrap: wrap;">
+              
+            </div>
+  
+            <div class="contacts-container">
+              <div class="friends">Contacts</div>
+              <div class="chatsContact">
+                <ul id="userContactsList">
+                  
+                </ul>
+                
+    
+              </div>
+            </div>
             
+  
           </div>
 
-          <div class="contacts-container">
-            <div class="friends">Contacts</div>
-            <div class="chatsContact">
-              <ul id="userContactsList">
-                
-              </ul>
+        
+        
+
+          <div class="chats-container ">
+            <div id="chatProfile-user" class="chat-profile">
+              <p id="chat-name"></p>
               
+            </div>
+            <div class="chats-view">
+              <ul id="messages" class=""  >
+  
+              </ul>
   
             </div>
-          </div>
-          
-
-        </div>
-
-        <div class="chats-container">
-          <div id="chatProfile-user" class="chat-profile">
-            
-          </div>
-          <div class="chats-view">
-            <ul id="messages" class=""  >
-
-            </ul>
-
-          </div>
-          
-            <div id="form">
               
-              <input id="input" autocomplete="off" /> <button id="sendMessage"><i class="fa fa-paper-plane"></i></button>
-            </div>
-           
-        </div>
+              
+              <div id="form">
+                <div class="message-spicer">
+                  
+                  <button class="message-auxilliaries"><i class="fa fa-smile"></i></button>
+                  
+                </div>
+                <input id="input" autocomplete="off" /> <button id="attatchFile" class="message-auxilliaries"><i class="fa fa-paperclip"></i></button> <button id="sendMessage"><i class="fa fa-paper-plane"></i></button>
+              </div>
+  
+             <!---- <div>
+                <div class="filePreview">
+                  
+                </div>
+                <input class="form-control" type="file" name="" id="">
+                <div class="row uploadActions">
+                  <div class="col-md-6">
+                    <button class="btn btn-block btn-primary">Upload</button>
+                  </div>
+                  <div class="col-md-6">
+                    <button class="btn btn-block btn-danger">Cancel</button>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="backdropMask">
+  
+              </div>-->
+             
+          </div>
+  
+        
 
       </section>
     </main>
