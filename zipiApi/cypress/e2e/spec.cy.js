@@ -1,3 +1,6 @@
+// Test the API For the chat App
+
+
 describe('My First Test', () => {
   it('Visits the Kitchen Sink site', () => {
     cy.visit('https://example.cypress.io')
