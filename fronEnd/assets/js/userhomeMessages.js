@@ -80,10 +80,11 @@ async function sendMessage() {
             message: messageToBeSent.value,
             sentAt: Date()
         }
+
         socket.emit("sendMessage",dataPacket);
 
         // send data to be saved at the server side
-        let response= await sendData('http://localhost:3000/convo/addmessage', dataPacket)
+        await sendData('http://localhost:3000/convo/addmessage', dataPacket)
 
         //showMessage(dataPacket);
         showMessagePerUser(dataPacket)
