@@ -6,7 +6,7 @@ let messageToBeSent= document.querySelector('#input')
 let sendMessageButton= document.querySelector('#sendMessage')
 
 let userProfileContainer= document.querySelector('#userEverything');
-let chatTitle= document.querySelector('#chat-name')
+
 let attatchFileBtn= document.querySelector('#attatchFile');
 let Body= document.querySelector('body');
 
@@ -16,6 +16,7 @@ let Body= document.querySelector('body');
 
 
 function creatList(data){
+    console.log(data.sender_id);
     console.log(data.sender_id === userProfileContainer.childNodes[0].id)
     let listClass='receiver';
     if (data.senderId=== userProfileContainer.childNodes[0].id ){
@@ -32,9 +33,6 @@ let accessToken= window.sessionStorage.getItem('access-token');
 const socket = io.connect(`http://localhost:3000`);
 
 
-/*setTimeout(function sendUserId(){
-    socket.emit('setUserId', );
-},4000);*/
 
 
 function ConnectWitChatServer(){
@@ -43,6 +41,7 @@ function ConnectWitChatServer(){
 }
 
 function showMessagePerUser(msg){
+    let chatTitle= document.querySelector('#chat-name');
     let receiverName= chatTitle.innerHTML;
     console.log(msg.recipientId , receiverName)
     if (msg.recipientId === receiverName){
@@ -55,7 +54,7 @@ function receiveMessage(){
         showMessage(msg)
         
         //showMessagePerUser(msg)
-        console.log(2)
+        //console.log(2)
     } )
 }
 
@@ -69,10 +68,11 @@ function showMessage(msg){
 }
 
 async function sendMessage() {
+    let chatTitle= document.querySelector('#chat-name');
     try{
         console.log(chatTitle);
         let chatName=chatTitle.innerHTML;
-      //npmconsole.log(userProfileContainer.childNodes[0].id)
+        console.log(userProfileContainer.childNodes[0].id)
 
         let dataPacket= {
             senderId: userProfileContainer.childNodes[0].id,
@@ -86,7 +86,7 @@ async function sendMessage() {
         // send data to be saved at the server side
         await sendData('http://localhost:3000/convo/addmessage', dataPacket)
 
-        //showMessage(dataPacket);
+    
         showMessagePerUser(dataPacket)
 
         console.log(1)
@@ -104,7 +104,7 @@ function clearMessageInput(){
 
 
 function showUploadToast(){
-    let uploadContainer=`<div>
+    let uploadContainer=`<div class='upload-container'>
     <div class="filePreview">
       
     </div>
@@ -114,7 +114,7 @@ function showUploadToast(){
         <button class="btn btn-block btn-primary">Upload</button>
       </div>
       <div class="col-md-6">
-        <button  class="btn btn-block btn-danger">Cancel</button>
+        <button id='cancel-upload'  class="btn btn-block btn-danger">Cancel</button>
       </div>
     </div>
   </div>`

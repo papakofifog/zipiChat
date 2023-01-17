@@ -266,7 +266,7 @@ div[type=button]:hover{
 
 .toastContainer{
     height: auto;
-    width: 200px;
+    width: 500px;
     background-color: #fff;
     margin-left: auto;
     margin-right: auto;
@@ -274,6 +274,10 @@ div[type=button]:hover{
     border-radius: 10px;
     box-shadow: 0 0 50px #ccc;
     padding: 10px;
+}
+
+.upload-container{
+    padding: 20px;
 }
 
 .toastText{
