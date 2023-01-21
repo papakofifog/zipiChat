@@ -1,6 +1,7 @@
-import { showInformationToast, createSpinner, createToastImage  } from "./toaster.js"
+import {  createSpinner } from "./toaster.js"
 import { MonitorClickFriend } from "./handleChat.js";
-import { ConnectWitChatServer } from './userhomeMessages.js'
+import { ConnectWitChatServer } from './userhomeMessages.js';
+import { getData } from './handleRequest.js'
 
 
 let userHomeBoard= document.querySelector('#userHome');
@@ -71,26 +72,18 @@ function removeOpaqueHomeBackground(){
     workingBody.removeChild(Spinner);
 }
 
-async function postUserRequest(url,Headers){
-    try{
-        let data=await axios.get(url,Headers);
-        return data;
-    }catch(e){
-        console.error(e)
-    }
-    
-}
 
 async function getUserData(){
     let url='http://localhost:3000/users/activeuser'
-    let user= window.sessionStorage.getItem('access-token');
+    /*let user= window.sessionStorage.getItem('access-token');
     let Headers={ headers: {
         authorization: user
       }
-    }
-    let results= await postUserRequest(url,Headers).catch((e)=>{
+    }*/
+    let results= await getData(url).catch((e)=>{
         console.error(e)
     });
+    console.log(results);
     return results
 
 }
@@ -116,12 +109,12 @@ async function formatActiveUserData(){
 
 async function getUserFriends(){
     let url='http://localhost:3000/users/friends';
-    let user= window.sessionStorage.getItem('access-token');
+    /*let user= window.sessionStorage.getItem('access-token');
     let Headers={ headers: {
         authorization: user
       }
-    }
-    let results= await postUserRequest(url,Headers).catch((e)=>{
+    }*/
+    let results= await getData(url).catch((e)=>{
         console.error(e)
     });
     return results
