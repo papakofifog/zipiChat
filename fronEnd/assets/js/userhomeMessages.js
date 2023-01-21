@@ -8,7 +8,7 @@ let sendMessageButton= document.querySelector('#sendMessage')
 let userProfileContainer= document.querySelector('#userEverything');
 
 let attatchFileBtn= document.querySelector('#attatchFile');
-let Body= document.querySelector('body');
+let UserHome= document.querySelector('#userHome');
 
 
 
@@ -106,27 +106,40 @@ function clearMessageInput(){
 function showUploadToast(){
     let uploadContainer=`<div class='upload-container'>
     <div class="filePreview">
-      
+      upload a file
     </div>
     <input class="form-control" type="file" name="" id="">
-    <div class="row uploadActions">
-      <div class="col-md-6">
-        <button class="btn btn-block btn-primary">Upload</button>
+    <div class="row ">
+      <div class="col-xl-6">
+        <button id='addfile' class="btn btn-block btn-primary">Upload</button>
       </div>
-      <div class="col-md-6">
+      <div class="col-xl-6">
         <button id='cancel-upload'  class="btn btn-block btn-danger">Cancel</button>
       </div>
     </div>
   </div>`
-    let Toast=showInformationToast(uploadContainer);
-    return Toast;
+    let toast= showInformationToast(uploadContainer);
+    return toast;
+    
 }
 
 function modifyMainForUpload(){
     let uploadToast=showUploadToast();
-    console.log(uploadToast.outerHTML)
-    let mask=`<div class="backdropMask">${uploadToast.outerHTML}</div>`
-    Body.innerHTML+=mask;
+    let mask=`<div id='backdrop' class="backdropMask">${uploadToast}</div>`
+    let mainBodyState=UserHome.innerHTML;
+    UserHome.innerHTML+=mask;
+    let cancelButton=document.querySelector('#cancel-upload');
+    cancelButton.addEventListener('click',()=>{
+        cancelUpload(mainBodyState);
+        //console.log(document);
+    })
+    
+}
+
+
+
+function cancelUpload(data){
+    UserHome.innerHTML=data;
 }
 
 
@@ -139,6 +152,7 @@ sendMessageButton.addEventListener('click', function handleSocketIntraction(){
 
 attatchFileBtn.addEventListener('click', function handleUploadInteraction(){
     modifyMainForUpload();
+
 } )
 
 

@@ -47,10 +47,6 @@ div[type=button]:hover{
     height: 100vh;
 }
 
-/*.mainPage ::after {
-    background-image: url('../pictures/chats_pic.jpg');
-    background-repeat: space;
-}*/
 .userProfile{
     background-color: #fefefe;
     box-shadow: 10px 10px 1  rgb(207, 207, 220);
@@ -266,7 +262,7 @@ div[type=button]:hover{
 
 .toastContainer{
     height: auto;
-    width: 500px;
+    width: 400px;
     background-color: #fff;
     margin-left: auto;
     margin-right: auto;
@@ -278,6 +274,15 @@ div[type=button]:hover{
 
 .upload-container{
     padding: 20px;
+}
+
+.filePreview{
+    border:1px solid silver;
+    height: 400px;
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .toastText{

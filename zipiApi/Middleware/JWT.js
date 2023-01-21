@@ -5,7 +5,7 @@ const decodeJwtT= require('jwt-decode');
 
 const createToken= (user) =>{
     const accessToken = sign(
-        { id: user._id, username:user.username },
+        { id: user._id },
         process.env['JWTSECRET'],
         {
             expiresIn:"5h",
@@ -18,7 +18,8 @@ const verifyToken = async (req,res,next) =>{
     try{
         const  token= req.body.token || req.query.token || req.headers['authorization'];
         if(!token)return res.status(403).json("A token authentication is needed");
-        const decode= await verify(token, process.env['JWTSECRET']);
+        let newToken= token.slice(7,token.length);
+        verify(newToken, process.env['JWTSECRET']);
     }catch(err){
         next(err)
     }
@@ -30,6 +31,7 @@ const verifyToken = async (req,res,next) =>{
 const decryptToken = async(req,res,next)=>{
     try{
         let token= req.headers['authorization'];
+
         
         let codeBreakdown= await decodeJwtT(token);
         

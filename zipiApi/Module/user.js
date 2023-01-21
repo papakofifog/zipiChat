@@ -117,19 +117,35 @@ async function doesUserExist(data){
     
 }
 
+function hasSameProps(obj1,obj2){
+    return Object.keys(obj1).every(function (prop ){
+        return obj2.hasOwnProperty(prop);
+    })
+}
+
 function checkRegisterDataformat(data){
-    if (data.hasOwnProperty('firstname')===false||data.hasOwnProperty('lastname')===false|| data.hasOwnProperty('username')===false ||data.hasOwnProperty('email')===false||
-    data.hasOwnProperty('password')==false|| data.hasOwnProperty('Dob')===false){
-        return false
-    }
-    return true
+    /*return !(data.hasOwnProperty('firstname')===false||data.hasOwnProperty('lastname')===false|| data.hasOwnProperty('username')===false ||data.hasOwnProperty('email')===false||
+    data.hasOwnProperty('password')===false|| data.hasOwnProperty('Dob')===false);*/
+    let idealStructure= new Object({
+        firstname:String,
+        lastname:String,
+        username:String,
+        email:String,
+        password:String,
+        Dob:String
+    }) 
+    
+    return hasSameProps(idealStructure,data)
+    
 }
 
 function checkLoginDataformat(data){
-    if ( data.hasOwnProperty('email')===false ||data.hasOwnProperty('password')===false){
-        return false
-    }
-    return true
+    let idealStructure= new Object({
+        email:String,
+        password:String,
+    })
+    return hasSameProps(idealStructure,data)
+
 }
 
 async function updateLoginStatus(data){

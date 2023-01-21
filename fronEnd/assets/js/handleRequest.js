@@ -1,7 +1,7 @@
 const user_access_token=window.sessionStorage.getItem('access-token')
     const Headers= {
         headers: {
-            authorization: user_access_token
+            authorization: 'Bearer '+user_access_token
         }
     }
 

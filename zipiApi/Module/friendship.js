@@ -56,9 +56,14 @@ async function addRelationship(data){
     
 }
 
-async function addNewFriend(user){
-    user.userFriendId.push(data.friendId);
-    user.save();
+async function addNewFriend(user,data){
+    try{
+        user.userFriendId.push(data.friendId);
+        user.save();
+    }catch(e){
+        return e;
+    }
+    
 }
 
 
@@ -67,10 +72,10 @@ async function addAfriend(data,next){
     try{
         let user= await doesUserHaveRelationship(data.userId);
         if(user){
-            if(user.userFriendId.includes(data.friendId)===true){
+            if(user.userFriendId.includes(data.friendId)){
                 return false;
-            } 
-            await addNewFriend(user);
+            }
+            await addNewFriend(user,data);
             return true
         }else{
             await addRelationship(data);

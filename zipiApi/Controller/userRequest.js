@@ -74,14 +74,14 @@ async function getFriendsDetails(userID){
 
 async function createFriend(req,res,next){
     try{
-        if(req.body.friend==='') return res.json.status(400).json(failureMessage("friend not specified"));
+        if(!req.body.friend) return res.status(400).json(failureMessage("friend field not specified"));
         let userId= req.body['id'];
         let friend= req.body.friend;
-        data={
+        let data={
             userId:userId,
             friendId:friend
         }
-        data2={
+        let data2={
             userId:friend,
             friendId:userId
         }
@@ -90,7 +90,7 @@ async function createFriend(req,res,next){
         if(newUser===true && newfriend1){
             return res.status(200).json(successMessage("Friendship Created"));
         }else{
-            return res.status(400).json(failureMessage("Broken friendship why"));
+            return res.status(400).json(failureMessage("Friend Already Exist"));
         }
         
     }catch(e){
