@@ -1,36 +1,26 @@
-require('dotenv').config()
-const {OAuth2Client} = require('google-auth-library');
-const { failureMessage } = require('./handleResponse')
+require('dotenv').config();
 
-function verifyGoogleAccessToken(req,res,next){
-    let googleToken= req.body.headers.authorization || req.query.token || req.headers.authorization
-    //console.log(req)
-    if(!(googleToken)) return res.json(failureMessage('Authorization Token needed'))
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-    async function verify() {
+const axios = require('axios');
 
-      const ticket = await client.verifyIdToken({
-          idToken: googleToken,
-          audience: process.env.GOOGLE_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
-          // Or, if multiple clients access the backend:
-          //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-      });
-      const payload = ticket.getPayload();
-      const userid = payload['sub'];
-      // If request specified a G Suite domain:
-      // const domain = payload['hd'];
-
-      
-    }
-    verify().then((data)=>{
-        res.status(200).json(data)
-    }).catch((e)=>{
-        next(e)
-    });
+const tokenEndpoint = 'https://oauth2.googleapis.com/token';
 
 
-    
+async function getAccessToken(code) {
+  const data = {
+    code,
+    client_id: process.env['googleClientId'],
+    client_secret: process.env['clientSecret'] ,
+    redirect_uri: process.env['redirectUri'],
+    grant_type: 'authorization_code',
+  };
+
+  try {
+    const response = await axios.post(tokenEndpoint, data);
+    return response.data.access_token;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 
-module.exports= verifyGoogleAccessToken
+

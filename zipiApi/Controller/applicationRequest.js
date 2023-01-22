@@ -45,13 +45,33 @@ const loginWithJWT= async (req,res,next) =>{
         if(isPasswordVerified){
             await updateLoginStatus({userId:user._id,status:true});
             const token= createToken(user);
-            return res.json(successMessage('Login Successfull',user="User verified",token));
+            return res.json(successMessage('Login Successfull',"User verified",token));
         }
         return res.json(failureMessage("Invalid username or password"));
     }catch(err){
         next(err)
     }
 }
+
+const RegisterGoogleUser= async (res,req,next)=>{
+    try{
+        let user= await findOneUser({email:req.body.email});
+        if(!user){ 
+            // store the needed data.
+            req.body.password= await encryptedPassword(req.body.password,next)
+            user= await createUser(req.body,next);
+            await updateLoginStatus({userId:user._id,status:true});
+        }
+        
+        let token= createToken(user);
+        return res.json(successMessage('Login Successfull',"User verified",token));
+         
+    }catch(e){
+        next(e)
+    }
+}
+
+
 
 const showHomePage = (req, res, next) =>{
     try{
@@ -61,13 +81,7 @@ const showHomePage = (req, res, next) =>{
     }
 }
 
-const LoginWithGoogle= (res,req,next)=>{
-    try{
-        
-    }catch(e){
-        next(e)
-    }
-}
+
 
 const verifyLogin= (req,res,next)=>{
     if (req.user){
