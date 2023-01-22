@@ -1,0 +1,32 @@
+This Privacy Policy explains how we collect, use, and disclose information through our Chat App (the "App"). By using the App, you consent to the collection, use, and disclosure of your information as described in this Privacy Policy.
+
+Collection of Information
+
+    We may collect personal information such as your name, email address, and phone number when you register for an account on the App.
+    We may also collect information about your device and its location, including but not limited to IP address, device type, and device identifier.
+    We collect information about your use of the App, including but not limited to chat logs, messages, and contacts.
+
+Use of Information
+
+    We use the information collected from the App to provide, maintain, and improve the App's services.
+    We may also use the information to send you promotional messages, updates, and news about the App.
+    We may share your information with third-party service providers to assist us in providing, maintaining, and improving the App's services.
+
+Disclosure of Information
+
+    We may disclose your information to third parties for legal reasons, such as in response to a subpoena or other legal process, or to protect the rights, property, or safety of our company or our users.
+    We may also disclose your information in the event of a merger, acquisition, or sale of all or a portion of our assets.
+
+Security of Information
+
+    We take reasonable measures to protect the information we collect through the App from loss, misuse, and unauthorized access, disclosure, alteration, and destruction. However, please be aware that no method of transmitting or storing data is completely secure.
+
+Changes to this Privacy Policy
+
+    We may update this Privacy Policy from time to time to reflect changes in our practices or applicable laws. The most current version of the Privacy Policy will govern our use of your information and will always be available on our App.
+
+Contact Us
+
+    If you have any questions or concerns about this Privacy Policy or our collection, use, or disclosure of your information, please contact us at [insert contact information].
+
+Last updated: [22nd January 2023]
