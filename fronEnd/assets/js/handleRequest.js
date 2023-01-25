@@ -35,4 +35,13 @@ async function updateData(url){
     
 }
 
-export {sendData, getData, updateData }
+async function sendGoogleCodeToSever(url,body){
+    try{
+        let response= await axios.post(url,body)
+        return response;
+    }catch(e){
+        console.error(e)
+    }
+}
+
+export {sendData, getData, updateData, sendGoogleCodeToSever }
