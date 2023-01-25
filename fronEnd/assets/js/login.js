@@ -100,4 +100,4 @@ async function handleLocalRequest(url,data) {
     
 }
 
-export {LoginUser, LoginWithGoogle}
+export {LoginUser}
