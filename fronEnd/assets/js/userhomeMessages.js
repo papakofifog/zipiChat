@@ -8,7 +8,7 @@ let sendMessageButton= document.querySelector('#sendMessage')
 let userProfileContainer= document.querySelector('#userEverything');
 
 let attatchFileBtn= document.querySelector('#attatchFile');
-let UserHome= document.querySelector('#userHome');
+let backDropMask= document.querySelector('#backdrop');
 
 
 
@@ -104,17 +104,17 @@ function clearMessageInput(){
 
 
 function showUploadToast(){
-    let uploadContainer=`<div class='upload-container'>
+    let uploadContainer=`<div class='container-fluid upload-container'>
     <div class="filePreview">
-      upload a file
+      <i class="fas fa-file-upload"></i>
     </div>
-    <input class="form-control" type="file" name="" id="">
-    <div class="row ">
-      <div class="col-xl-6">
-        <button id='addfile' class="btn btn-block btn-primary">Upload</button>
+    <input class="form-control" type="file" name="" id="inputFile">
+    <div class="row">
+      <div class="col-sm-6">
+        <button id='addfile' class="btn btn-primary">Upload</button>
       </div>
-      <div class="col-xl-6">
-        <button id='cancel-upload'  class="btn btn-block btn-danger">Cancel</button>
+      <div class="col-sm-6">
+        <button id='cancel-upload'  class="btn btn-danger">Cancel</button>
       </div>
     </div>
   </div>`
@@ -123,15 +123,25 @@ function showUploadToast(){
     
 }
 
+function PreviewPicture(value){
+    let documentPreview= document.querySelector('.filePreview');
+    documentPreview.innerHTML=`<img class='img-thumbnail' src='${URL.createObjectURL(value)}' alt='inputfile' >`;
+
+}
+
 function modifyMainForUpload(){
     let uploadToast=showUploadToast();
-    let mask=`<div id='backdrop' class="backdropMask">${uploadToast}</div>`
-    let mainBodyState=UserHome.innerHTML;
-    UserHome.innerHTML+=mask;
+    uploadToast.classList.add('centerItem');
+    backDropMask.innerHTML=uploadToast.outerHTML;
+    backDropMask.classList.add('block');
     let cancelButton=document.querySelector('#cancel-upload');
+    let uploadButton= document.querySelector("#inputFile");
+    let storeUpload = document.querySelector('#addfile');
+    uploadButton.addEventListener('change', (element)=>{
+        PreviewPicture(element.target.files[0]);
+    })
     cancelButton.addEventListener('click',()=>{
-        cancelUpload(mainBodyState);
-        //console.log(document);
+        backDropMask.classList.remove('block'); 
     })
     
 }
