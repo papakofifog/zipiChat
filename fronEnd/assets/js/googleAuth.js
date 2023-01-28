@@ -1,4 +1,4 @@
-import {sendGoogleCodeToSever} from './handleRequest.js'
+import {SendPostWithoutHeader} from './handleRequest.js'
 let loginGoogle= document.querySelector('#signin-button')
 
 gapi.load('auth2', function() {
@@ -28,7 +28,7 @@ async function sendCodeForAccessToken(code){
     let url= 'http://localhost:3000/api/googleLogin'
     let body=code;
 
-    let accessToken = await sendGoogleCodeToSever(url,body);
+    let accessToken = await SendPostWithoutHeader(url,body);
 
     return accessToken;
 

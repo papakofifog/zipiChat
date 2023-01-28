@@ -1,4 +1,4 @@
-import { sendData } from "./handleRequest.js";
+import { sendData, getData, SendPostWithoutHeader } from "./handleRequest.js";
 import { showInformationToast } from "./toaster.js";
 
 let chatsView = document.querySelector('#messages');
@@ -129,6 +129,30 @@ function PreviewPicture(value){
 
 }
 
+async function uploadFunctionCloudinary(value){
+    let signResponse = await getData("http://localhost:3000/users/getCloudinarySignature");
+    
+    let signData= signResponse.data;
+
+    console.log(signData)
+
+    let url= `https://api.cloudinary.com/v1_1/${signData.cloudname}/`;
+
+    let formData= new FormData();
+
+    formData.append("file", value);
+    formData.append("api_key", signData.apikey);
+    formData.append("timestamp", signData.timestamp);
+    formData.append("signature", signData.signature);
+    formData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+    formData.append("folder", "signed_upload_demo_form");
+
+    let response= await SendPostWithoutHeader(url, formData);
+
+    console.log(response)
+
+}
+
 function modifyMainForUpload(){
     let uploadToast=showUploadToast();
     uploadToast.classList.add('centerItem');
@@ -140,18 +164,16 @@ function modifyMainForUpload(){
     uploadButton.addEventListener('change', (element)=>{
         PreviewPicture(element.target.files[0]);
     })
+    storeUpload.addEventListener('click', function(){
+        let targetFile = uploadButton.files[0];
+        uploadFunctionCloudinary(targetFile);
+
+    })
     cancelButton.addEventListener('click',()=>{
         backDropMask.classList.remove('block'); 
     })
     
 }
-
-
-
-function cancelUpload(data){
-    UserHome.innerHTML=data;
-}
-
 
 
 
