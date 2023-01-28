@@ -35,7 +35,7 @@ async function updateData(url){
     
 }
 
-async function sendGoogleCodeToSever(url,body){
+async function SendPostWithoutHeader(url,body){
     try{
         let response= await axios.post(url,body)
         return response;
@@ -44,4 +44,9 @@ async function sendGoogleCodeToSever(url,body){
     }
 }
 
-export {sendData, getData, updateData, sendGoogleCodeToSever }
+
+
+
+
+
+export {sendData, getData, updateData, SendPostWithoutHeader}

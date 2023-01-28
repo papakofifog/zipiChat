@@ -4,7 +4,7 @@ const UserRoute= express.Router();
 const { getActiveUser,getFriends, createFriend, getAllUserSystem }= require('../Controller/userRequest');
 const fileUpload  = require('../Util/handlefiles')
 const upload= require('../Controller/userRequest');
-const { AddProfilePicture}= require('../Controller/handleFileRequest')
+const { AddProfilePicture, storeSignFile}= require('../Controller/handleFileRequest')
 
 
 
@@ -13,6 +13,7 @@ UserRoute.get('/friends', verifyToken, decryptToken, getFriends)
 UserRoute.post('/addFriend/',verifyToken,decryptToken, createFriend)
 UserRoute.post('/addPicture', verifyToken,decryptToken,fileUpload.single('userProfile'),AddProfilePicture)
 UserRoute.get('/adminAllusers',getAllUserSystem);
+UserRoute.get('/getCloudinarySignature',verifyToken,decryptToken,storeSignFile)
 
 
 module.exports= UserRoute;
