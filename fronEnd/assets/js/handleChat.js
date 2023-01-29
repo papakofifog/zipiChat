@@ -32,11 +32,13 @@ function handleChatView(value1,value2){
 
     // handdle chat behaviour when a user interact with the chat app.
     personalFriends.addEventListener('click', async function(){
+        
         friendItem1.innerHTML="Friends";
         friendItem2.innerHTML="New Contacts";
         let friends= await formatActiveUserFriends();
         userContacts.innerHTML=friends;
         handleChatView(friends,"");
+        MonitorClickFriend();
     })
     groups.addEventListener('click', function (){
         friendItem1.innerHTML="Groups";
