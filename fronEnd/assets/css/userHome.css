@@ -142,7 +142,8 @@ div[type=button]:hover{
     border-radius: 10px;
     box-shadow: 1px 1px 0 0 #eee;
     height: 200px;
-    overflow-y: scroll;
+    overflow-y: overlay;
+    
 }
 
 .chatsContact>ul>li{
@@ -217,6 +218,7 @@ div[type=button]:hover{
     margin: 0.25rem; 
     background-color: #fff;
     overflow-y: scroll;
+    overflow-anchor: auto;
 
 }
 #messages > li {

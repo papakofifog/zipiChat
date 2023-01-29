@@ -1,5 +1,5 @@
 import {  createSpinner } from "./toaster.js"
-import { MonitorClickFriend } from "./handleChat.js";
+import { MonitorClickFriend, MonitorOptions } from "./handleChat.js";
 import { ConnectWitChatServer } from './userhomeMessages.js';
 import { getData } from './handleRequest.js'
 
@@ -9,6 +9,8 @@ let workingBody= document.querySelector('body');
 let userContacts=document.querySelector('#userContactsList');
 let userProfileBoard= document.querySelector('#userEverything');
 let Spinner=createSpinner();
+let friendItem1= document.querySelector('#friendItem-1');
+let friendItem2= document.querySelector('#friendItem-2');
 
 
 function createContact(data){
@@ -21,7 +23,7 @@ function createContact(data){
     </div>
     <div class="userFriendName">${data.fullname}</div>
     <div>
-        <img class='icon' src="/assets/svg/chat.svg" alt="chat icon" >
+       <i class="fas fa-comment-alt"></i>
     </div>
     </li>`;
 
@@ -48,10 +50,10 @@ function showUserProfile(data){
     <div>
       <div id='userFriends'>Friends: ${data.friendCount}</div>
       <div style="display: flex; gap: 10px; flex-wrap: wrap ;">
-        <i><img class='icon' src='/assets/svg/facebook.svg' alt="facebook"></i>
-        <i><img class='icon' src='/assets/svg/twitter.svg' alt="twiter"></i>
-        <i><img class='icon' src='/assets/svg/instagram.svg' alt="instagram"></i>
-        <i><img class='icon' src='/assets/svg/snapchat.svg' alt="snapchat"></i>
+        <i class="fab fa-facebook"></i>
+        <i class="fab fa-twitter"></i>
+        <i class="fab fa-instagram"></i>
+        <i class="fab fa-snapchat"></i>
       </div>
     </div>
 
@@ -150,13 +152,18 @@ window.addEventListener('load',async function(){
     
     let userProfileData= showUserProfile(results);
     userProfileBoard.innerHTML=userProfileData;
+    friendItem1.innerHTML="Contacts";
+    friendItem2.innerHTML="NewContacts";
     let userFriends=friends;
-    
+
     userContacts.innerHTML=userFriends;
     ConnectWitChatServer();
     MonitorClickFriend();
+    MonitorOptions();
 
     this.setTimeout(function(){
         removeOpaqueHomeBackground();
     },1000)
 });
+
+export {formatActiveUserFriends}
