@@ -11,6 +11,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
+    
+
 
 
     <title>Welcome</title>
@@ -77,11 +80,13 @@
               
               <div id="form">
                 <div class="message-spicer">
-                  
-                  <button class="message-auxilliaries"><i class="fa fa-smile"></i></button>
-                  
+                  <button class="message-auxilliaries" id="addEmoji"><i class="fa fa-smile"></i></button>
+                  <div id="dropdownWrapper">
+
+                  </div>
                 </div>
                 <input id="input" autocomplete="off" /> <button id="attatchFile" class="message-auxilliaries"><i class="fa fa-paperclip"></i></button> <button id="sendMessage"><i class="fa fa-paper-plane"></i></button>
+                
               </div>
               <div id="filePreview">
                 <div id='backdrop' class="backdropMask none"></div>

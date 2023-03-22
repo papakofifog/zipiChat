@@ -343,6 +343,20 @@ div[type=button]:hover{
     gap: 25px;
 }
 
+.dropdown{
+    height: auto;
+    width: 13.63rem;
+}
+
+li{
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+li:nth-child(2){
+    background-color: #eee;
+}
+
 .none{
     display: none;
 }
@@ -355,6 +369,11 @@ div[type=button]:hover{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.dropdownWrapper{
+    position: absolute;
+    z-index: 100;
 }
 
 
