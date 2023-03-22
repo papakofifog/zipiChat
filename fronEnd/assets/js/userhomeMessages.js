@@ -1,5 +1,6 @@
 import { sendData, getData, SendPostWithoutHeader } from "./handleRequest.js";
 import { showInformationToast } from "./toaster.js";
+//import { dropDown  } from "./componets.js"
 
 let chatsView = document.querySelector('#messages');
 let messageToBeSent= document.querySelector('#input')
@@ -9,8 +10,8 @@ let userProfileContainer= document.querySelector('#userEverything');
 
 let attatchFileBtn= document.querySelector('#attatchFile');
 let backDropMask= document.querySelector('#backdrop');
-
-
+let addEmogiButton= document.querySelector('#addEmoji');
+let dropdownWrapper= document.querySelector('#dropdownWrapper');
 
 
 
@@ -188,7 +189,22 @@ attatchFileBtn.addEventListener('click', function handleUploadInteraction(){
 } )
 
 
+function addEmogi(){
+    let selectedEmoji="";
+    addEmogiButton.addEventListener('click', ()=>{
+        const pickerOptions = { onEmojiSelect: function(event){
+            messageToBeSent.value+=event.native;
+            dropdownWrapper.removeChild(document.querySelector('#emojiPicker'));
+        } }
+        const picker = new EmojiMart.Picker(pickerOptions)
+        picker.id="emojiPicker";
+        //console.log(picker.id)
+        document.querySelector('em-emoji-picker')?dropdownWrapper.removeChild(document.querySelector('#emojiPicker')): dropdownWrapper.appendChild(picker)
+    })
+    
+}
 
+addEmogi()
 
 
 export { ConnectWitChatServer, showMessage }
