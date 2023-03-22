@@ -9,3 +9,7 @@
 #JavaScript
 #Bootstrap
 #Axios remote api fetch requests
+#EmojiMart Library
+#Cloudinary for Storing Files Sent in the Messages Sent
+#Google Social Authentication.
+#FontAwesome Icons.
