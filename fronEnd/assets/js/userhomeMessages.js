@@ -198,7 +198,7 @@ function addEmogi(){
         } }
         const picker = new EmojiMart.Picker(pickerOptions)
         picker.id="emojiPicker";
-        //console.log(picker.id)
+        console.log(picker)
         document.querySelector('em-emoji-picker')?dropdownWrapper.removeChild(document.querySelector('#emojiPicker')): dropdownWrapper.appendChild(picker)
     })
     
