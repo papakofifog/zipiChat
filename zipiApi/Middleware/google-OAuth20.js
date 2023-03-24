@@ -1,33 +1,38 @@
 require('dotenv').config();
 
-const axios = require('axios');
+const { registerUserGoogleAuth } = require('../Controller/applicationRequest');
 
-const tokenEndpoint = 'https://oauth2.googleapis.com/token';
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/google/callback"
+  },
+  async function(accessToken, refreshToken, profile, done) {
 
-
-async function getAccessToken(code) {
-  const data = {
-    code,
-    client_id: process.env['GOOGLE_CLIENT_ID'],
-    client_secret: process.env['GOOGLE_CLIENT_SECRET'] ,
-    redirect_uri: process.env['REDIRECTURL'],
-    grant_type: 'authorization_code',
-  };
-
-  try {
-    const response = await axios.post(tokenEndpoint, data);
-    return response.data.access_token;
-
-
-  } catch (error) {
-    console.error(error);
+    await registerUserGoogleAuth(profile, function(err,user){
+      return done(err, user)
+    })
   }
-}
+));
 
-async function handleGetAccessToken(req,res,next){
-  console.log(req.body)
+
+function SignUpwithGoogle(req,res,next){
+ 
+  passport.authenticate('google', { scope: ['openid'] })
   
 }
 
-module.exports= {handleGetAccessToken}
+function getGoogleUserData(req,res,next){
+  console.log(req);
+  passport.authenticate('google', {failureRedirect: 'http://localhost:3000/login.html'},
+    function(req,res){
+      return next
+    }
+  )
+    
+}
+
+module.exports = { SignUpwithGoogle, getGoogleUserData}
 

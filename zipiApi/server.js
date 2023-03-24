@@ -35,7 +35,8 @@ const {updateReadStatusOfOneChat} = require('./Module/chat')
 const { getAllUsers } = require('./Module/user');
 const UserRoute = require('./routes/userRoutes');
 
-const { updateUserData, getUserSocket } = require('./Module/user')
+const { updateUserData, getUserSocket } = require('./Module/user');
+const passport = require('passport');
 
 app.use(bodyParser.json())
 app.use('/userProfiles',express.static(__dirname+'/userProfiles'))
@@ -52,6 +53,7 @@ app.get('/home', (req,res)=>{
 
 //application routes
 app.use('/api',AppRoute);
+
 app.get('/admin/allUsers', async (req,res)=>{
     return res.json( await getAllUsers());
 })
@@ -64,6 +66,11 @@ app.use('/convo',ChatRouter);
 
 // handle errors
 app.use(errorHandler);
+
+//Add authentication routes
+app.use('/auth', AppRoute)
+
+
 
 
 

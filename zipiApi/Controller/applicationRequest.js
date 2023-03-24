@@ -5,6 +5,7 @@ const { createToken } = require('../Middleware/JWT');
 const { successMessage, failureMessage, success, failure } = require('../Middleware/handleResponse')
 //require('../Middleware/google-OAuth20')
 require('dotenv').config();
+const securePassword = require("secure-random-password")
 
 
 
@@ -22,6 +23,32 @@ const registerUser= async (req,res,next) =>{
     }
     
 }
+
+async function registerUserGoogleAuth(data,next){
+    let {uniqueId, name, email, profilepic, gender} = data;
+    try{
+        let existingUser= await doesUserExist({email: email})
+        if(existingUser) return res.json(successMessage("Account exist proceed to Login"));
+        let password= securePassword.randomPassword({
+            length: 12,
+            characters: securePassword.lower + securePassword.upper + securePassword.digits + securePassword.symbols
+          });
+        
+        let newUser= await createUser({
+            firstname: name.split(' ')[0],
+            lastname: name.split(' ')[1],
+            username: username,
+            email: email,
+            password: password,
+            Dob: Dob
+        }, next)
+
+        await newUser.save();
+    }catch(e){
+        return e
+    }
+}
+
 
 async function checkUserName(req,res,next){
     try{
@@ -103,4 +130,4 @@ const appLogout= async (req, res, next)=>{
 
 
 
-module.exports= { registerUser, checkUserName, loginWithJWT, showHomePage, verifyLogin, appLogout };
+module.exports= { registerUser, registerUserGoogleAuth, checkUserName, loginWithJWT, showHomePage, verifyLogin, appLogout };
