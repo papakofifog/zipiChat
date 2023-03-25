@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { success, failure, successMessage, failureMessage } = require('../Middleware/handleResponse');
 const { addUserPicture, getAllpictures } = require('../Module/userPictures');
-const { signuploadform } = require('../util/cloudinary');
+const { uploadFileCloud } = require('../util/cloudinary');
 
 
 async function AddProfilePicture(req,res,next){
@@ -34,20 +34,25 @@ async function allPictures(req,res,next){
 }
 
 
-function storeSignFile(req,res,next){
+function storeSignFile(req,res){
     try{
-        const sig = signuploadform();
-        res.json({
-            signature: sig.signature,
-            timestamp: sig.timestamp,
-            cloudname: process.env['CLOUDNAME'],
-            apikey : process.env['CLOUDSECRET']
-        })
+        uploadFileCloud(req, function(error,result){
+            if(error){
+                res.status(500).send('Failed to upload file to Cloudinary')
+
+            }else{
+                //successMessage('File uploaded to Cloudinary', result)
+                res.send(successMessage('File uploaded to Cloudinary', result))
+            }
+        });
 
     }catch(e){
-        return next(e)
+        return console.error(e)
     }
 }
+
+
+
 
 
 module.exports= { AddProfilePicture, allPictures, storeSignFile };

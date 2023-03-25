@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const cloudinary = require('cloudinary').v2;
-
+const path = require('path');
 
 cloudinary.config({
     cloud_name: process.env.CLOUDNAME,
@@ -9,19 +9,23 @@ cloudinary.config({
     api_secret: process.env.CLOUDKEYSECRET
 });
 
-const signuploadform = () =>{
-    let timestamp = Math.random((new Date).getTime()/1000);
 
-    let signature = cloudinary.utils.api_sign_request({
-        timestamp: timestamp,
-        eager: 'c_pad,h_300,w_400|c_crop,h_200,w_260',
-        folder: 'zipiChat_uploads'
-    },
-    cloudinary.config().api_secret);
 
-    return { timestamp , signature }
+const uploadFileCloud = (req, callback) =>{
+    //console.log(file)
+    //const filePath = req.user+'1056_'+path.join(__dirname, req.file.originalname);
+    const filePath= 'userProfiles/'+req.user+'1056_'+ path.extname(req.file.originalname);
+    cloudinary.uploader.upload(filePath, function(error, result) {
+        if (error) {
+          console.error('Failed to upload file to Cloudinary:', error);
+        } else {
+          //console.log('File uploaded to Cloudinary:', result);
+          callback(error, result);
+        }
+        
+      });
 }
 
 
-module.exports= { signuploadform };
+module.exports= { uploadFileCloud };
 
