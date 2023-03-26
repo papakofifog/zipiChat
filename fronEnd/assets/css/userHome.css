@@ -230,10 +230,16 @@ div[type=button]:hover{
     align-self: center;
     padding: 20px;
     border-radius: 15px;
-
-    
-
 }
+
+.messageList img{
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+
 
 .receiver{
     display: flex;

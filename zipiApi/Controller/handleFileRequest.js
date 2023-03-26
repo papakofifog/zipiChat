@@ -6,7 +6,7 @@ const { uploadFileCloud } = require('../util/cloudinary');
 
 async function AddProfilePicture(req,res,next){
     try{
-        let picturePath= '/userProfiles/'+req.user+'1056_';
+        let picturePath= 'userProfiles';
         let data= {
         userId:req.user,
         userPicture:picturePath
@@ -34,14 +34,13 @@ async function allPictures(req,res,next){
 }
 
 
-function storeSignFile(req,res){
+function storeSignFile(req,res,next){
     try{
         uploadFileCloud(req, function(error,result){
             if(error){
                 res.status(500).send('Failed to upload file to Cloudinary')
 
             }else{
-                //successMessage('File uploaded to Cloudinary', result)
                 res.send(successMessage('File uploaded to Cloudinary', result))
             }
         });

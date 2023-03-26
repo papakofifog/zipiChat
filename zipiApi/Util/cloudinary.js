@@ -12,14 +12,11 @@ cloudinary.config({
 
 
 const uploadFileCloud = (req, callback) =>{
-    //console.log(file)
-    //const filePath = req.user+'1056_'+path.join(__dirname, req.file.originalname);
-    const filePath= 'userProfiles/'+req.user+'1056_'+ path.extname(req.file.originalname);
-    cloudinary.uploader.upload(filePath, function(error, result) {
+    const filePath= 'userProfiles/'+req.user+'1056_'+req.file.originalname
+    cloudinary.uploader.upload(filePath, {resource_type: "raw"}, function(error, result) {
         if (error) {
           console.error('Failed to upload file to Cloudinary:', error);
         } else {
-          //console.log('File uploaded to Cloudinary:', result);
           callback(error, result);
         }
         
