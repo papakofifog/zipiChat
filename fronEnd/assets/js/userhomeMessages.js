@@ -1,4 +1,4 @@
-import { sendData, getData, SendPostWithoutHeader } from "./handleRequest.js";
+import { sendData, getData, sendFormData } from "./handleRequest.js";
 import { showInformationToast } from "./toaster.js";
 //import { dropDown  } from "./componets.js"
 
@@ -23,8 +23,10 @@ function creatList(data){
     if (data.senderId=== userProfileContainer.childNodes[0].id ){
         listClass='sender';
     }
-   
+    //const pattern = /^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})(:\d{1,5})?([/?#].*)?$/i;
+
     let messageList=`<div class=${listClass}> <li class='messageList'>${data.message}</li></div>`;
+    
     return messageList;
     
     
@@ -131,26 +133,27 @@ function PreviewPicture(value){
 }
 
 async function uploadFunctionCloudinary(value){
-    let signResponse = await getData("http://localhost:3000/users/getCloudinarySignature");
-    
-    let signData= signResponse.data;
-
-    console.log(signData)
-
-    let url= `https://api.cloudinary.com/v1_1/${signData.cloudname}/`;
-
+    // create a form data object
     let formData= new FormData();
+    formData.append('file', value);
 
-    formData.append("file", value);
-    formData.append("api_key", signData.apikey);
-    formData.append("timestamp", signData.timestamp);
-    formData.append("signature", signData.signature);
-    formData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
-    formData.append("folder", "signed_upload_demo_form");
+    //send the file using axios
+    
+    let uploadedFileData= await sendFormData("http://localhost:3000/users/upload", formData);
 
-    let response= await SendPostWithoutHeader(url, formData);
+    console.log(uploadedFileData.data)
+    let CloudinaryFileData=uploadedFileData.data;
+    
+    if(CloudinaryFileData.success){
+        messageToBeSent.value+=`<img src='${CloudinaryFileData.data.url}' alt='sentFile'></img>`;
+        backDropMask.classList.remove('block'); 
 
-    console.log(response)
+        document.querySelector('.messageList img').addEventListener('click', function(event){
+            window.open(event.target.src, '_blank');
+        })
+    } 
+    
+    
 
 }
 
@@ -187,6 +190,9 @@ attatchFileBtn.addEventListener('click', function handleUploadInteraction(){
     modifyMainForUpload();
 
 } )
+
+
+
 
 
 function addEmogi(){
