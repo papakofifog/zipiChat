@@ -10,7 +10,7 @@ const filestorage = multer.diskStorage({
     destination: 'userProfiles',
     filename: (req, file, cb)=> {
         //console.log(req.file)
-        cb(null, req.user+'1056_'+ path.extname(file.originalname));
+        cb(null, req.user+'1056_'+file.originalname)
         //console.log(path.extname(file.originalname))
         //req.user.fielExtension=path.extname(file.originalname);
         

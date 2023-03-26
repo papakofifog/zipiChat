@@ -44,9 +44,20 @@ async function SendPostWithoutHeader(url,body){
     }
 }
 
+async function sendFormData(url,body){
+    try{
+        Headers.headers['Content-Type']='multipart/form-data';
+        let response= await axios.post(url,body,Headers)
+        console.log(response)
+        return response;
+    }catch(e){
+        console.error(e)
+    }
+}
 
 
 
 
 
-export {sendData, getData, updateData, SendPostWithoutHeader}
+
+export {sendData, getData, updateData, SendPostWithoutHeader, sendFormData}
