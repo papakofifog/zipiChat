@@ -436,6 +436,14 @@ li:nth-child(2){
     flex-grow: 1;
 }
 
+.documentPreview{
+    height: 5.0rem;
+    width: 5.0rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+
+}
+
 
 
 

@@ -12,7 +12,11 @@ let attatchFileBtn= document.querySelector('#attatchFile');
 let backDropMask= document.querySelector('#backdrop');
 let addEmogiButton= document.querySelector('#addEmoji');
 let dropdownWrapper= document.querySelector('#dropdownWrapper');
+let filePreview= document.querySelector('.file-preview')
 
+let currentUploadedFileURL= {
+    url:''
+}
 
 
 
@@ -80,7 +84,7 @@ async function sendMessage() {
         let dataPacket= {
             senderId: userProfileContainer.childNodes[0].id,
             recipientId: chatName,
-            message: messageToBeSent.value,
+            message: currentUploadedFileURL.url ? messageToBeSent.value+ `<img class="documentPreview" src='${currentUploadedFileURL.url}' alt='sentFile'></img>`: messageToBeSent.value,
             sentAt: Date()
         }
 
@@ -91,6 +95,10 @@ async function sendMessage() {
 
     
         showMessagePerUser(dataPacket)
+
+        currentUploadedFileURL.url='';
+        filePreview.innerHTML='';
+
 
         console.log(1)
 
@@ -149,10 +157,9 @@ async function uploadFunctionCloudinary(value){
     })*/
     
     if(CloudinaryFileData.success){
-        messageToBeSent.value+=`<img src='${CloudinaryFileData.data.url}' alt='sentFile'></img>`;
-        backDropMask.classList.remove('block'); 
-
-        
+        currentUploadedFileURL.url=CloudinaryFileData.data.url;
+        filePreview.innerHTML=`<img class="documentPreview" src='${CloudinaryFileData.data.url}' alt='sentFile'></img>`
+        backDropMask.classList.remove('block');  
     } 
     
     
