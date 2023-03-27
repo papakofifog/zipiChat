@@ -141,16 +141,18 @@ async function uploadFunctionCloudinary(value){
     
     let uploadedFileData= await sendFormData("http://localhost:3000/users/upload", formData);
 
-    console.log(uploadedFileData.data)
+    //console.log(uploadedFileData.data)
     let CloudinaryFileData=uploadedFileData.data;
+
+    /*document.querySelector('.messageList ').addEventListener('click', function(event){
+        window.open(event.target.src, '_blank');
+    })*/
     
     if(CloudinaryFileData.success){
         messageToBeSent.value+=`<img src='${CloudinaryFileData.data.url}' alt='sentFile'></img>`;
         backDropMask.classList.remove('block'); 
 
-        document.querySelector('.messageList img').addEventListener('click', function(event){
-            window.open(event.target.src, '_blank');
-        })
+        
     } 
     
     
