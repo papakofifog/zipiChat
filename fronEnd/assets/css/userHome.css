@@ -16,6 +16,10 @@ header{
     z-index: 50px;
 }
 
+.gray{
+    color: #333;
+}
+
 .flex{
     display: flex;
     gap: 0.93rem;
@@ -290,7 +294,12 @@ div[type=button]:hover{
 }
 
 .message-auxilliaries{
-    background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff;
+    background: #fff; 
+    border: none; 
+    padding: 0 1rem;  
+    border-radius: 3px; 
+    outline: none; 
+    color: #fff;
     
 }
 
@@ -415,12 +424,16 @@ li:nth-child(2){
     
 }
 
-.m-attatchment{
-    flex-grow: 1;
+.m-attatchments{
+    display: flex;
+    justify-content: space-evenly;
+
 }
 
 .m-send{
-    flex-grow: 2;
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
 }
 
 
