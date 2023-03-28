@@ -14,7 +14,7 @@ let addEmogiButton= document.querySelector('#addEmoji');
 let dropdownWrapper= document.querySelector('#dropdownWrapper');
 let filePreview= document.querySelector('.file-preview');
 let fileUpload= document.querySelector('#filePreview');
-let recordAudioBtn= document.querySelector('#record-audio')
+let recordAudioBtn= document.querySelector('#record-audio');
 
 let currentUploadedFileURL= {
     url:'',
@@ -345,6 +345,43 @@ function recorderInfo(){
 }
 
 addEmogi()
+
+function recordAudio(){
+    try{
+
+        recordButton.addEventListener('click', async function(){
+            let streamObject= await navigator.mediaDevices.getUserMedia({audio:true})
+            let recorder = RecordRTC(streamObject, {
+                type: 'audio',
+                //mimeType: 'audio/webm',
+                //recorderType: StereoAudioRecorder,
+                //desiredSampRate: 16000,
+                //numberOfAudioChannels: 1  
+            })
+            
+    
+            recorder.startRecording();
+    
+            stopRecordingBtn.addEventListener('click', ()=>{
+                recorder.stopRecording(function() {
+                    // Get the recorded audio blob and create a url for it.
+                    let blob = recorder.getBlob();
+                    let url= URL.createObjectURL(blob);
+                    
+                    console.log("Recorder audio URL:", blob)
+                    console.log("Recorder audio URL:", url)
+
+                    window.open(url, '_blank')
+                })
+            })
+        })
+    }catch(e){
+        console.error(e)
+    }
+    
+}
+
+recordAudio();
 
 
 export { ConnectWitChatServer, showMessage }
