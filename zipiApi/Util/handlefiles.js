@@ -10,7 +10,7 @@ const filestorage = multer.diskStorage({
     destination: 'userProfiles',
     filename: (req, file, cb)=> {
         //console.log(req.file)
-        cb(null, req.user+'1056_'+file.originalname)
+        cb(null, file.originalname)
         //console.log(path.extname(file.originalname))
         //req.user.fielExtension=path.extname(file.originalname);
         
@@ -23,7 +23,7 @@ const filestorage = multer.diskStorage({
 const fileUpload = multer({
     storage: filestorage,
     limits: {
-        fileSize: 1000000 // 1000000 Bytes = 1MB
+        fileSize: 20000000 // 20000000 Bytes = 20MB
     },
     fileFileter(req, file, next){
         if(file.originalname.match(/^$/)){
@@ -33,5 +33,7 @@ const fileUpload = multer({
         return next;
     }
 })
+
+
 
 module.exports= fileUpload;

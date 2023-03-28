@@ -15,24 +15,47 @@ let dropdownWrapper= document.querySelector('#dropdownWrapper');
 let filePreview= document.querySelector('.file-preview')
 
 let currentUploadedFileURL= {
-    url:''
+    url:'',
+    type:'',
+    name:''
+}
+
+let dynamicMessage={
+    messageString:"",
+    fileSent:{
+        url:'',
+        type:'',
+        name:''
+    }
 }
 
 
 
 function creatList(data){
-    console.log(data.sender_id);
-    console.log(data.sender_id === userProfileContainer.childNodes[0].id)
-    let listClass='receiver';
-    if (data.senderId=== userProfileContainer.childNodes[0].id ){
-        listClass='sender';
-    }
-    //const pattern = /^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})(:\d{1,5})?([/?#].*)?$/i;
+    try{
+        console.log(data.senderId);
+        //console.log(data.sender_id === userProfileContainer.childNodes[0].id)
+        let listClass='receiver';
+        if (data.senderId=== userProfileContainer.childNodes[0].id ){
+            listClass='sender';
+        }
+        
+        let messageList=`<div class=${listClass}> <li class='messageList'>
+            ${
+                data.message.fileSent.url ? formatMessage(data.message.messageString)+ getElementPerFleType(data.message.fileSent): data.message.messageString
+            
+            }
+            
+            </li></div>`;
+        
+        
+        return messageList;
+        
+    
 
-    let messageList=`<div class=${listClass}> <li class='messageList'>${data.message}</li></div>`;
-    
-    return messageList;
-    
+    } catch(e){
+        console.error(e)
+    }
     
 }
 
@@ -69,35 +92,84 @@ function receiveMessage(){
 receiveMessage()
 
 function showMessage(msg){
-    let message= creatList(msg);
-    chatsView.innerHTML+=message;
-    //console.log(message)
+    try{
+        console.log("message for the boys",msg)
+        let message= creatList(msg);
+        chatsView.innerHTML+=message;
+        //console.log(message)
+    }catch(e){
+        console.error(e)
+    }
+
+    
+}
+
+function getElementPerFleType(data){
+    console.log(data)
+    let type= data.type.split('/')[1]
+        switch(type){
+            case "mp3" || "wav "||" aac":
+                return `<audio src="${data.url}" class="audio" controls alt='${data.name}'></audio>`;
+              
+
+            case  "mp4" || "avi" || "mov" || "wmv":
+                return `<video src="${data.url}" class="video" controls alt='${data.name}'></video>`;
+
+            default:
+                return `<img class="documentPreview" src='${data.url}' alt='${data.name}'>`;
+            
+        }
+    
+}
+
+function formatMessage(msg){
+    return `<h5>${msg}</h5>`
+}
+
+function ResetState(){
+    currentUploadedFileURL.url='';
+    currentUploadedFileURL.type='';
+    currentUploadedFileURL.name='';
+    filePreview.innerHTML='';
+    dynamicMessage.fileSent.url='';
+    dynamicMessage.fileSent.type=''
+    dynamicMessage.fileSent.name=''
+
 }
 
 async function sendMessage() {
     let chatTitle= document.querySelector('#chat-name');
     try{
+        //let { url } = currentUploadedFileURL;
         console.log(chatTitle);
         let chatName=chatTitle.innerHTML;
-        console.log(userProfileContainer.childNodes[0].id)
+        //console.log(userProfileContainer.childNodes[0].id)
+
+        
+        dynamicMessage.messageString=messageToBeSent.value;
+        dynamicMessage.fileSent.url=currentUploadedFileURL.url;
+        dynamicMessage.fileSent.name=currentUploadedFileURL.name;
+        dynamicMessage.fileSent.type=currentUploadedFileURL.type;
+
+        console.log(currentUploadedFileURL)
 
         let dataPacket= {
             senderId: userProfileContainer.childNodes[0].id,
             recipientId: chatName,
-            message: currentUploadedFileURL.url ? messageToBeSent.value+ `<img class="documentPreview" src='${currentUploadedFileURL.url}' alt='sentFile'></img>`: messageToBeSent.value,
+            message: dynamicMessage,
             sentAt: Date()
         }
+
+        console.log(dataPacket)
 
         socket.emit("sendMessage",dataPacket);
 
         // send data to be saved at the server side
         await sendData('http://localhost:3000/convo/addmessage', dataPacket)
 
-    
         showMessagePerUser(dataPacket)
 
-        currentUploadedFileURL.url='';
-        filePreview.innerHTML='';
+        ResetState();
 
 
         console.log(1)
@@ -157,8 +229,12 @@ async function uploadFunctionCloudinary(value){
     })*/
     
     if(CloudinaryFileData.success){
-        currentUploadedFileURL.url=CloudinaryFileData.data.url;
-        filePreview.innerHTML=`<img class="documentPreview" src='${CloudinaryFileData.data.url}' alt='sentFile'></img>`
+        let { url, original_filename, fileType} = CloudinaryFileData.data;
+        console.log(url);
+        currentUploadedFileURL.url=url;
+        currentUploadedFileURL.name=original_filename;
+        currentUploadedFileURL.type=fileType;
+        filePreview.innerHTML= getElementPerFleType(currentUploadedFileURL)
         backDropMask.classList.remove('block');  
     } 
     
