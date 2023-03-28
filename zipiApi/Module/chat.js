@@ -2,11 +2,27 @@ const mongoose= require('mongoose');
 
 const user= require('./user')
 
-const chats= new mongoose.Schema({
-    message: {
-        type: String,
-        max_length:255
+const fileObject = new mongoose.Schema({
+    url: {
+        type: String,  
     },
+    type: {
+        type: String,  
+    },
+    name: {
+        type: String,  
+    },
+})
+
+const messageObject= new mongoose.Schema({
+    messageString: {
+        type: String
+    },
+    fileSent: fileObject
+})
+
+const chats= new mongoose.Schema({
+    message: messageObject,
     senderId: {
         type: String
     },
@@ -22,17 +38,34 @@ const chats= new mongoose.Schema({
 }, {timestamps: true}
 );
 
+let fileObjectSchema = mongoose.model('file', fileObject)
+
+let messageObjectSchema= mongoose.model('messages',messageObject);
+
 let chatSchema= mongoose.model('chat', chats);
 
 async function addChat(data){
+
     try{
-        console.log(data.sentAt)
+        let fileObject= new fileObjectSchema({
+            url:data.message.fileSent.url,
+            type:data.message.fileSent.type,
+            name:data.message.fileSent.name
+        })
+
+        let actualMessage= new messageObjectSchema({
+            messageString:data.message.messageString,
+            fileSent: fileObject
+        })
+
         let convo= new chatSchema({
-            message:data.message,
+
+            message: actualMessage,
             senderId: data.senderId,
             recipientId:data.recipientId,
             sentAt: data.sentAt
         });
+
         await convo.save();
         return true;
     }catch(e){

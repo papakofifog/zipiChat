@@ -238,6 +238,10 @@ div[type=button]:hover{
 
 .messageList {
     /*margin: 5px;*/
+    display: flex;
+    flex-direction: column;
+    gap: 0.90rem;
+    flex-wrap: wrap;
     align-self: center;
     padding: 20px;
     border-radius: 15px;

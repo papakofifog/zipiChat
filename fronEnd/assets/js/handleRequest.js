@@ -1,12 +1,13 @@
 const user_access_token=window.sessionStorage.getItem('access-token')
-    const Headers= {
-        headers: {
-            authorization: 'Bearer '+user_access_token
-        }
+const Headers= {
+    headers: {
+        authorization: 'Bearer '+user_access_token
     }
+}
 
 async function sendData(url,data){
     try{
+        Headers.headers['Content-Type']='application/json';
         let response=await axios.post(url,data,Headers);
         return response;
     }catch(e){
@@ -48,7 +49,7 @@ async function sendFormData(url,body){
     try{
         Headers.headers['Content-Type']='multipart/form-data';
         let response= await axios.post(url,body,Headers)
-        console.log(response)
+        
         return response;
     }catch(e){
         console.error(e)
