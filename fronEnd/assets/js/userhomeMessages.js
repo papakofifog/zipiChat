@@ -9,10 +9,11 @@ let sendMessageButton= document.querySelector('#sendMessage')
 let userProfileContainer= document.querySelector('#userEverything');
 
 let attatchFileBtn= document.querySelector('#attatchFile');
-let backDropMask= document.querySelector('#backdrop');
+//let backDropMask= document.querySelector('#backdrop');
 let addEmogiButton= document.querySelector('#addEmoji');
 let dropdownWrapper= document.querySelector('#dropdownWrapper');
 let filePreview= document.querySelector('.file-preview')
+let fileUpload= document.querySelector('#filePreview')
 
 let currentUploadedFileURL= {
     url:'',
@@ -235,7 +236,7 @@ async function uploadFunctionCloudinary(value){
         currentUploadedFileURL.name=original_filename;
         currentUploadedFileURL.type=fileType;
         filePreview.innerHTML= getElementPerFleType(currentUploadedFileURL)
-        backDropMask.classList.remove('block');  
+        fileUpload.classList.remove('block');  
     } 
     
     
@@ -245,8 +246,8 @@ async function uploadFunctionCloudinary(value){
 function modifyMainForUpload(){
     let uploadToast=showUploadToast();
     uploadToast.classList.add('centerItem');
-    backDropMask.innerHTML=uploadToast.outerHTML;
-    backDropMask.classList.add('block');
+    fileUpload.innerHTML=uploadToast.outerHTML;
+    fileUpload.classList.add('block')
     let cancelButton=document.querySelector('#cancel-upload');
     let uploadButton= document.querySelector("#inputFile");
     let storeUpload = document.querySelector('#addfile');
@@ -259,7 +260,7 @@ function modifyMainForUpload(){
 
     })
     cancelButton.addEventListener('click',()=>{
-        backDropMask.classList.remove('block'); 
+        fileUpload.classList.remove('block'); 
     })
     
 }

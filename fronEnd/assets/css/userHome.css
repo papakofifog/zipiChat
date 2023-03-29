@@ -102,7 +102,7 @@ div[type=button]:hover{
     background-color: #fefefe;
     box-shadow: 2px 2px 0 0 rgb(207, 207, 220);
     border-radius: 10px;
-    height: 500px;
+    height: 38rem;
     width: 50%;
     align-self: center;
     margin-right:20px;
@@ -193,7 +193,8 @@ div[type=button]:hover{
     padding: 0.25rem;
     box-sizing: border-box; 
     backdrop-filter: blur(10px);
-    
+    height: 25rem;
+    max-height: 25rem;
 }
 
 #form{
@@ -225,7 +226,7 @@ div[type=button]:hover{
 }
 #messages{
     padding: 0.1rem;
-    height: 350px;
+    height: 24rem;
     list-style-type: none; 
     margin: 0.25rem; 
     background-color: #fff;
@@ -357,13 +358,23 @@ div[type=button]:hover{
 
 }
 
+#filePreview{
+    position: absolute;
+    z-index: 2000;
+    top: 8rem;
+}
+
 .filePreview{
-    border:1px solid silver;
-    height: 400px;
-    width: 300px;
+    height: 14rem;
+    max-height: 14rem;
+    max-width: 14rem;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.file-preview{
+    height: 14rem;
 }
 
 .toastText{
@@ -455,6 +466,11 @@ li:nth-child(2){
     border-radius: 0.25rem;
     cursor: pointer;
 
+}
+
+.img-thumbnail{
+    max-height: 14rem;
+    max-width: 14rem;
 }
 
 
