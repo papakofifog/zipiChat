@@ -102,7 +102,7 @@ div[type=button]:hover{
     background-color: #fefefe;
     box-shadow: 2px 2px 0 0 rgb(207, 207, 220);
     border-radius: 10px;
-    height: 38rem;
+    height: fit-content;
     width: 50%;
     align-self: center;
     margin-right:20px;
@@ -473,6 +473,9 @@ li:nth-child(2){
     max-width: 14rem;
 }
 
+.disableElement{
+    pointer-events: none;
+}
 
 
 

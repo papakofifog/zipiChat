@@ -12,6 +12,7 @@ let groups=document.querySelector("#groups");
 let friendItem1= document.querySelector('#friendItem-1');
 let friendItem2= document.querySelector('#friendItem-2');
 let userContacts=document.querySelector('#userContactsList');
+let form= document.querySelector('#form');
 
 
 function handleChatView(value1,value2){
@@ -57,6 +58,7 @@ function MonitorClickFriend(){
     //console.log(userContacts)
     userContacts.forEach((x)=>{
         x.addEventListener('click', async function chatWithUser(){
+            form.classList.remove('disableElement')
             chatsView.innerHTML='';
             let chatImage=`<img id="chatFriendIcon" class="icon" src="${x.childNodes[1].childNodes[1].src}" alt="chat Avatar">`;
             if(!x.childNodes[1].childNodes[1].src)chatImage= `<div class="contactImg contactNoPic">${x.childNodes[1].childNodes[1].innerHTML}</div>`;
