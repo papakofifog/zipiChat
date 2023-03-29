@@ -42,7 +42,7 @@ function creatList(data){
         
         let messageList=`<div class=${listClass}> <li class='messageList'>
             ${
-                data.message.fileSent.url ? formatMessage(data.message.messageString)+ getElementPerFleType(data.message.fileSent): data.message.messageString
+                data.message.fileSent.url ? formatMessage(data.message.messageString)+ getElementPerFleType(data.message.fileSent): formatMessage(data.message.messageString)
             
             }
             
@@ -93,7 +93,7 @@ receiveMessage()
 
 function showMessage(msg){
     try{
-        console.log("message for the boys",msg)
+        
         let message= creatList(msg);
         chatsView.innerHTML+=message;
         //console.log(message)

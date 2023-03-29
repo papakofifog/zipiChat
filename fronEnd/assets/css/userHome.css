@@ -188,6 +188,7 @@ div[type=button]:hover{
     
 }
 .chats-view{
+    position: relative;
     background: rgba(0,0,0,0.15);
     padding: 0.25rem;
     box-sizing: border-box; 
@@ -408,10 +409,18 @@ li:nth-child(2){
     align-items: center;
 }
 
-.dropdownWrapper{
+#dropdownWrapper{
     position: absolute;
-    z-index: 100;
+    z-index: 1000;
+    
 }
+
+#emojiPicker{
+    position: absolute;
+    top: -5rem;
+}
+
+
 
 .file-preview{
     background-color: #fff;
