@@ -12,8 +12,9 @@ let attatchFileBtn= document.querySelector('#attatchFile');
 //let backDropMask= document.querySelector('#backdrop');
 let addEmogiButton= document.querySelector('#addEmoji');
 let dropdownWrapper= document.querySelector('#dropdownWrapper');
-let filePreview= document.querySelector('.file-preview')
-let fileUpload= document.querySelector('#filePreview')
+let filePreview= document.querySelector('.file-preview');
+let fileUpload= document.querySelector('#filePreview');
+let recordAudioBtn= document.querySelector('#record-audio')
 
 let currentUploadedFileURL= {
     url:'',
@@ -261,6 +262,7 @@ function modifyMainForUpload(){
     })
     cancelButton.addEventListener('click',()=>{
         fileUpload.classList.remove('block'); 
+        fileUpload.innerHTML='';
     })
     
 }
@@ -276,6 +278,10 @@ attatchFileBtn.addEventListener('click', function handleUploadInteraction(){
     modifyMainForUpload();
 
 } )
+
+recordAudioBtn.addEventListener('click', function handleAudioRecorder(){
+    addRecorderModal();
+})
 
 
 
@@ -294,6 +300,48 @@ function addEmogi(){
         document.querySelector('em-emoji-picker')?dropdownWrapper.removeChild(document.querySelector('#emojiPicker')): dropdownWrapper.appendChild(picker)
     })
     
+}
+
+function addRecorderModal(){
+    let uploadToast=showUploadToast();
+    uploadToast.classList.add('centerItem');
+    fileUpload.innerHTML=uploadToast.outerHTML;
+    let uploadContainer= document.querySelector('.container-fluid .upload-container');
+    uploadContainer.innerHTML='';
+    uploadContainer.innerHTML= recorderInfo()
+    fileUpload.classList.add('block');
+    let stopRecording= document.querySelector('#stopRecording');
+    stopRecording.addEventListener('click', function(){
+        uploadContainer.innerHTML='';
+        fileUpload.classList.remove('block');
+    })
+
+    mutateWaveForm();
+
+}
+
+async function mutateWaveForm(){
+    let audioContext = new AudioContext();
+    let mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    let mediaStreamSource = audioContext.createMediaStreamSource(mediaStream);
+    let meadiaRecorder = new MediaRecorder(mediaStream);
+    meadiaRecorder.start();
+
+}
+
+function recorderInfo(){
+    return `
+        <button class="microphone-Space">
+        <i class="fa fa-microphone gray microphone"></i>
+    </button>
+    <div>
+        <div class="waveform-container"></div>
+        <span id="timer" class="time-display">00:00</span>
+    </div>
+    <button id="stopRecording">
+        <i class="fa fa-circle"></i>
+    </button>
+    `
 }
 
 addEmogi()
