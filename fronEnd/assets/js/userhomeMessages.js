@@ -302,7 +302,7 @@ function addEmogi(){
     
 }
 
-function addRecorderModal(){
+async function addRecorderModal(){
     let uploadToast=showUploadToast();
     uploadToast.classList.add('centerItem');
     fileUpload.innerHTML=uploadToast.outerHTML;
@@ -311,9 +311,25 @@ function addRecorderModal(){
     uploadContainer.innerHTML= recorderInfo()
     fileUpload.classList.add('block');
     let stopRecording= document.querySelector('#stopRecording');
+    let audioContext = new AudioContext();
+    let mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    let mediaStreamSource = audioContext.createMediaStreamSource(mediaStream);
+    let meadiaRecorder = new MediaRecorder(mediaStream);
+    meadiaRecorder.start();
     stopRecording.addEventListener('click', function(){
-        uploadContainer.innerHTML='';
-        fileUpload.classList.remove('block');
+        //uploadContainer.innerHTML='';
+        //fileUpload.classList.remove('block');
+
+        // Stop recording
+        meadiaRecorder.stop();
+
+        //Get the recorded file
+        meadiaRecorder.addEventListener('stop', function(event){
+            let blob = new Blob([event.data], {type: 'video/mp3'});
+            let url = URL.createObjectURL(blob);
+
+            console.log(url)
+        })
     })
 
     mutateWaveForm();
@@ -321,11 +337,9 @@ function addRecorderModal(){
 }
 
 async function mutateWaveForm(){
-    let audioContext = new AudioContext();
-    let mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    let mediaStreamSource = audioContext.createMediaStreamSource(mediaStream);
-    let meadiaRecorder = new MediaRecorder(mediaStream);
-    meadiaRecorder.start();
+    
+
+
 
 }
 
