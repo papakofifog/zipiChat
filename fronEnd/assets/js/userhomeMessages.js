@@ -381,7 +381,7 @@ function recordAudio(){
     
 }
 
-recordAudio();
+//recordAudio();
 
 
 export { ConnectWitChatServer, showMessage }
