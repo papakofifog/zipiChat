@@ -14,20 +14,19 @@ let friendItem2= document.querySelector('#friendItem-2');
 
 
 function createContact(data){
-    let names=data.fullname.split(' ');
-    let contactPicture=`<img class="contactImg" src="http://localhost:3000'+${data.picUrl}" alt="img">`
-    if(!data.picUrl) contactPicture= `<div class="contactImg contactNoPic">${names[0][0]+names[1][0]}</div>`
-    let newContact=`<li id=${data.username}  type="button">
+    
+    let contactPicture=data.picUrl? `<img class="contactImg" src="http://localhost:3000'+${data.picUrl}" alt="img">`:`<div class="contactImg contactNoPic">${data.firstname[0]+data.lastname[0]}</div>`;
+    
+    return `<li id=${data.username}  type="button">
     <div class="userImg contactImg">
         ${contactPicture}
     </div>
-    <div class="userFriendName">${data.fullname}</div>
+    <div class="userFriendName">${data.firstname+' '+data.lastname}</div>
     <div>
        <i class="fas fa-comment-alt"></i>
     </div>
     </li>`;
 
-    return newContact;
 }
 
 
@@ -77,11 +76,6 @@ function removeOpaqueHomeBackground(){
 
 async function getUserData(){
     let url='http://localhost:3000/users/activeuser'
-    /*let user= window.sessionStorage.getItem('access-token');
-    let Headers={ headers: {
-        authorization: user
-      }
-    }*/
     let results= await getData(url).catch((e)=>{
         console.error(e)
     });
@@ -101,7 +95,6 @@ async function formatActiveUserData(){
         friendCount: results.data.data.friendCount,
         userPic: results.data.data.pictures
         }
-        //console.log(userData.userPic)
         return userData;
     }catch(e){
         console.error(e)
@@ -111,23 +104,34 @@ async function formatActiveUserData(){
 
 async function getUserFriends(){
     let url='http://localhost:3000/users/friends';
-    /*let user= window.sessionStorage.getItem('access-token');
-    let Headers={ headers: {
-        authorization: user
-      }
-    }*/
     let results= await getData(url).catch((e)=>{
         console.error(e)
     });
-    return results
+    return results;
+}
+
+async function getAllUsers(){
+    let url = 'http://localhost:3000/users/allnonFriends';
+    let results= await getData(url).catch((e)=>{
+        console.error(e)
+    });
+    return results;
 }
 
 async function formatActiveUserFriends(){
     try{
         let activeUserFriends= await getUserFriends();
-        //console.log(activeUserFriends.data.data)
         let friendListHtmlCode=generateUserContacts(activeUserFriends.data.data);
         return friendListHtmlCode;
+    }catch(e){
+        console.error(e)
+    }
+}
+async function formatAllUsers(){
+    try{
+        let allUsers= await getAllUsers();
+        let UserListHTMLCode= generateUserContacts(allUsers.data.data);
+        return UserListHTMLCode;
     }catch(e){
         console.error(e)
     }
@@ -135,11 +139,10 @@ async function formatActiveUserFriends(){
 
 function generateUserContacts(data){
     let friendList='';
-    let noFriends= data.length;
-    for(let i=0; i< noFriends; i++){
-        friendList+=createContact(data[i]);
-    }
-    //console.log(friendList)
+    console.log(data)
+    data.map((friend)=>{
+        friendList+=createContact(friend)
+    })
     return friendList;
 }
 
@@ -155,6 +158,7 @@ window.addEventListener('load',async function(){
     friendItem1.innerHTML="Contacts";
     friendItem2.innerHTML="NewContacts";
     let userFriends=friends;
+    
 
     userContacts.innerHTML=userFriends;
     ConnectWitChatServer();
@@ -166,4 +170,4 @@ window.addEventListener('load',async function(){
     },1000)
 });
 
-export {formatActiveUserFriends}
+export {formatActiveUserFriends, formatAllUsers}

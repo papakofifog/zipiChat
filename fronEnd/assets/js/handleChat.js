@@ -1,6 +1,8 @@
 import { sendData } from "./handleRequest.js";
 import { showMessage } from "./userhomeMessages.js";
-import { formatActiveUserFriends } from "./userHome.js";
+import { formatActiveUserFriends, formatAllUsers } from "./userHome.js";
+import { showInformationToast, createSpinner, createToastImage } from './toaster.js'
+
 const userContactsContainer= document.querySelector('#userContactsList');
 const chatWithFriendIcon= document.querySelector('#chatFriendIcon');
 const chatWithUserUsername= document.querySelector('#chat-name');
@@ -16,19 +18,26 @@ let form= document.querySelector('#form');
 
 
 function handleChatView(value1,value2){
+    
     friendItem1.addEventListener('click',async function(){
+        
         userContacts.innerHTML=value1;
+        MonitorClickFriend()
     })
 
     friendItem2.addEventListener('click', function(){
         userContacts.innerHTML=value2;
+        monitorAddNewFriend();
     })
 }
 
  async function MonitorOptions (){
     let friends= await formatActiveUserFriends();
+    let allUsers= await formatAllUsers();
     // show the friends chat view when the page loads.
-    handleChatView(friends,"");
+    //console.log(friends)
+
+    handleChatView(friends, allUsers);
 
 
     // handdle chat behaviour when a user interact with the chat app.
@@ -36,12 +45,13 @@ function handleChatView(value1,value2){
         
         friendItem1.innerHTML="Friends";
         friendItem2.innerHTML="New Contacts";
-        let friends= await formatActiveUserFriends();
+        friends= await formatActiveUserFriends();
+        allUsers= await formatAllUsers();
         userContacts.innerHTML=friends;
-        handleChatView(friends,"");
+        handleChatView(friends,allUsers);
         MonitorClickFriend();
     })
-    groups.addEventListener('click', function (){
+    groups.addEventListener('click', async function (){
         friendItem1.innerHTML="Groups";
         friendItem2.innerHTML="New Groups";
         let groups="";
@@ -75,6 +85,36 @@ function MonitorClickFriend(){
 
     
     
+}
+
+function monitorAddNewFriend(){
+    try{
+        let nonFriends= userContactsContainer.childNodes;
+        nonFriends.forEach((nonFriend)=>{
+            nonFriend.addEventListener('click', async function addNewFriend() {
+                //console.log(nonFriend.id)
+                let data={
+                    "friend": nonFriend.id
+                }
+                let url='http://localhost:3000/users/addFriend'
+                let results= await sendData(url,data).catch((e)=>{
+                    console.error(e)
+                });
+
+                console.log(results.data.message)
+
+                setTimeout(()=>{
+                    showInformationToast(results.data.message)
+                }, 1000)
+
+
+            })
+        })
+    }catch(e){
+        console.error(e)
+    }
+    
+
 }
 
 

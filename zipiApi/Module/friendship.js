@@ -71,6 +71,7 @@ async function addNewFriend(user,data){
 async function addAfriend(data,next){
     try{
         let user= await doesUserHaveRelationship(data.userId);
+        
         if(user){
             if(user.userFriendId.includes(data.friendId)){
                 return false;
@@ -84,6 +85,28 @@ async function addAfriend(data,next){
     }catch(e){
         next(e)
     }
+}
+
+
+
+async function removeAFriend(data,next){
+    try{
+        let user= await doesUserHaveRelationship(data.userId);
+        if(user){
+            if(user.userFriendId.includes(data.friendId)){
+                user.userFriendId.filter(friendId => friendId !== data.userId );
+                user.save();
+            }else{
+                return false;
+            }
+            
+        }else{
+            return false;
+        }
+    }catch(e){
+        next(e)
+    }
+    
 }
 
 

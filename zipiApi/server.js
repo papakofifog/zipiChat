@@ -22,11 +22,13 @@ const errorHandler= require('./Middleware/handleErrors/errorHandler');
 
 const bodyParser= require('body-parser') 
 
-const AppRoute = require('./routes/applicationRoutes');
+const AppRouter = require('./routes/applicationRoutes');
 
 const ChatRouter= require('./routes/chatRoutes')
 
-const UserRoute = require('./routes/userRoutes');
+const UserRouter = require('./routes/userRoutes');
+
+const FriendRouter = require('./routes/friendRoutes');
 
 app.use(bodyParser.json())
 
@@ -36,13 +38,15 @@ app.use('/userProfiles',express.static(__dirname+'/userProfiles'))
 dbConnection()
 
 //application routes
-app.use('/api',AppRoute);
+app.use('/api',AppRouter);
 
 //user request routes
-app.use('/users', UserRoute);
+app.use('/users', UserRouter);
 
 // chat routes
 app.use('/convo',ChatRouter);
+
+app.use('/friend', FriendRouter);
 
 // handle errors
 app.use(errorHandler);

@@ -82,6 +82,15 @@ async function findOneUserById(userId){
     }
 }
 
+async function findUserByUserName(username){
+    try{
+        let existingUser= await ZipiUser.findOne({username: username })
+        return existingUser ? existingUser : `No User with username ${username}`;
+    }catch(e){
+        consosle.error(e)
+    }
+}
+
 async function findOneUser(user){
     try{
         let existingUser= await ZipiUser.findOne(user).catch((e)=>{
@@ -150,15 +159,10 @@ function checkLoginDataformat(data){
 
 async function updateLoginStatus(data){
     try{
-        
-
         let user= await ZipiUser.findById(data.userId);
-        //console.log(user)
         user.loginStatus=data.status;
         await user.save();
         return true
-        
-
     }catch(e){
         console.error(e)
         return false
@@ -166,4 +170,4 @@ async function updateLoginStatus(data){
    
 }
 
-module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat, updateLoginStatus }
+module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat, updateLoginStatus, findUserByUserName }
