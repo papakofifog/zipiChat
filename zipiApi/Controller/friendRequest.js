@@ -121,7 +121,7 @@ async function removeUsersFriend(req,res,next){
         let removeRelationship2 = await removeAFriend(activeUserFriendRelation,res,next);
         let results=removeRelationship1 && removeRelationship2;
 
-        console.log(removeRelationship1 ,removeRelationship2)
+        //console.log(removeRelationship1 ,removeRelationship2)
         return results? res.json(successMessage("Relationship Broken successfully", results)): res.json(failureMessage("Something went wrong"))
     }catch(e){
         return next(e)

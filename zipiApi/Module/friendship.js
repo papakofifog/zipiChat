@@ -51,7 +51,7 @@ async function addNewFriend(user,data,next){
 async function addAfriend(data,next){
     try{
         let friend= await getRelationship(data.userId)
-        console.log(friend)
+        //console.log(friend)
         if(friend.userFriendId.includes(data.friendId)){
                 return false;
         }
@@ -79,7 +79,7 @@ async function removeFriend(user,data,next){
 async function removeAFriend(data,res,next){
     try{
         let user=  await getRelationship(data.userId);
-        console.log(user)
+        //console.log(user)
         if(user){
             if(user.userFriendId.includes(data.friendId)){
                 

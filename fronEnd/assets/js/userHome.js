@@ -103,7 +103,7 @@ async function formatActiveUserData(){
 }
 
 async function getUserFriends(){
-    let url='http://localhost:3000/users/friends';
+    let url='http://localhost:3000/friend/getUsersFriends';
     let results= await getData(url).catch((e)=>{
         console.error(e)
     });
@@ -111,7 +111,7 @@ async function getUserFriends(){
 }
 
 async function getAllUsers(){
-    let url = 'http://localhost:3000/users/allnonFriends';
+    let url = 'http://localhost:3000/friend/getUsersFriends';
     let results= await getData(url).catch((e)=>{
         console.error(e)
     });
