@@ -65,7 +65,10 @@ async function addAfriend(data,next){
 
 async function removeFriend(user,data,next){
     try{
-        let userFriends=user.userFriendId.filter(friendId => (friendId).toString() !== data.friendId );
+        let userFriends=user.userFriendId.filter((friendId) => {
+            // console.log((friendId).toString(), (data.friendId).toString() )
+            return (friendId).toString() !== (data.friendId).toString() 
+        } );
         user.userFriendId=userFriends;
         user.save();
     }catch(e){
@@ -75,10 +78,12 @@ async function removeFriend(user,data,next){
 
 async function removeAFriend(data,res,next){
     try{
-        let friend=  await getRelationship(data.userId);
-        if(friend){
-            if(friend.userFriendId.includes(data.friendId)){
-                await removeFriend(friend,data,next);
+        let user=  await getRelationship(data.userId);
+        console.log(user)
+        if(user){
+            if(user.userFriendId.includes(data.friendId)){
+                
+                await removeFriend(user,data,next);
                 return true;
             }else{
                 return false;

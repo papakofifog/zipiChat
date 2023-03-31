@@ -28,8 +28,8 @@ async function getFriendsDetails(userID){
     try{
         let friends= await retriveUserFriends(userID);
         let friendDetailsList=[];
-        for(let j=0; j<friends.userFriendId.length; j++){
-            let user = await findOneUserById(friends.userFriendId[j]);
+        for(let friendId of friends.userFriendId){
+            let user = await findOneUserById(friendId);
             let userPicture= await getUserpicture(user._id);
             friendDetailsList.push(
                 {
@@ -41,7 +41,6 @@ async function getFriendsDetails(userID){
                     loginStatus:user.loginStatus||false
                 });
         }
-        console.log(friendDetailsList)
         return friendDetailsList;
     }catch(e){
         console.error(e)
@@ -65,7 +64,7 @@ async function createFriend(req,res,next){
             friendId:friend._id
         }
         let activeUserFriendRelation={
-            userId:friend,
+            userId:friend._id,
             friendId:userId
         }
         let newUser=await addAfriend(activeUserRelationship,next);
@@ -104,22 +103,25 @@ async function removeUsersFriend(req,res,next){
         
         if(!friend) return res.status(400).json(failureMessage("User Provided does not exist"));
 
-        let userId= req.body['id'];
+        let userID= req.body['id'];
 
-        if((friend._id).toString() === userId) return res.status(400).json(failureMessage("An active User cannot be friends with himself"))
+        if((friend._id).toString() === userID) return res.status(400).json(failureMessage("An active User cannot be friends with himself"))
         
         let activeUserRelationship={
-            userId:userId,
+            userId:userID,
             friendId:friend._id
         }
 
         let activeUserFriendRelation={
-            userId:friend,
-            friendId:userId
+            userId:friend._id,
+            friendId:userID
         }
+        
         let removeRelationship1=await removeAFriend(activeUserRelationship,res,next);
         let removeRelationship2 = await removeAFriend(activeUserFriendRelation,res,next);
         let results=removeRelationship1 && removeRelationship2;
+
+        console.log(removeRelationship1 ,removeRelationship2)
         return results? res.json(successMessage("Relationship Broken successfully", results)): res.json(failureMessage("Something went wrong"))
     }catch(e){
         return next(e)
