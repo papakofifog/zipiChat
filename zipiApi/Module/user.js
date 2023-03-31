@@ -1,9 +1,9 @@
 //const e = require('express')
 const mongoose= require('mongoose')
 const pictureRoot= 'cloudinarySomething';
-const toLower= require('../Util/helperfunctions')
-const errorHandler= require('../Middleware/handleErrors/errorHandler')
-
+const toLower= require('../Util/helperfunctions');
+const errorHandler= require('../Middleware/handleErrors/errorHandler');
+const { friendshipSchema } = require('../Module/friendship')
 
 const userSchema= new mongoose.Schema({
     firstname:{
@@ -46,9 +46,27 @@ const userSchema= new mongoose.Schema({
         type: Boolean,
         default: false
     }
-
-
 }, {timestamps:true})
+
+
+userSchema.pre('save', async function(next){
+    try{
+        // Check if the parent document is new
+        if(this.isNew){
+            // Create a new child document with the parent's ID
+            const child = new friendshipSchema({
+                userId: this._id,
+                userFriendId: []
+            })  
+
+            // Save the child document
+            await child.save();
+        }
+        next()
+    }catch(e){
+        next(e)
+    }
+})
 
 let ZipiUser=mongoose.model('User', userSchema);
 
@@ -85,9 +103,9 @@ async function findOneUserById(userId){
 async function findUserByUserName(username){
     try{
         let existingUser= await ZipiUser.findOne({username: username })
-        return existingUser ? existingUser : `No User with username ${username}`;
+        return existingUser ? existingUser : null;
     }catch(e){
-        consosle.error(e)
+        console.error(e)
     }
 }
 

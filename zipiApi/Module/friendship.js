@@ -20,7 +20,7 @@ let friendshipSchema= mongoose.model('friend', friendSchema);
 
 async function retriveUserFriends(userID){
     try{
-        let friends= await friendshipSchema.find({userId:userID});
+        let friends= await friendshipSchema.findOne({userId:userID});
         return friends;
     }catch(e){
         console.error(e)
@@ -28,74 +28,58 @@ async function retriveUserFriends(userID){
     
 }
 
-
-
-async function doesUserHaveRelationship(userID){
+async function getRelationship(userId){
     try{
-        let user= await friendshipSchema.findOne({userId:userID});
-        return user;
-    }catch(e){
-        console.error(e)
-    }
-}
-
-
-
-
-
-async function addRelationship(data){
-    try{
-            let newFriend= new friendshipSchema({
-            userId:data.userId,
-            userFriendId:data.friendId
-        });
-        await newFriend.save()
+        let userRelationship = friendshipSchema.findOne({userId: userId});
+        return userRelationship
     }catch(e){
         console.error(e)
     }
     
 }
 
-async function addNewFriend(user,data){
+async function addNewFriend(user,data,next){
     try{
         user.userFriendId.push(data.friendId);
         user.save();
     }catch(e){
-        return e;
+        next(e);
     }
     
 }
 
-
-
 async function addAfriend(data,next){
     try{
-        let user= await doesUserHaveRelationship(data.userId);
-        
-        if(user){
-            if(user.userFriendId.includes(data.friendId)){
+        let friend= await getRelationship(data.userId)
+        console.log(friend)
+        if(friend.userFriendId.includes(data.friendId)){
                 return false;
-            }
-            await addNewFriend(user,data);
-            return true
-        }else{
-            await addRelationship(data);
-            return true;
-        } 
+        }
+        await addNewFriend(friend,data,next);
+        return true
+        
     }catch(e){
         next(e)
     }
 }
 
-
-
-async function removeAFriend(data,next){
+async function removeFriend(user,data,next){
     try{
-        let user= await doesUserHaveRelationship(data.userId);
-        if(user){
-            if(user.userFriendId.includes(data.friendId)){
-                user.userFriendId.filter(friendId => friendId !== data.userId );
-                user.save();
+        let userFriends=user.userFriendId.filter(friendId => (friendId).toString() !== data.friendId );
+        user.userFriendId=userFriends;
+        user.save();
+    }catch(e){
+        next(e)
+    }
+}
+
+async function removeAFriend(data,res,next){
+    try{
+        let friend=  await getRelationship(data.userId);
+        if(friend){
+            if(friend.userFriendId.includes(data.friendId)){
+                await removeFriend(friend,data,next);
+                return true;
             }else{
                 return false;
             }
@@ -111,4 +95,4 @@ async function removeAFriend(data,next){
 
 
 
-module.exports=  { retriveUserFriends, addAfriend }
+module.exports=  { friendshipSchema, retriveUserFriends, addAfriend, removeAFriend, getRelationship }
