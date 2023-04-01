@@ -146,7 +146,7 @@ function generateUserContacts(data){
     return friendList;
 }
 
-window.addEventListener('load',async function(){
+/*window.addEventListener('load',async function(){
     showOpaqueHomeBackground();
     
     let results= await formatActiveUserData();
@@ -168,6 +168,6 @@ window.addEventListener('load',async function(){
     this.setTimeout(function(){
         removeOpaqueHomeBackground();
     },1000)
-});
+});*/
 
 export {formatActiveUserFriends, formatAllUsers}
