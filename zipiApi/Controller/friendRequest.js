@@ -1,4 +1,4 @@
-const { retriveUserFriends, addAfriend,removeAFriend, getRelationship }= require('../Module/friendship');
+const { retriveUserFriends, addAfriend,removeRelationship,addFriendRequest, getRelationship }= require('../Module/friendship');
 const { findUserByUserName, findOneUserById, getAllUsers } = require('../Module/user');
 const { getUserpicture } = require('../Module/userPictures');
 const { userSuccess, successMessage, failureMessage}= require('../Middleware/handleResponse');
@@ -79,6 +79,36 @@ async function createFriend(req,res,next){
     }  
 }
 
+async function addFreiendRequest(req, res,next){
+    try{
+        if(!req.body.friend) return res.status(400).json(failureMessage("friend field not specified"));
+        
+        let friend= await findUserByUserName(req.body.friend)
+        
+        if(!friend) return res.status(400).json(failureMessage("User Provided does not exist"));
+
+        let userId= req.body['id'];
+
+        if((friend._id).toString() === userId) return res.status(400).json(failureMessage("An active User cannot be friends with himself"));
+
+        let activeUserRelationship={
+            userId:userId,
+            friendId:friend._id
+        }
+
+        let newFriendRequest=await addFriendRequest(activeUserRelationship,next);
+
+        if(newFriendRequest){
+            return res.status(200).json(successMessage("Friendship Created"));
+        }else{
+            return res.status(400).json(failureMessage("Friend Already Exist"));
+        } 
+        
+    }catch(e){
+        return next(e)
+    }
+}
+
 async function getAllUserNonFriends(req,res,next){
     try{
         let users= await getAllUsers();
@@ -117,8 +147,8 @@ async function removeUsersFriend(req,res,next){
             friendId:userID
         }
         
-        let removeRelationship1=await removeAFriend(activeUserRelationship,res,next);
-        let removeRelationship2 = await removeAFriend(activeUserFriendRelation,res,next);
+        let removeRelationship1=await removeRelationship(activeUserRelationship,res,next);
+        let removeRelationship2 = await removeRelationship(activeUserFriendRelation,res,next);
         let results=removeRelationship1 && removeRelationship2;
 
         //console.log(removeRelationship1 ,removeRelationship2)
@@ -128,4 +158,4 @@ async function removeUsersFriend(req,res,next){
     }
 }
 
-module.exports= { getUserNumberFriends, getFriends, createFriend, getAllUserNonFriends, removeUsersFriend }
+module.exports= { getUserNumberFriends, getFriends, createFriend, getAllUserNonFriends, removeUsersFriend,addFreiendRequest }

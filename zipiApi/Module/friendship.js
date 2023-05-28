@@ -12,7 +12,13 @@ const friendSchema = new mongoose.Schema({
         type: [mongoose.Types.ObjectId],
         ref:'user',
         required: (true, "friend reference is required")
+    },
+    userFriendIdRequests: {
+        type: [mongoose.Types.ObjectId],
+        ref:'user',
+        required: (true, "friend reference is required")
     }
+
 });
 
 let friendshipSchema= mongoose.model('friend', friendSchema);
@@ -48,6 +54,15 @@ async function addNewFriend(user,data,next){
     
 }
 
+async function addNewFriendRequest(user,data,next){
+    try{
+        user.userFriendIdRequests.push(data.friendId);
+        user.save();
+    }catch(e){
+        next(e);
+    }
+}
+
 async function addAfriend(data,next){
     try{
         let friend= await getRelationship(data.userId)
@@ -56,6 +71,24 @@ async function addAfriend(data,next){
                 return false;
         }
         await addNewFriend(friend,data,next);
+        return true
+        
+    }catch(e){
+        next(e)
+    }
+}
+
+async function addFriendRequest(data,next){
+    try{
+        let relationship= await getRelationship(data.userId)
+        //console.log(friend)
+        if(friend.userFriendId.includes(data.friendId)){
+            return false;
+        }
+        if(relationship.userFriendIdRequests.includes(data.friendId)){
+                return false;
+        }
+        await addNewFriendRequest(relationship,data,next);
         return true
         
     }catch(e){
@@ -76,7 +109,7 @@ async function removeFriend(user,data,next){
     }
 }
 
-async function removeAFriend(data,res,next){
+async function removeRelationship(data,res,next){
     try{
         let user=  await getRelationship(data.userId);
         //console.log(user)
@@ -100,4 +133,4 @@ async function removeAFriend(data,res,next){
 
 
 
-module.exports=  { friendshipSchema, retriveUserFriends, addAfriend, removeAFriend, getRelationship }
+module.exports=  { friendshipSchema, retriveUserFriends, addAfriend, addFriendRequest, removeRelationship, getRelationship }
