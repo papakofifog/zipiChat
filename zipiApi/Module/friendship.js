@@ -23,17 +23,6 @@ const friendSchema = new mongoose.Schema({
 
 let friendshipSchema= mongoose.model('friend', friendSchema);
 
-
-async function retriveUserFriends(userID){
-    try{
-        let friends= await friendshipSchema.findOne({userId:userID});
-        return friends;
-    }catch(e){
-        console.error(e)
-    }
-    
-}
-
 async function getRelationship(userId){
     try{
         let userRelationship = friendshipSchema.findOne({userId: userId});
@@ -43,6 +32,27 @@ async function getRelationship(userId){
     }
     
 }
+
+async function retriveUserFriends(userID){
+    try{
+        let friend= await getRelationship(userID);
+        return friend.userFriendId;
+    }catch(e){
+        console.error(e)
+    }
+    
+}
+
+async function retriveActiveUserRequest(userID){
+    try{
+        let friend= await getRelationship(userID);
+        return friend.userFriendIdRequests;
+    }catch(e){
+        console.error(e)
+    }
+}
+
+
 
 async function addNewFriend(user,data,next){
     try{
@@ -56,7 +66,7 @@ async function addNewFriend(user,data,next){
 
 async function addNewFriendRequest(user,data,next){
     try{
-        user.userFriendIdRequests.push(data.friendId);
+        user.userFriendIdRequests.push(data.userId);
         user.save();
     }catch(e){
         next(e);
@@ -80,13 +90,13 @@ async function addAfriend(data,next){
 
 async function addFriendRequest(data,next){
     try{
-        let relationship= await getRelationship(data.userId)
+        let relationship= await getRelationship(data.friendId)
         //console.log(friend)
-        if(friend.userFriendId.includes(data.friendId)){
+        if(relationship.userFriendId.includes(data.userId)){
             return false;
         }
-        if(relationship.userFriendIdRequests.includes(data.friendId)){
-                return false;
+        if(relationship.userFriendIdRequests.includes(data.userId)){
+            return false;
         }
         await addNewFriendRequest(relationship,data,next);
         return true
@@ -94,6 +104,30 @@ async function addFriendRequest(data,next){
     }catch(e){
         next(e)
     }
+}
+
+async function removeFriendRequest(data,next){
+    try{
+        let relationship= await getRelationship(data.userId);
+
+        if(relationship.userFriendIdRequests.length==0){
+            return false
+        }
+        
+        let newUserFriendRequest=relationship.userFriendIdRequests.filter((friendId)=>{
+            return (friendId).toString()!==(data.friendId).toString();
+        });
+
+        
+        
+        relationship.userFriendIdRequests=newUserFriendRequest;
+        relationship.save();
+        return true;
+    }catch(e){
+        next(e);
+    }
+    
+
 }
 
 async function removeFriend(user,data,next){
@@ -105,14 +139,14 @@ async function removeFriend(user,data,next){
         user.userFriendId=userFriends;
         user.save();
     }catch(e){
-        next(e)
+        next(e);
     }
 }
 
 async function removeRelationship(data,res,next){
     try{
         let user=  await getRelationship(data.userId);
-        //console.log(user)
+        
         if(user){
             if(user.userFriendId.includes(data.friendId)){
                 
@@ -133,4 +167,4 @@ async function removeRelationship(data,res,next){
 
 
 
-module.exports=  { friendshipSchema, retriveUserFriends, addAfriend, addFriendRequest, removeRelationship, getRelationship }
+module.exports=  { friendshipSchema, retriveUserFriends, addAfriend, addFriendRequest, removeRelationship, getRelationship, retriveActiveUserRequest,removeFriendRequest }

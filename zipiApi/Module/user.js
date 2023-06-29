@@ -120,9 +120,13 @@ async function findOneUser(user){
     }
 }
 
+async function getRelevantUserData(user){
+
+}
+
 async function getAllUsers(user){
     try{
-        let allUsers= await ZipiUser.find().catch((e)=>{
+        let allUsers= await ZipiUser.find({},{password: 0,Dob:0, createdAt:0,updatedAt:0}).catch((e)=>{
             next(e);
         })
         return allUsers;
@@ -134,10 +138,7 @@ async function getAllUsers(user){
 async function doesUserExist(data){
     try{
         let user=await ZipiUser.findOne(data);
-        if (!user){
-            return false;
-        }
-        return true;
+        return !user?true:false;
     }catch(e){
         return errorHandler(e)
     }
@@ -151,8 +152,6 @@ function hasSameProps(obj1,obj2){
 }
 
 function checkRegisterDataformat(data){
-    /*return !(data.hasOwnProperty('firstname')===false||data.hasOwnProperty('lastname')===false|| data.hasOwnProperty('username')===false ||data.hasOwnProperty('email')===false||
-    data.hasOwnProperty('password')===false|| data.hasOwnProperty('Dob')===false);*/
     let idealStructure= new Object({
         firstname:String,
         lastname:String,
@@ -187,5 +186,7 @@ async function updateLoginStatus(data){
     }
    
 }
+
+
 
 module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat, updateLoginStatus, findUserByUserName }

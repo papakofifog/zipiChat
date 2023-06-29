@@ -12,7 +12,7 @@ const server= http.createServer(app);
 
 const clients=new Map()
 
-app.use(cors({origin:'http://localhost:8000'}));
+app.use(cors({origin:'http://localhost:5173'}));
 
 //const { registerWithGoogle } = require('./Controller/applicationRequest');
 
