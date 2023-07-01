@@ -1,5 +1,6 @@
 import { sendData, getData, sendFormData } from "./handleRequest.js";
 import { showInformationToast } from "./toaster.js";
+import { recordAudio } from "./handleAudioRecording.js";
 //import { dropDown  } from "./componets.js"
 
 let chatsView = document.querySelector('#messages');
@@ -220,15 +221,9 @@ async function uploadFunctionCloudinary(value){
     formData.append('file', value);
 
     //send the file using axios
-    
     let uploadedFileData= await sendFormData("http://localhost:3000/users/upload", formData);
-
-    //console.log(uploadedFileData.data)
     let CloudinaryFileData=uploadedFileData.data;
 
-    /*document.querySelector('.messageList ').addEventListener('click', function(event){
-        window.open(event.target.src, '_blank');
-    })*/
     
     if(CloudinaryFileData.success){
         let { url, original_filename, fileType} = CloudinaryFileData.data;
@@ -244,7 +239,7 @@ async function uploadFunctionCloudinary(value){
 
 }
 
-function modifyMainForUpload(){
+ function modifyMainForUpload(){
     let uploadToast=showUploadToast();
     uploadToast.classList.add('centerItem');
     fileUpload.innerHTML=uploadToast.outerHTML;
@@ -257,7 +252,7 @@ function modifyMainForUpload(){
     })
     storeUpload.addEventListener('click', function(){
         let targetFile = uploadButton.files[0];
-        uploadFunctionCloudinary(targetFile);
+         uploadFunctionCloudinary(targetFile);
 
     })
     cancelButton.addEventListener('click',()=>{
@@ -281,6 +276,7 @@ attatchFileBtn.addEventListener('click', function handleUploadInteraction(){
 
 recordAudioBtn.addEventListener('click', function handleAudioRecorder(){
     addRecorderModal();
+
 })
 
 
@@ -311,6 +307,16 @@ async function addRecorderModal(){
     uploadContainer.innerHTML= recorderInfo()
     fileUpload.classList.add('block');
     let stopRecording= document.querySelector('#stopRecording');
+    
+    let timer=document.querySelector('#timer');
+    //let recordMedia= await recordAudio();
+    //recordMedia.start();
+    let count=0;
+    setInterval(function incrementTime(){
+        count++;
+        timer.innerHTML=count;
+    },1000)
+
     let audioContext = new AudioContext();
     let mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
     let mediaStreamSource = audioContext.createMediaStreamSource(mediaStream);
@@ -324,7 +330,7 @@ async function addRecorderModal(){
         meadiaRecorder.stop();
 
         //Get the recorded file
-        meadiaRecorder.addEventListener('stop', function(event){
+        stopRecording.addEventListener('stop', function(event){
             let blob = new Blob([event.data], {type: 'video/mp3'});
             let url = URL.createObjectURL(blob);
 
@@ -332,14 +338,16 @@ async function addRecorderModal(){
         })
     })
 
-    mutateWaveForm();
+    //mutateWaveForm();
 
-}
 
-async function mutateWaveForm(){
+    /*stopRecording.addEventListener('click', function(){
+        // Stop recording
+        recordMedia.stop();
+        fileUpload.classList.remove('block');
+    })*/
+
     
-
-
 
 }
 
@@ -360,10 +368,10 @@ function recorderInfo(){
 
 addEmogi()
 
-function recordAudio(){
+/*function recordAudio(){
     try{
 
-        recordButton.addEventListener('click', async function(){
+        recordAudioBtn.addEventListener('click', async function(){
             let streamObject= await navigator.mediaDevices.getUserMedia({audio:true})
             let recorder = RecordRTC(streamObject, {
                 type: 'audio',
@@ -395,7 +403,7 @@ function recordAudio(){
     
 }
 
-//recordAudio();
+//recordAudio();*/
 
 
 export { ConnectWitChatServer, showMessage }
