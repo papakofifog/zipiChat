@@ -26,7 +26,7 @@ let friendshipSchema= mongoose.model('friend', friendSchema);
 async function getRelationship(userId){
     try{
         let userRelationship = friendshipSchema.findOne({userId: userId});
-        return userRelationship
+        return userRelationship;
     }catch(e){
         console.error(e)
     }

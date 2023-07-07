@@ -125,9 +125,11 @@ async function getAllUserNonFriends(req,res,next){
         let activeUser= await findOneUserById(req.body['id']).catch((e)=>{
             return next(e);
         })
+    
         let retrieveActiveUserFriends= await  retriveUserFriends(req.body['id'])
-        retrieveActiveUserFriends.push(activeUser._id)
+        //retrieveActiveUserFriends.push(activeUser._id)
         let activeUserNonFriends=users.filter(zipiUser => retrieveActiveUserFriends.indexOf(zipiUser._id) === -1); 
+        
         return res.json(successMessage("Users Non Friends are ", activeUserNonFriends));
     }catch(e){
        return next(e)
@@ -160,7 +162,6 @@ async function removeUsersFriend(req,res,next){
         let removeRelationship2 = await removeRelationship(activeUserFriendRelation,res,next);
         let results=removeRelationship1 && removeRelationship2;
 
-        //console.log(removeRelationship1 ,removeRelationship2)
         return results? res.json(successMessage("Relationship Broken successfully", results)): res.json({"relationship1": removeRelationship1,
     "relationship2": removeRelationship2})
     }catch(e){
