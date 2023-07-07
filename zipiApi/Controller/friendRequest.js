@@ -127,7 +127,7 @@ async function getAllUserNonFriends(req,res,next){
         })
     
         let retrieveActiveUserFriends= await  retriveUserFriends(req.body['id'])
-        //retrieveActiveUserFriends.push(activeUser._id)
+        retrieveActiveUserFriends.push(activeUser._id);
         let activeUserNonFriends=users.filter(zipiUser => retrieveActiveUserFriends.indexOf(zipiUser._id) === -1); 
         
         return res.json(successMessage("Users Non Friends are ", activeUserNonFriends));

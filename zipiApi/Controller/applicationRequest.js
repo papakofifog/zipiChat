@@ -8,11 +8,17 @@ require('dotenv').config();
 
 
 
+
+
 const registerUser= async (req,res,next) =>{
     try{
         if(!(checkRegisterDataformat(req.body)))return res.json(failureMessage("All inputs requred"));
+
+        
         let existingUser= await doesUserExist({email:req.body.email});
-        if(existingUser) return res.json(successMessage("User exists proceeding to login"))
+        //console.log(existingUser)
+        if(existingUser) return res.json(failureMessage("User exists proceeding to login"));
+
         req.body.password= await encryptedPassword(req.body.password,next)
         let newUser= await createUser(req.body,next);
         if(newUser) return next(newUser);

@@ -120,9 +120,7 @@ async function findOneUser(user){
     }
 }
 
-async function getRelevantUserData(user){
 
-}
 
 async function getAllUsers(user){
     try{
@@ -138,7 +136,7 @@ async function getAllUsers(user){
 async function doesUserExist(data){
     try{
         let user=await ZipiUser.findOne(data);
-        return !user?true:false;
+        return user?true:false;
     }catch(e){
         return errorHandler(e)
     }
@@ -153,11 +151,30 @@ function hasSameProps(obj1,obj2){
 
 function checkRegisterDataformat(data){
     let idealStructure= new Object({
-        firstname:String,
-        lastname:String,
-        username:String,
-        email:String,
-        password:String,
+        firstname:{
+           type: String,
+           required:true,
+           RegExp: /\w+/
+        },
+        lastname:{
+            type: String,
+            required:true,
+            RegExp: /\w+/
+         },
+        username:{
+            type: String,
+            required:true,
+            RegExp: /\w+/
+         },
+        email:{
+            type: String,
+            required:true,
+            RegExp: /^\w+@\w+.+w$/
+         },
+        password:{
+            type: String,
+            required:true
+         },
         Dob:String
     }) 
     
