@@ -119,18 +119,33 @@ async function addFreiendRequest(req, res,next){
     }
 }
 
+async function getFriendIsRequestSentStatus(userId,friendId){
+    let activeUserRequest= await retriveActiveUserRequest(friendId);
+    return activeUserRequest.includes(userId);
+}
+
 async function getAllUserNonFriends(req,res,next){
     try{
         let users= await getAllUsers();
-        let activeUser= await findOneUserById(req.body['id']).catch((e)=>{
-            return next(e);
-        })
+        let activeUser= await findOneUserById(req.body['id'])
     
-        let retrieveActiveUserFriends= await  retriveUserFriends(req.body['id'])
+        let retrieveActiveUserFriends= await  retriveUserFriends(req.body['id']);
         retrieveActiveUserFriends.push(activeUser._id);
-        let activeUserNonFriends=users.filter(zipiUser => retrieveActiveUserFriends.indexOf(zipiUser._id) === -1); 
+        let activeUserNonFriends=users.filter(nonFried => retrieveActiveUserFriends.indexOf(nonFried._id) === -1);
+        let data=[];
         
-        return res.json(successMessage("Users Non Friends are ", activeUserNonFriends));
+        for (let friend of activeUserNonFriends) {
+            let isRequestSentStatus= await getFriendIsRequestSentStatus(activeUser._id,friend._id);
+            data.push({
+                id: friend._id,
+                firstname:friend.firstname,
+                lastname:friend.lastname,
+                username:friend.username,
+                email: friend.email,
+                isRequestSent:isRequestSentStatus
+            })
+        }
+        return res.json(successMessage("Users Non Friends are ", data));
     }catch(e){
        return next(e)
     }
