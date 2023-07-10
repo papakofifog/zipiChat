@@ -205,6 +205,12 @@ async function removeUserFriendRequest(req,res,next){
         let friend= await findUserByUserName(req.body.friend)
         
         if(!friend) return res.status(400).json(failureMessage("User Provided does not exist"));
+
+        let friendRelationship= await getRelationship(friend._id);
+
+        if( friendRelationship.userFriendIdRequests.includes(req.body['id'])==false){
+            return res.status(400).json(failureMessage("friend request not sent to this user"));
+        }
         
         let data={
             userId:req.body['id'],

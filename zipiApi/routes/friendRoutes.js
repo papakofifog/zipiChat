@@ -9,7 +9,8 @@ FriendRouter.get('/allnonFriends', verifyToken,decryptToken,getAllUserNonFriends
 FriendRouter.post('/addFriend',verifyToken,decryptToken, createFriend);
 FriendRouter.post('/removeFriend',verifyToken,decryptToken, removeUsersFriend);
 FriendRouter.post('/sendFriendRequest',verifyToken,decryptToken,addFreiendRequest);
+FriendRouter.post('/cancelFriendRequest', verifyToken,decryptToken,removeUserFriendRequest)
 FriendRouter.get('/getAllFriendRequest', verifyToken,decryptToken,getAllActiveUserFriendRequest)
-FriendRouter.post('/removeFriendRequest',verifyToken,decryptToken,removeUserFriendRequest)
+//FriendRouter.post('/removeFriendRequest',verifyToken,decryptToken,removeUserFriendRequest)
 
 module.exports= FriendRouter;
