@@ -2,9 +2,10 @@ const express= require('express');
 const FriendRouter = express.Router();
 
 const { verifyToken, decryptToken } = require('../Middleware/JWT');
-const {getFriends ,getAllUserNonFriends, createFriend, removeUsersFriend,addFreiendRequest, getAllActiveUserFriendRequest, removeUserFriendRequest } = require('../Controller/friendRequest');
+const {getFriends ,getAllUserNonFriends, createFriend, removeUsersFriend,addFreiendRequest, getAllActiveUserFriendRequest, removeUserFriendRequest,searchAUsersFriendByName } = require('../Controller/friendRequest');
 
 FriendRouter.get('/getUsersFriends', verifyToken, decryptToken, getFriends);
+FriendRouter.post('/searchUserFriendByName', verifyToken,decryptToken, searchAUsersFriendByName);
 FriendRouter.get('/allnonFriends', verifyToken,decryptToken,getAllUserNonFriends);
 FriendRouter.post('/addFriend',verifyToken,decryptToken, createFriend);
 FriendRouter.post('/removeFriend',verifyToken,decryptToken, removeUsersFriend);

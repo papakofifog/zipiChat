@@ -30,6 +30,11 @@ const userSchema= new mongoose.Schema({
         max_length:255,
         unique: true
     },
+    socialProvider:{
+        type: String,
+
+    },
+    
     password: {
         type: String,
         required:( true , "password is required")
@@ -56,7 +61,8 @@ userSchema.pre('save', async function(next){
             // Create a new child document with the parent's ID
             const child = new friendshipSchema({
                 userId: this._id,
-                userFriendId: []
+                userFriendId: [],
+                userFriendIdRequests:[]
             })  
 
             // Save the child document
@@ -87,6 +93,24 @@ async function createUser(newUser,next){
         return e
     }
     
+}
+
+async function createGoogleSocialAuthUser(newUser, next){
+    try{
+        let newPerson= new ZipiUser({
+            firstname:newUser.firstname,
+            lastname: newUser.lastname,
+            username: newUser.username,
+            email:newUser.email,
+            password: newUser.password,
+            socialProvider:"Google",
+            Dob:newUser.Dob,
+            socketData:''
+        });
+        await newPerson.save();
+    }catch(e){
+        return e
+    }
 }
 
 async function findOneUserById(userId){
@@ -206,4 +230,4 @@ async function updateLoginStatus(data){
 
 
 
-module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat, updateLoginStatus, findUserByUserName }
+module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat, updateLoginStatus, findUserByUserName, createGoogleSocialAuthUser }

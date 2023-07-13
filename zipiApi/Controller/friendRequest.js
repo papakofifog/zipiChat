@@ -24,6 +24,23 @@ async function getFriends(req,res,next){
     
 }
 
+async function searchAUsersFriendByName(req,res,next){
+    try{
+        let userId= req.body['id'];
+        let userFriends= await getFriendsDetails(userId);
+        
+        if(req.body.firstName){
+            //console.log(userFriends.filter((friend)=>friend.firstname.search(req.body.firstName)))
+            return res.status(200).json(userSuccess(userFriends.filter((friend)=>friend.firstname.match(req.body.firstName))))
+        }else if(req.body.lastName){
+            return res.status(200).json(userSuccess(userFriends.filter((friend)=>friend.lastname.match(req.body.lastname))))
+        }
+        
+    }catch(e){
+        next(e)
+    }
+}
+
 async function getUserDetails(friendIdList){
     let friendDetailsList=[];
     for(let friendId of friendIdList){
@@ -227,4 +244,4 @@ async function removeUserFriendRequest(req,res,next){
     }
 }
 
-module.exports= { getUserNumberFriends, getFriends, createFriend, getAllUserNonFriends, removeUsersFriend,addFreiendRequest, getAllActiveUserFriendRequest, removeUserFriendRequest }
+module.exports= { getUserNumberFriends, getFriends, createFriend, getAllUserNonFriends, removeUsersFriend,addFreiendRequest, getAllActiveUserFriendRequest, removeUserFriendRequest,searchAUsersFriendByName }

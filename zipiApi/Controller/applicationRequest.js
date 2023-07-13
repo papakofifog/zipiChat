@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { createUser,findOneUser,doesUserExist,checkRegisterDataformat, checkLoginDataformat, updateLoginStatus }= require('../Module/user')
+const { createUser,findOneUser,doesUserExist,checkRegisterDataformat, checkLoginDataformat, updateLoginStatus, createGoogleSocialAuthUser }= require('../Module/user')
 const { encryptedPassword, verifyPassword} = require('../Middleware/encryptData');
 const { createToken } = require('../Middleware/JWT');
 const { successMessage, failureMessage, success, failure } = require('../Middleware/handleResponse')
@@ -16,7 +16,6 @@ const registerUser= async (req,res,next) =>{
 
         
         let existingUser= await doesUserExist({email:req.body.email});
-        //console.log(existingUser)
         if(existingUser) return res.json(failureMessage("User exists proceeding to login"));
 
         req.body.password= await encryptedPassword(req.body.password,next)
@@ -59,15 +58,17 @@ const loginWithJWT= async (req,res,next) =>{
     }
 }
 
-const RegisterGoogleUser= async (res,req,next)=>{
+const ContinueWithGoogleUser= async (req,res,next)=>{
     try{
         let user= await findOneUser({email:req.body.email});
         if(!user){ 
             // store the needed data.
             req.body.password= await encryptedPassword(req.body.password,next)
-            user= await createUser(req.body,next);
-            await updateLoginStatus({userId:user._id,status:true});
+            user= await createGoogleSocialAuthUser(req.body,next);
+           
         }
+
+        await updateLoginStatus({userId:user._id,status:true});
         
         let token= createToken(user);
         return res.json(successMessage('Login Successfull',"User verified",token));
@@ -109,4 +110,4 @@ const appLogout= async (req, res, next)=>{
 
 
 
-module.exports= { registerUser, checkUserName, loginWithJWT, showHomePage, verifyLogin, appLogout };
+module.exports= { registerUser, checkUserName, loginWithJWT, showHomePage, verifyLogin, appLogout, ContinueWithGoogleUser };
