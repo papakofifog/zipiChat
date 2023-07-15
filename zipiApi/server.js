@@ -30,6 +30,8 @@ const UserRouter = require('./routes/userRoutes');
 
 const FriendRouter = require('./routes/friendRoutes');
 
+const SocketRouter= require('./routes/socketEvents')
+
 app.use(bodyParser.json())
 
 app.use('/userProfiles',express.static(__dirname+'/userProfiles'))
@@ -40,6 +42,7 @@ dbConnection()
 //application routes
 app.use('/api',AppRouter);
 
+
 //user request routes
 app.use('/users', UserRouter);
 
@@ -48,10 +51,10 @@ app.use('/convo',ChatRouter);
 
 app.use('/friend', FriendRouter);
 
+
+
 // handle errors
 app.use(errorHandler);
-
-
 
 const sio = require("socket.io")(server, {
     handlePreflightRequest: (req, res) => {
@@ -63,49 +66,48 @@ const sio = require("socket.io")(server, {
         res.writeHead(200, headers);
         res.end();
     }
-});
-
-
-function sendMessageToReceiver(clientSocket,data){
-    clients.get(clientSocket).emit('receiveMessage', data)
-}
-
-sio.on('connection', function(socket){
-    //)
-
-    socket.on('setUserId', async (msg)=> {
-        clients.set(msg, socket) 
-    })
-    // When a client sends a message
-    socket.on('sendMessage', async (data)=> {
-        // check if the recipient is connected to the server
-        console.log(data)
-        //let client= await getUserSocket(data);
-        let clientSocket= data.recipientId
-        if (clients.has(clientSocket)) {
-            //save chat 
-            let chatData= {
-                message: data.message,
-                sender_id: data.senderId,
-                receiver_id: data.recipientId
-            }
-            
-            sendMessageToReceiver(clientSocket,data)
-        }else{
-            
-            clients.set(data.recipientId,socket);
-            
-        }
- 
     });
-});
 
 
+    function sendMessageToReceiver(clientSocket,data){
+        clients.get(clientSocket).emit('receiveMessage', data)
+    }
 
-
+    sio.on('connection', function(socket){
+        //)
+        console.log(socket.on)
+        socket.on('setUserId', async (msg)=> {
+            console.log(msg)
+            clients.set(msg, socket) 
+        })
+        // When a client sends a message
+        socket.on('sendMessage', async (data)=> {
+            // check if the recipient is connected to the server
+            console.log(data)
+            //let client= await getUserSocket(data);
+            let clientSocket= data.recipientId
+            if (clients.has(clientSocket)) {
+                //save chat 
+                let chatData= {
+                    message: data.message,
+                    sender_id: data.senderId,
+                    receiver_id: data.recipientId
+                }
+                
+                sendMessageToReceiver(clientSocket,data)
+            }else{
+                
+                clients.set(data.recipientId,socket);
+                
+            }
+    
+        });
+    });
 
 
 server.listen(process.env.PORT);
+
+module.exports=server;
 
 
 
