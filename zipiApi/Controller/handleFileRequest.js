@@ -45,8 +45,6 @@ function storeSignFile(req,res,next){
             }
         });
 
-        //res.send(successMessage("The file Object recieved is ", req.file))
-
     }catch(e){
         return console.error(e)
     }

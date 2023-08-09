@@ -1,13 +1,12 @@
 const { retriveUserFriends, addAfriend,removeRelationship,addFriendRequest, getRelationship, retriveActiveUserRequest, removeFriendRequest }= require('../Module/friendship');
 const { findUserByUserName, findOneUserById, getAllUsers } = require('../Module/user');
 const { getUserpicture } = require('../Module/userPictures');
-const { userSuccess, successMessage, failureMessage}= require('../Middleware/handleResponse');
+const { userSuccess, successMessage, failureMessage, success}= require('../Middleware/handleResponse');
 
 async function getUserNumberFriends(userID){
     let friends= await getFriendsDetails(userID).catch((e)=>{
         console.error(e)
     });
-    
     return friends.length;
 }
 
@@ -28,18 +27,13 @@ async function searchAUsersFriendByName(req,res,next){
     try{
         let userId= req.body['id'];
         let userFriends= await getFriendsDetails(userId);
-        
-        if(req.body.firstName){
-            //console.log(userFriends.filter((friend)=>friend.firstname.search(req.body.firstName)))
-            return res.status(200).json(userSuccess(userFriends.filter((friend)=>friend.firstname.match(req.body.firstName))))
-        }else if(req.body.lastName){
-            return res.status(200).json(userSuccess(userFriends.filter((friend)=>friend.lastname.match(req.body.lastname))))
-        }
-        
+        return res.status(200).json(userSuccess(userFriends.filter((friend)=> friend.firstname.concat(' '+friend.lastname).toLowerCase().includes(req.query.friend.toLowerCase()) || friend.username.toLowerCase().includes(req.query.friend.toLowerCase()))));
     }catch(e){
         next(e)
     }
 }
+
+ 
 
 async function getUserDetails(friendIdList){
     let friendDetailsList=[];
@@ -141,32 +135,55 @@ async function getFriendIsRequestSentStatus(userId,friendId){
     return activeUserRequest.includes(userId);
 }
 
+
+async function getDetailsOfAllActiveUsersNonFriends(activeUser){
+    let retrievedActiveUserFriends= await  retriveUserFriends(activeUser._id);
+    retrievedActiveUserFriends.push(activeUser._id);
+    let users= await getAllUsers();
+    let activeUserNonFriendDetails=users.filter(nonFried => retrievedActiveUserFriends.indexOf(nonFried._id) === -1);
+    let data=[];
+    for (let friend of activeUserNonFriendDetails) {
+        let isRequestSentStatus= await getFriendIsRequestSentStatus(activeUser._id,friend._id);
+        data.push({
+            id: friend._id,
+            firstname:friend.firstname,
+            lastname:friend.lastname,
+            username:friend.username,
+            email: friend.email,
+            isRequestSent:isRequestSentStatus
+        })
+    }
+    return data;
+}
+
+
 async function getAllUserNonFriends(req,res,next){
     try{
-        let users= await getAllUsers();
-        let activeUser= await findOneUserById(req.body['id'])
-    
-        let retrieveActiveUserFriends= await  retriveUserFriends(req.body['id']);
-        retrieveActiveUserFriends.push(activeUser._id);
-        let activeUserNonFriends=users.filter(nonFried => retrieveActiveUserFriends.indexOf(nonFried._id) === -1);
-        let data=[];
-        
-        for (let friend of activeUserNonFriends) {
-            let isRequestSentStatus= await getFriendIsRequestSentStatus(activeUser._id,friend._id);
-            data.push({
-                id: friend._id,
-                firstname:friend.firstname,
-                lastname:friend.lastname,
-                username:friend.username,
-                email: friend.email,
-                isRequestSent:isRequestSentStatus
-            })
-        }
-        return res.json(successMessage("Users Non Friends are ", data));
+        let activeUser= await findOneUserById(req.body['id']);
+        let activeUserNonFriends= await getDetailsOfAllActiveUsersNonFriends(activeUser);
+        return res.json(successMessage("Users Non Friends are ", activeUserNonFriends));
     }catch(e){
        return next(e)
     }
 }
+
+async function searchForNonUserFriends(req, res, next){
+    try{
+        let activeUser= await findOneUserById(req.body['id']);
+        let activeUserNonFriends= await getDetailsOfAllActiveUsersNonFriends(activeUser);
+        let searchQuery= req.query.friend;
+
+        let interestedNonFriends=activeUserNonFriends.filter(nonFriend=> nonFriend.firstname.toLowerCase().includes(searchQuery.toLowerCase()  || nonFriend.username.toLowerCase().includes(searchQuery.toLowerCase())));
+
+        return res.status(200).json(successMessage("Non Friend is", interestedNonFriends))
+    }catch(e){
+        next(e)
+    }
+}
+
+
+
+
 
 async function removeUsersFriend(req,res,next){
     try{
@@ -203,13 +220,23 @@ async function removeUsersFriend(req,res,next){
 
 async function getAllActiveUserFriendRequest(req, res, next){
     try{
-
         let userId= req.body['id'];
         let activeUserRequests= await retriveActiveUserRequest(userId);
         let activeUserRequestDetails= await getUserDetails(activeUserRequests);
-
         return activeUserRequestDetails ? res.json(successMessage("User request", activeUserRequestDetails)): res.json(failureMessage("There are issues with this code"));
+    }catch(e){
+        return next(e);
+    }
+}
 
+async function searchForFriendWhoHasSentARequest(req,res, next){
+    try{
+        let userId= req.body['id'];
+        let activeUserRequests= await retriveActiveUserRequest(userId);
+        let activeUserRequestDetails= await getUserDetails(activeUserRequests);
+        let searchQuery= req.query.friend;
+        let specificRequest=activeUserRequestDetails.filter(friendWhoHasSentRequest=> friendWhoHasSentRequest.username.toLowerCase().includes(searchQuery.toLowerCase()));
+        return res.status(200).json(successMessage("Aquainted to ",specificRequest));
     }catch(e){
         return next(e);
     }
@@ -244,4 +271,16 @@ async function removeUserFriendRequest(req,res,next){
     }
 }
 
-module.exports= { getUserNumberFriends, getFriends, createFriend, getAllUserNonFriends, removeUsersFriend,addFreiendRequest, getAllActiveUserFriendRequest, removeUserFriendRequest,searchAUsersFriendByName }
+module.exports= { 
+    getUserNumberFriends, 
+    getFriends, 
+    createFriend, 
+    getAllUserNonFriends, 
+    removeUsersFriend,
+    addFreiendRequest, 
+    getAllActiveUserFriendRequest, 
+    removeUserFriendRequest,
+    searchAUsersFriendByName, 
+    searchForNonUserFriends, 
+    searchForFriendWhoHasSentARequest,
+}

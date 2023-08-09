@@ -1,14 +1,21 @@
 const { application } = require('express');
 const express= require('express');
-const { saveMessage, viewAllMessages, updateReadStatus }= require('../Controller/chatRequest');
+const { 
+    saveMessage, 
+    viewAllMessages, 
+    updateReadStatus,
+    updateMessage
+
+}= require('../Controller/chatRequest');
 const InterceptMessage =require('../Controller/converstion')
-const { verifyToken } = require('../Middleware/JWT');
+const { verifyToken, decryptToken } = require('../Middleware/JWT');
 
 const Chatrouter = express.Router();
 
-Chatrouter.post('/addmessage',verifyToken, saveMessage);
-Chatrouter.post('/readAllConvo',verifyToken,viewAllMessages);
+Chatrouter.post('/addmessage:receipientId',verifyToken, saveMessage);
+Chatrouter.get('/readAllConvo:receiver',verifyToken, decryptToken, viewAllMessages);
 Chatrouter.put('/isMessageRead', verifyToken,updateReadStatus);
+Chatrouter.put('/editMessage:messageId',verifyToken, decryptToken, updateMessage )
 
 
 

@@ -14,6 +14,17 @@ const createToken= (user) =>{
     return accessToken;
 }
 
+const createEmailToken= (user)=>{
+    const accessToken= sign(
+        {id: user._id},
+        process.env['JWTSECRET'],
+        {
+            expiresIn: "15mins"
+        }
+    )
+    return accessToken;
+}
+
 const verifyToken = async (req,res,next) =>{
     try{
         const  token= req.body.token || req.query.token || req.headers['authorization'];
@@ -46,7 +57,7 @@ const decryptToken = async(req,res,next)=>{
 }
 
 
-module.exports= { createToken, verifyToken, decryptToken };
+module.exports= { createToken, createEmailToken, verifyToken, decryptToken };
 
 
 

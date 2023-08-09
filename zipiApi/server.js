@@ -1,4 +1,8 @@
+// @ts-nocheck
+
 require('dotenv').config();
+
+const Server= require('socket.io');
 
 const cors= require('cors');
 
@@ -12,7 +16,11 @@ const server= http.createServer(app);
 
 const clients=new Map()
 
-app.use(cors({origin:'*'}));
+app.use('/userProfiles',express.static(__dirname+'/userProfiles'))
+
+app.use(cors({origin:'http://localhost:5173'}));
+
+
 
 //const { registerWithGoogle } = require('./Controller/applicationRequest');
 
@@ -22,6 +30,8 @@ const errorHandler= require('./Middleware/handleErrors/errorHandler');
 
 const bodyParser= require('body-parser') 
 
+
+
 const AppRouter = require('./routes/applicationRoutes');
 
 const ChatRouter= require('./routes/chatRoutes')
@@ -30,11 +40,14 @@ const UserRouter = require('./routes/userRoutes');
 
 const FriendRouter = require('./routes/friendRoutes');
 
+const MailRouter= require('./routes/emailRoutes');
+
 const SocketRouter= require('./routes/socketEvents')
 
+// express middle ware to handle geting json data
 app.use(bodyParser.json())
 
-app.use('/userProfiles',express.static(__dirname+'/userProfiles'))
+
 
 //connect to the db
 dbConnection()
@@ -42,49 +55,49 @@ dbConnection()
 //application routes
 app.use('/api',AppRouter);
 
-
 //user request routes
 app.use('/users', UserRouter);
 
 // chat routes
 app.use('/convo',ChatRouter);
 
+//friend routes
 app.use('/friend', FriendRouter);
+
+//email routes
+app.use('/email', MailRouter);
 
 
 
 // handle errors
 app.use(errorHandler);
 
-const sio = require("socket.io")(server, {
-    handlePreflightRequest: (req, res) => {
-        const headers = {
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
-            "Access-Control-Allow-Credentials": true
-        };
-        res.writeHead(200, headers);
-        res.end();
-    }
+const sio = Server(server, {
+        cors: {
+            origin: "http://localhost:5173"
+      }
     });
 
 
     function sendMessageToReceiver(clientSocket,data){
+        console.log(data);
+        /*console.log(clientSocket);*/
         clients.get(clientSocket).emit('receiveMessage', data)
     }
 
-    sio.on('connection', function(socket){
-        //)
-        console.log(socket.on)
+    function sendTypingStatus(clientSocket){
+        clientSocket.get(clientSocket).emit('typing', 'typing...');
+    }
+
+    sio.on("connection", function(socket){
+        //console.log("connected successfully")
+        
         socket.on('setUserId', async (msg)=> {
-            console.log(msg)
+            //console.log("coded message",msg)
             clients.set(msg, socket) 
         })
         // When a client sends a message
         socket.on('sendMessage', async (data)=> {
-            // check if the recipient is connected to the server
-            console.log(data)
-            //let client= await getUserSocket(data);
             let clientSocket= data.recipientId
             if (clients.has(clientSocket)) {
                 //save chat 
@@ -93,15 +106,26 @@ const sio = require("socket.io")(server, {
                     sender_id: data.senderId,
                     receiver_id: data.recipientId
                 }
-                
-                sendMessageToReceiver(clientSocket,data)
+                sendMessageToReceiver(clientSocket,data);
             }else{
                 
                 clients.set(data.recipientId,socket);
+                sendMessageToReceiver(clientSocket,data);
                 
             }
     
         });
+
+        socket.on('typing', (receipientId)=>{
+            let clientSocket=receipientId;
+            if (clients.has(clientSocket)){
+                
+                sendTypingStatus(receipientId);
+            }else{
+                clients.set(receipientId,socket);
+                sendTypingStatus(receipientId);
+            }
+        })
     });
 
 

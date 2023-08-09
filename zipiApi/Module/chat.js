@@ -1,6 +1,5 @@
 const mongoose= require('mongoose');
 
-const user= require('./user')
 
 const fileObject = new mongoose.Schema({
     url: {
@@ -63,7 +62,6 @@ async function addChat(data){
             message: actualMessage,
             senderId: data.senderId,
             recipientId:data.recipientId,
-            sentAt: data.sentAt
         });
 
         await convo.save();
@@ -76,7 +74,7 @@ async function addChat(data){
 
 async function retriveChats(sender,receiver){
    try{
-        let retrivedChats1=await chatSchema.find({$or:[{senderId:sender, recipientId:receiver},{senderId: receiver, recipientId:sender}]});
+        let retrivedChats1=await  chatSchema.find({$or:[{senderId:sender, recipientId:receiver},{senderId: receiver, recipientId:sender}]});
         return retrivedChats1;
 
    }catch(e){
@@ -97,10 +95,23 @@ async function updateReadStatusOfOneChat(sender,receiver){
     }
 }
 
+async function udpateOneChat(messageId, newMessage){
+    try{
+        let updatedMessage= chatSchema.updateOne(
+            {_id: messageId},
+            { $set: { message: newMessage.message } }
+        )
+        return await(updatedMessage).acknowledged;
+    }catch(e){
+        console.error(e);
+    }
+
+}
+
 async function deleteOneChat(convoId){
     await chatSchema.deleteOne({_id:convoId}).catch((e)=>{
         console.error(e);
     })
 }
 
-module.exports= { addChat, retriveChats, updateReadStatusOfOneChat, deleteOneChat }
+module.exports= { addChat, retriveChats, updateReadStatusOfOneChat, udpateOneChat, deleteOneChat }

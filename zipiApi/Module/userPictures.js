@@ -8,33 +8,13 @@ const userPictureSchema= new mongoose.Schema({
     },
     userPicUrl: {
         type:String,
-        required: true,
-        unique: true
+        required: false,
     }
 });
 
 const UserPicture= mongoose.model('Upictures', userPictureSchema);
 
-async function addUserPicture(data){
-    try{
-        let newUserPicture= new UserPicture({
-            userId: data.userId,
-            userPicUrl: data.userPicture
-        });
 
-        let picture= await UserPicture.findOne({userPicUrl:newUserPicture.userPicUrl});
-        if(picture===null){
-            await newUserPicture.save();
-            return true;
-        }else{
-            
-            return false;
-        }
-    }catch(e){
-        return e;
-    }
-    
-}
 
 async function getUserpicture(userId){
     let usePicture= await UserPicture.findOne({userId:userId});
@@ -47,10 +27,17 @@ async function getUserpicture(userId){
 
 async function updateUserPicture(data){
     try{
-        let currentUserPictureId= data.userId;
-        let currentUserPicture= await UserPicture.findOne({userId:userId}).catch((e)=>{
-            return new Error(e)
-        });
+        
+        let currentUserPicture= await getUserpicture(data.userId);
+
+        console.log(data.picURl)
+
+        currentUserPicture.userPicUrl=data.picURl;
+
+        await currentUserPicture.save();
+
+        let newCurrentUserPicture= await getUserpicture(data.userId);
+        return newCurrentUserPicture?true:false;
         
     }catch(e){
         return e;
@@ -64,4 +51,4 @@ async function getAllpictures(){
     return allpictures;
 }
 
-module.exports= { addUserPicture, getUserpicture, updateUserPicture, getAllpictures };
+module.exports= { UserPicture, getUserpicture, updateUserPicture, getAllpictures };

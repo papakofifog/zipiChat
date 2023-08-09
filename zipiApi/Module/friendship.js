@@ -91,7 +91,6 @@ async function addAfriend(data,next){
 async function addFriendRequest(data,next){
     try{
         let relationship= await getRelationship(data.friendId)
-        //console.log(friend)
         if(relationship.userFriendId.includes(data.userId)){
             return false;
         }

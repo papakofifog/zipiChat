@@ -4,6 +4,7 @@ const pictureRoot= 'cloudinarySomething';
 const toLower= require('../Util/helperfunctions');
 const errorHandler= require('../Middleware/handleErrors/errorHandler');
 const { friendshipSchema } = require('../Module/friendship')
+const { UserPicture }= require('../Module/userPictures')
 
 const userSchema= new mongoose.Schema({
     firstname:{
@@ -67,6 +68,13 @@ userSchema.pre('save', async function(next){
 
             // Save the child document
             await child.save();
+
+            const secondChild= new UserPicture({
+                userId: this._id,
+                userPicUrl: ""
+            });
+
+            await secondChild.save();
         }
         next()
     }catch(e){
@@ -130,6 +138,15 @@ async function findUserByUserName(username){
         return existingUser ? existingUser : null;
     }catch(e){
         console.error(e)
+    }
+}
+
+async function findUserByEmail(query){
+    try{
+        let existingUser= await ZipiUser.findOne(query)
+        return existingUser? existingUser: null
+    }catch(e){
+        console.error(e);
     }
 }
 
@@ -230,4 +247,6 @@ async function updateLoginStatus(data){
 
 
 
-module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat, updateLoginStatus, findUserByUserName, createGoogleSocialAuthUser }
+
+
+module.exports= { createUser,findOneUserById,findOneUser,getAllUsers,doesUserExist,checkRegisterDataformat,checkLoginDataformat, updateLoginStatus, findUserByUserName,findUserByEmail, createGoogleSocialAuthUser }
