@@ -72,6 +72,16 @@ async function addChat(data){
     } 
 }
 
+async function findOneChat(messageId, senderId){
+    try{
+        let specificChat= await chatSchema.findOne({_id:messageId, senderId: senderId});
+        return specificChat;
+
+    }catch(e){
+        console.error(e)
+    }
+}
+
 async function retriveChats(sender,receiver){
    try{
         let retrivedChats1=await  chatSchema.find({$or:[{senderId:sender, recipientId:receiver},{senderId: receiver, recipientId:sender}]});
@@ -95,10 +105,10 @@ async function updateReadStatusOfOneChat(sender,receiver){
     }
 }
 
-async function udpateOneChat(messageId, newMessage){
+async function udpateOneChat(messageId, senderId, newMessage){
     try{
         let updatedMessage= chatSchema.updateOne(
-            {_id: messageId},
+            {_id: messageId, senderId: senderId},
             { $set: { message: newMessage.message } }
         )
         return await(updatedMessage).acknowledged;
@@ -108,10 +118,17 @@ async function udpateOneChat(messageId, newMessage){
 
 }
 
-async function deleteOneChat(convoId){
-    await chatSchema.deleteOne({_id:convoId}).catch((e)=>{
-        console.error(e);
-    })
+async function deleteOneChat(convoId, senderId){
+    try{
+        let deletedChat= await chatSchema.deleteOne({_id:convoId, senderId: senderId}).catch((e)=>{
+            console.error(e);
+        })
+    
+        return deletedChat.acknowledged;
+    }catch(e){
+        console.error(e)
+    }
+    
 }
 
 module.exports= { addChat, retriveChats, updateReadStatusOfOneChat, udpateOneChat, deleteOneChat }

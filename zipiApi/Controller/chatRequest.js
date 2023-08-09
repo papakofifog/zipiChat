@@ -41,8 +41,7 @@ const updateMessage= async (req, res, next) =>{
     try{
         if(!req.params.messageId)return res.json(failureMessage("Message Id is required"));
         let activeUser= await findOneUserById(req.body.id);
-        if(req.body.sender != activeUser.username && req.body.receiver !=activeUser.username) return res.status(401).json(failureMessage("You are not authorized to edit this message"));
-        let messageUpdated= await udpateOneChat(req.params.messageId,req.body);
+        let messageUpdated= await udpateOneChat(req.params.messageId, activeUser.username,req.body);
         return messageUpdated?res.status(200).json(success): res.status(400).json(failure);
     }catch(e){
         next(e);
@@ -53,6 +52,9 @@ const deleteMessage= async (req, res, next)=>{
     try{
         if(!req.params.messageId)return res.json(failureMessage("Message Id is required"));
         let activeUser= await findOneUserById(req.body.id);
+        let messageDeleted= await deleteOneChat(req.params.messageId,activeUser.username);
+        return messageDeleted? res.status(200).json(success): res.status(400).json(failure);
+
     }catch(e){
         next(e)
     }
@@ -62,5 +64,6 @@ module.exports= {
     saveMessage, 
     viewAllMessages,
     updateReadStatus,
-    updateMessage
+    updateMessage,
+    deleteMessage
  }
