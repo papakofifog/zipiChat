@@ -5,7 +5,9 @@ const decodeJwtT= require('jwt-decode');
 
 const createToken= (user) =>{
     const accessToken = sign(
-        { id: user._id },
+        {   id: user._id,
+            username: user.username
+        },
         process.env['JWTSECRET'],
         {
             expiresIn:"5h",

@@ -24,7 +24,7 @@ async function getActiveUser(req,res,next){
             email: user.email,
             Dob:user.Dob,
             friendCount: numberOfFriends,
-            pictures:usersPicture.userPicUrl||''
+            picture:usersPicture.userPicUrl||''
         }
         return res.status(200).json(userSuccess(returnUser));
     }catch(e){

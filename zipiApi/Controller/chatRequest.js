@@ -5,16 +5,18 @@ const { findUserByUserName, findOneUserById, doesUserExist } = require('../Modul
 
 const saveMessage= async(req,res,next)=>{
     try{
-        if(!req.params.receipientId)return res.status(400).json(failureMessage("receipient id required"));
-        let receivedData= await findUserByUserName(req.params.receipientId);
+        if(req.body.recipientId === "")return res.status(400).json(failureMessage("receipient id required"));
+        let receivedData= await findUserByUserName(req.body.recipientId);
         if(!receivedData)return res.status(400).json(failureMessage("receipient does not exist"));
         let activeUserId= await findOneUserById(req.body.id);
+        let sender=activeUserId.username;
+
         let newChatStatus=await addChat({
-            message:req.body,
-            senderId: activeUserId,
-            receiverId:  req.params.receipientId
+            message:req.body.message,
+            senderId: sender,
+            recipientId:req.body.recipientId
         });
-        return newChatStatus?res.status(200).json(successMessage("Chat added")): res.status(400).json(successMessage("Chat was not added"));
+        return newChatStatus?res.status(200).json(successMessage("Chat added")): res.status(400).json(failureMessage("Chat was not added"));
     }catch(e){
         next(e);
     }
@@ -22,7 +24,8 @@ const saveMessage= async(req,res,next)=>{
 
 const viewAllMessages= async (req,res,next)=>{
     try{
-        let receiver= req.params.receiver;
+        if(req.body.receiver === "")return res.status(400).json(failureMessage("Receiver should be part of the query sent"));
+        let receiver= req.body.receiver;
         let activeUser= await findOneUserById(req.body.id); 
         let allmessages= await retriveChats(activeUser.username,receiver);
         return allmessages? res.status(200).json(userSuccess(allmessages)): res.status(400).json(failureMessage("No message between sender and receiver"));

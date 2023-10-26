@@ -45,14 +45,17 @@ const loginWithJWT= async (req,res,next) =>{
     try{
         if(checkLoginDataformat(req.body)===false)return res.status(400).json(failureMessage("All inputs required"));
         let user= await findOneUser({email:req.body.email});
-        if(!user)return res.json(failureMessage("User does not exist proceed to SignUp"));
+        if(!user)return res.status(401).json(failureMessage("User does not exist proceed to SignUp"));
         const isPasswordVerified= await verifyPassword(req.body.password, user.password);
         if(isPasswordVerified){
             await updateLoginStatus({userId:user._id,status:true});
             const token= createToken(user);
-            return res.json(successMessage('Login Successfull',"User verified",token));
+
+            
+
+            return res.status(200).json(successMessage('Login Successfull',"User verified",token));
         }
-        return res.json(failureMessage("Invalid username or password"));
+        return res.status(400).json(failureMessage("Invalid username or password"));
     }catch(err){
         next(err)
     }
