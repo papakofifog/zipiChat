@@ -46,7 +46,8 @@ const updateMessage= async (req, res, next) =>{
         let activeUser= await findOneUserById(req.body.id);
         let specificMessage= await doesMessageExist(req.params.messageId,activeUser.username);
         if(!specificMessage)return res.json(failureMessage("Message with this Id does not exist"));
-        let messageUpdated= await udpateOneChat(req.params.messageId, activeUser.username,req.body);
+        console.log(req)
+        let messageUpdated= await udpateOneChat(req.params.messageId, activeUser.username, req.body);
         return messageUpdated?res.status(200).json(successMessage("Chat updated succesfully")): res.status(400).json(failureMessage("Your chat has not been updated yet. We are working with team to resolve this issue as soon as possible"));
     }catch(e){
         next(e);
