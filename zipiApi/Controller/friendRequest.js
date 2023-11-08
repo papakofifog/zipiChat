@@ -85,7 +85,7 @@ async function createFriend(req,res,next){
         }
         let newUser=await addAfriend(activeUserRelationship,next);
         let newfriend1 = await addAfriend(activeUserFriendRelation,next);
-        let takeFriendRequestOut=removeFriendRequest(activeUserRelationship, next);
+        let takeFriendRequestOut= await removeFriendRequest(activeUserRelationship, next);
         if(newUser && newfriend1 && takeFriendRequestOut){
             
 
@@ -252,8 +252,10 @@ async function removeUserFriendRequest(req,res,next){
 
         let friendRelationship= await getRelationship(friend._id);
 
-        if( friendRelationship.userFriendIdRequests.includes(req.body['id'])==false){
-            return res.status(400).json(failureMessage("friend request not sent to this user"));
+        console.log(friendRelationship)
+
+        if( ! friendRelationship.userFriendIdRequests.includes(req.body['id'])){
+            return res.status(400).json(failureMessage("friend request has not sent to this user"));
         }
         
         let data={
@@ -263,7 +265,7 @@ async function removeUserFriendRequest(req,res,next){
 
         let friendRequestTakenOut= await removeFriendRequest(data,next);
         if(friendRequestTakenOut){
-            return res.send(successMessage("friend request removedSuccesfully"))
+            return res.send(successMessage("friend request removed Succesfully"))
         }
         return res.send(failureMessage("friend request removal failed"))
     }catch(e){
