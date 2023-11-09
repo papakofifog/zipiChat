@@ -85,7 +85,7 @@ async function createFriend(req,res,next){
         }
         let newUser=await addAfriend(activeUserRelationship,next);
         let newfriend1 = await addAfriend(activeUserFriendRelation,next);
-        let takeFriendRequestOut= await removeFriendRequest(activeUserRelationship, next);
+        let takeFriendRequestOut= await removeFriendRequest(activeUserFriendRelation, next);
         if(newUser && newfriend1 && takeFriendRequestOut){
             
 
