@@ -42,6 +42,8 @@ const MailRouter= require('./routes/emailRoutes');
 
 const SocketRouter= require('./routes/socketEvents')
 
+const NotificationRouter= require("./routes/notificationRoutes");
+
 // express middle ware to handle geting json data
 app.use(bodyParser.json())
 
@@ -64,6 +66,9 @@ app.use('/friend', FriendRouter);
 
 //email routes
 app.use('/email', MailRouter);
+
+//notification routes
+app.use('/notification', NotificationRouter);
 
 
 

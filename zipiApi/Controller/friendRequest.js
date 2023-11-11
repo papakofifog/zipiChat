@@ -130,6 +130,8 @@ async function addFreiendRequest(req, res,next){
     }
 }
 
+
+
 async function getFriendIsRequestSentStatus(userId,friendId){
     let activeUserRequest= await retriveActiveUserRequest(friendId);
     return activeUserRequest.includes(userId);
@@ -244,8 +246,6 @@ async function searchForFriendWhoHasSentARequest(req,res, next){
 
 async function removeUserFriendRequest(req,res,next){
     try{
-
-
         let friend= await findUserByUserName(req.body.friend)
         
         if(!friend) return res.status(400).json(failureMessage("User Provided does not exist"));

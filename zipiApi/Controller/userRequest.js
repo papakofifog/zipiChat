@@ -1,5 +1,5 @@
-const { findOneUserById, getAllUsers }= require('../Module/user');
-const { userSuccess, successMessage, failureMessage}= require('../Middleware/handleResponse');
+const { findOneUserById, getAllUsers, findUserByUserName }= require('../Module/user');
+const { userSuccess, successMessage, failureMessage, success}= require('../Middleware/handleResponse');
 const { getUserpicture, updateUserPicture} = require('../Module/userPictures');
 const { getUserNumberFriends } = require('./friendRequest');
 const { encryptedPassword} = require("../Middleware/encryptData")
@@ -103,7 +103,18 @@ async function handlePasswordUpdate(req, res, next){
 
 }
 
+async function getUsersLoginStatus(req, res, next){
+    try{
+        let username= req.path['friend'];
+        let user= await findUserByUserName(username);
+        let message=user.loginStatus?"User is Logged In":"User is Logged out";
+        return !user ? res.status(400).json(failureMessage("User does not exist")): res.status(200).json(successMessage(message, {loginStatus:user.loginStatus}))
+    }catch(e){
+        next(e);
+    }
+}
 
-module.exports= { getActiveUser, getAllUserSystem, updateActiveUserData, updateUserPictureRequest, getActiveUsersPictureRequest, handlePasswordUpdate };
+
+module.exports= { getActiveUser, getAllUserSystem, updateActiveUserData, updateUserPictureRequest, getActiveUsersPictureRequest, handlePasswordUpdate, getUsersLoginStatus };
 
 
