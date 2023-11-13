@@ -1,7 +1,7 @@
 require('dotenv').config();
-const { createUser,findOneUser,doesUserExist,checkRegisterDataformat, checkLoginDataformat, updateLoginStatus, createGoogleSocialAuthUser }= require('../Module/user')
+const { createUser,findOneUser,doesUserExist,checkRegisterDataformat, checkLoginDataformat, updateLoginStatus, createGoogleSocialAuthUser, findOneUserById }= require('../Module/user')
 const { encryptedPassword, verifyPassword} = require('../Middleware/encryptData');
-const { createToken } = require('../Middleware/JWT');
+const { createToken, createRefreshToken } = require('../Middleware/JWT');
 const { successMessage, failureMessage, success, failure } = require('../Middleware/handleResponse')
 //require('../Middleware/google-OAuth20')
 require('dotenv').config();
@@ -50,10 +50,11 @@ const loginWithJWT= async (req,res,next) =>{
         if(isPasswordVerified){
             await updateLoginStatus({userId:user._id,status:true});
             const token= createToken(user);
-
-            
-
-            return res.status(200).json(successMessage('Login Successfull',"User verified",token));
+            const refreshtoken=createRefreshToken(user);
+            return res.status(200).json(successMessage('Login Successfull',"User verified",{
+                accessToken: token,
+                refreshToken: refreshtoken
+            }));
         }
         return res.status(400).json(failureMessage("Invalid username or password"));
     }catch(err){
@@ -74,7 +75,11 @@ const ContinueWithGoogleUser= async (req,res,next)=>{
         await updateLoginStatus({userId:user._id,status:true});
         
         let token= createToken(user);
-        return res.json(successMessage('Login Successfull',"User verified",token));
+        let refreshtoken= createRefreshToken(user);
+        return res.json(successMessage('Login Successfull',"User verified",{
+            accessToken:token,
+            refreshToken:refreshtoken
+        }));
          
     }catch(e){
         next(e)
@@ -90,6 +95,7 @@ const showHomePage = (req, res, next) =>{
         next(err)
     }
 }
+
 
 
 
@@ -111,6 +117,20 @@ const appLogout= async (req, res, next)=>{
     }
 }
 
+const generateAccessTokenAndRefreshToken= (req, res, next)=>{
+    try{
+        let user=findOneUserById(req.body['id']);
+        let token= createToken(user);
+        let refreshtoken= createRefreshToken(user);
+        return res.status(200).json(successMessage('Login Successfull',"User verified",{
+            accessToken: token,
+            refreshToken: refreshtoken
+        }))
+    }catch(e){
+        next(e);
+    }
+}
 
 
-module.exports= { registerUser, checkUserName, loginWithJWT, showHomePage, verifyLogin, appLogout, ContinueWithGoogleUser };
+
+module.exports= { registerUser, checkUserName, loginWithJWT, showHomePage, verifyLogin, appLogout, ContinueWithGoogleUser,generateAccessTokenAndRefreshToken };

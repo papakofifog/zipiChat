@@ -2,6 +2,8 @@ const { retriveUserFriends, addAfriend,removeRelationship,addFriendRequest, getR
 const { findUserByUserName, findOneUserById, getAllUsers } = require('../Module/user');
 const { getUserpicture } = require('../Module/userPictures');
 const { userSuccess, successMessage, failureMessage, success}= require('../Middleware/handleResponse');
+const { saveNotification } = require('./notificationRequest');
+const { createNotification } = require('../Module/notifications');
 
 async function getUserNumberFriends(userID){
     let friends= await getFriendsDetails(userID).catch((e)=>{
@@ -87,8 +89,12 @@ async function createFriend(req,res,next){
         let newfriend1 = await addAfriend(activeUserFriendRelation,next);
         let takeFriendRequestOut= await removeFriendRequest(activeUserFriendRelation, next);
         if(newUser && newfriend1 && takeFriendRequestOut){
-            
-
+            let activeUser= await findOneUserById(req.body['id']);
+            let activeUserName=activeUser.username;
+            await createNotification({
+                receipientUsername: req.body.friend ,
+                message:`${activeUserName} accepted your request`
+            })
             return res.status(200).json(successMessage("Friendship Created"));
         }else{
             return res.status(400).json(failureMessage("Friend Creation Failed"));
@@ -110,6 +116,8 @@ async function addFreiendRequest(req, res,next){
 
         let userId= req.body['id'];
 
+
+
         if((friend._id).toString() === userId) return res.status(400).json(failureMessage("An active User cannot be friends with himself"));
 
         let proposedUserRelationship={
@@ -119,7 +127,15 @@ async function addFreiendRequest(req, res,next){
 
         let newFriendRequest=await addFriendRequest(proposedUserRelationship,next);
 
+        let activeUser= await findOneUserById(req.body['id']);
+        let activeUserName=activeUser.username;
+
         if(newFriendRequest){
+            await createNotification({
+                receipientUsername: req.body.friend ,
+                message:`${activeUserName} sent you a friend request`
+            })
+            console.log("we are here")
             return res.status(200).json(successMessage("Friend Request Sent"));
         }else{
             return res.status(400).json(failureMessage("Friend Request Failed"));
@@ -252,7 +268,7 @@ async function removeUserFriendRequest(req,res,next){
 
         let friendRelationship= await getRelationship(friend._id);
 
-        console.log(friendRelationship)
+        //console.log(friendRelationship)
 
         if( ! friendRelationship.userFriendIdRequests.includes(req.body['id'])){
             return res.status(400).json(failureMessage("friend request has not sent to this user"));
@@ -264,7 +280,14 @@ async function removeUserFriendRequest(req,res,next){
         }
 
         let friendRequestTakenOut= await removeFriendRequest(data,next);
+        let activeUser= await findOneUserById(req.body['id']);
+        let activeUserName=activeUser.username;
+        let notificationMessage={
+            receipientUsername: req.body.friend,
+            message:`${activeUserName} canceled friend request`
+        }
         if(friendRequestTakenOut){
+            await createNotification(notificationMessage)
             return res.send(successMessage("friend request removed Succesfully"))
         }
         return res.send(failureMessage("friend request removal failed"))

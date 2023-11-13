@@ -1,31 +1,28 @@
 const mongoose= require('mongoose');
 
 const notificationsSchema = new mongoose.Schema({
-    notificationId:{
-        type: mongoose.Types.ObjectId,
-        unique: true,
-        required: (true, "notification reference is required")
-    },
-    senderUsername:{
-        type: String,
-        required: (true, "senderUsername is required")
-    },
     receipientUsername:{
         type: String,
         required:(true, "friend username is required")
+    },
+    message:{
+        type: String,
+        required:(true, "message is required")
     }
 }, {timestamps:true});
 
 
-let ZipiUserNotification= mongoose.model('Notification', notificationsSchema);
+let ZipiUserNotification= mongoose.model('notifications', notificationsSchema);
 
 async function createNotification(newNotificationData){
     try{
-        let newNotification= new ZipiUserNotification({
-            senderUsername:newNotificationData.activeUserName,
-            receipientUsername: newNotificationData.friendUserName  
+        let notification= new ZipiUserNotification({
+            receipientUsername: newNotificationData.receipientUsername,
+            message:newNotificationData.message
         })
-        await newNotification.save();
+        
+        notification.save();
+        
     }catch(e){
         return(e);
     }
@@ -45,7 +42,7 @@ async function findOneNotificationById(notificationId){
 
 async function getAllNotification(data){
     try{
-        let userNotification= await ZipiUserNotification.find({friendUserName:data?.username}).catch((e)=>{
+        let userNotification= await ZipiUserNotification.find({receipientUsername:data?.username}).catch((e)=>{
             console.error(e);
         });
         return userNotification;
@@ -56,8 +53,8 @@ async function getAllNotification(data){
 
 async function deleteOneNotifcation(notificationId){
     try{
-        let {deleteOne}=await ZipiUserNotification.deleteOne({notificationId:notificationId})
-        return Boolean(deleteOne);
+        let isNotificationDeleted=await ZipiUserNotification.findByIdAndDelete({_id:notificationId});
+        return isNotificationDeleted;
     }catch(e){
         console.error(e)
     }

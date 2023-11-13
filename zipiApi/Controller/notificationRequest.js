@@ -24,7 +24,8 @@ async function getAllUserNotificationRequest(req,res,next){
 
 async function deleteOneNotificationRequest(req,res,next){
     try{
-        let isNotificationDeleted= await deleteOneNotifcation(req.body);
+        //console.log(req.params.notificationId);
+        let isNotificationDeleted= await deleteOneNotifcation(req.params.notificationId);
         return isNotificationDeleted?res.status(200).json(successMessage("Notification deleted")):res.status(400).json(failureMessage("Failed to delete notification"));
     }catch(e){
         return next(e);
