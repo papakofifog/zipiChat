@@ -135,7 +135,6 @@ async function addFreiendRequest(req, res,next){
                 receipientUsername: req.body.friend ,
                 message:`${activeUserName} sent you a friend request`
             })
-            console.log("we are here")
             return res.status(200).json(successMessage("Friend Request Sent"));
         }else{
             return res.status(400).json(failureMessage("Friend Request Failed"));
@@ -299,26 +298,30 @@ async function removeUserFriendRequest(req,res,next){
 
 async function declineFriendRequest(req, res, next){
     try{
-        let friendId=req.body.friend;
+        let friendUsername=req.body.friend;
         let currentUserId=req.body['id'];
-        let friend= await findUserByUserName(friendId);
-        let user= await findOneUserById(currentUserId);
-        /*if(!friend) return res.status(400).json(failureMessage("No friend exists with that username"));
+        let friend = await findUserByUserName(friendUsername);
+        let user = await findOneUserById(currentUserId);
+        if(!friend) return res.status(400).json(failureMessage("No friend exists with that username"));
         let friendRelationship= await getRelationship(user._id);
-        if( ! friendRelationship.userFriendIdRequests.includes(friendId)){
+        if( ! friendRelationship.userFriendIdRequests.includes(friend._id)){
             return res.status(401).json(failureMessage("friend request not found"));
         }
         let data={
-            userID:friendId,
+            userId:friend._id,
             friendId:currentUserId
-        }*/
-        /*let friendRequestTakenOut= await removeFriendRequest(data,next);
+        }
+        let friendRequestTakenOut= await removeFriendRequest(data,next);
+        let notificationMessage={
+            receipientUsername: req.body.friend,
+            message:`${user.username} declined your friend request`
+        }
         if(friendRequestTakenOut){
             await createNotification(notificationMessage)
-            return res.send(successMessage("friend request removed Succesfully"))
+            return res.send(successMessage("friend request declined Succesfully"))
         }
-        return res.send(failureMessage("friend request removal failed"));*/
-        console.log(friendId, user.username);
+        return res.send(failureMessage("Failed to decline the friend request"));
+        console.log(friend, user);
     }catch(e){
         next(e);
     }

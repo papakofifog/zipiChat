@@ -27,7 +27,7 @@ FriendRouter.post('/addFriend',verifyToken,decryptToken, createFriend);
 FriendRouter.post('/removeFriend',verifyToken,decryptToken, removeUsersFriend);
 FriendRouter.post('/sendFriendRequest',verifyToken,decryptToken,addFreiendRequest);
 FriendRouter.post('/cancelFriendRequest', verifyToken,decryptToken,removeUserFriendRequest)
-FriendRouter.post('/declineFriendRequest/',verifyToken,decryptToken,declineFriendRequest)
+FriendRouter.post('/declineRequest',verifyToken,decryptToken,declineFriendRequest)
 
 
 module.exports= FriendRouter;

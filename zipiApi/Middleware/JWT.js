@@ -48,7 +48,7 @@ const decryptToken = async(req,res,next)=>{
 
         
         let codeBreakdown= await decodeJwtT(token);
-        console.log(codeBreakdown);
+        //console.log(codeBreakdown);
         req.body['id']=codeBreakdown.id;
         req.user=codeBreakdown.id;
         return next()

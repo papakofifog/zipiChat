@@ -30,7 +30,7 @@ async function updateUserPicture(data){
         
         let currentUserPicture= await getUserpicture(data.userId);
 
-        console.log(data.picURl)
+        //console.log(data.picURl)
 
         currentUserPicture.userPicUrl=data.picURl;
 

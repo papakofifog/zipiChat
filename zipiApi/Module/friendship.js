@@ -107,11 +107,12 @@ async function addFriendRequest(data,next){
 async function removeFriendRequest(data,next){
     try{
         let relationship= await getRelationship(data.friendId);
-        console.log(relationship)
+        //console.log(relationship)
         let newUserFriendRequest=relationship.userFriendIdRequests.filter((friendId)=>{
+            console.log(friendId)
             return (friendId).toString()!==(data.userId).toString();
         });
-        console.log(newUserFriendRequest);
+        //console.log(newUserFriendRequest);
         relationship.userFriendIdRequests=newUserFriendRequest;
         relationship.save();
         return true;
