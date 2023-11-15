@@ -117,9 +117,10 @@ const appLogout= async (req, res, next)=>{
     }
 }
 
-const generateAccessTokenAndRefreshToken= (req, res, next)=>{
+const generateAccessTokenAndRefreshToken= async (req, res, next)=>{
     try{
-        let user=findOneUserById(req.body['id']);
+        let user= await findOneUserById(req.body['id']);
+        if(!user)return res.status(400).send(failureMessage("User does not exist in the system"));
         let token= createToken(user);
         let refreshtoken= createRefreshToken(user);
         return res.status(200).json(successMessage('Login Successfull',"User verified",{

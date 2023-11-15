@@ -12,7 +12,8 @@ const {
     removeUserFriendRequest,
     searchAUsersFriendByName, 
     searchForNonUserFriends,
-    searchForFriendWhoHasSentARequest
+    searchForFriendWhoHasSentARequest,
+    declineFriendRequest
 } = require('../Controller/friendRequest');
 
 FriendRouter.get('/getUsersFriends', verifyToken, decryptToken, getFriends);
@@ -26,7 +27,7 @@ FriendRouter.post('/addFriend',verifyToken,decryptToken, createFriend);
 FriendRouter.post('/removeFriend',verifyToken,decryptToken, removeUsersFriend);
 FriendRouter.post('/sendFriendRequest',verifyToken,decryptToken,addFreiendRequest);
 FriendRouter.post('/cancelFriendRequest', verifyToken,decryptToken,removeUserFriendRequest)
-//FriendRouter.post('/removeFriendRequest',verifyToken,decryptToken,removeUserFriendRequest)
+FriendRouter.post('/declineFriendRequest/',verifyToken,decryptToken,declineFriendRequest)
 
 
 module.exports= FriendRouter;

@@ -21,7 +21,7 @@ const createEmailToken= (user)=>{
         {id: user._id},
         process.env['JWTSECRET'],
         {
-            expiresIn: "5h"
+            expiresIn: "5h",
         }
     )
     return accessToken;
@@ -48,7 +48,7 @@ const decryptToken = async(req,res,next)=>{
 
         
         let codeBreakdown= await decodeJwtT(token);
-        
+        console.log(codeBreakdown);
         req.body['id']=codeBreakdown.id;
         req.user=codeBreakdown.id;
         return next()

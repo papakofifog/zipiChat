@@ -53,7 +53,6 @@ async function retriveActiveUserRequest(userID){
 }
 
 
-
 async function addNewFriend(user,data,next){
     try{
         user.userFriendId.push(data.friendId);
