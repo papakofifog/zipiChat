@@ -93,7 +93,8 @@ async function createFriend(req,res,next){
             let activeUserName=activeUser.username;
             await createNotification({
                 receipientUsername: req.body.friend ,
-                message:`${activeUserName} accepted your request`
+                message:`${activeUserName} accepted your request`,
+                senderId:req.body['id']
             })
             return res.status(200).json(successMessage("Friendship Created"));
         }else{
@@ -133,7 +134,8 @@ async function addFreiendRequest(req, res,next){
         if(newFriendRequest){
             await createNotification({
                 receipientUsername: req.body.friend ,
-                message:`${activeUserName} sent you a friend request`
+                message:`${activeUserName} sent you a friend request`,
+                senderId:req.body['id']
             })
             return res.status(200).json(successMessage("Friend Request Sent"));
         }else{
@@ -283,7 +285,8 @@ async function removeUserFriendRequest(req,res,next){
         let activeUserName=activeUser.username;
         let notificationMessage={
             receipientUsername: req.body.friend,
-            message:`${activeUserName} canceled friend request`
+            message:`${activeUserName} canceled friend request`,
+            senderId:req.body['id']
         }
         if(friendRequestTakenOut){
             await createNotification(notificationMessage)
@@ -302,6 +305,7 @@ async function declineFriendRequest(req, res, next){
         let currentUserId=req.body['id'];
         let friend = await findUserByUserName(friendUsername);
         let user = await findOneUserById(currentUserId);
+        let userPic= await getUserpicture(currentUserId);
         if(!friend) return res.status(400).json(failureMessage("No friend exists with that username"));
         let friendRelationship= await getRelationship(user._id);
         if( ! friendRelationship.userFriendIdRequests.includes(friend._id)){
@@ -314,14 +318,15 @@ async function declineFriendRequest(req, res, next){
         let friendRequestTakenOut= await removeFriendRequest(data,next);
         let notificationMessage={
             receipientUsername: req.body.friend,
-            message:`${user.username} declined your friend request`
+            message:`${user.username} declined your friend request`,
+            senderId:user._id
         }
         if(friendRequestTakenOut){
             await createNotification(notificationMessage)
             return res.send(successMessage("friend request declined Succesfully"))
         }
         return res.send(failureMessage("Failed to decline the friend request"));
-        console.log(friend, user);
+        
     }catch(e){
         next(e);
     }

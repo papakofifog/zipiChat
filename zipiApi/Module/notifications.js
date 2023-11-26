@@ -8,6 +8,10 @@ const notificationsSchema = new mongoose.Schema({
     message:{
         type: String,
         required:(true, "message is required")
+    },
+    senderId:{
+        type: mongoose.Types.ObjectId,
+        ref:'user',
     }
 }, {timestamps:true});
 
@@ -18,7 +22,8 @@ async function createNotification(newNotificationData){
     try{
         let notification= new ZipiUserNotification({
             receipientUsername: newNotificationData.receipientUsername,
-            message:newNotificationData.message
+            message:newNotificationData.message,
+            senderId:newNotificationData.senderId
         })
         
         notification.save();
